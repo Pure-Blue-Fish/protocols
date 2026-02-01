@@ -1,0 +1,3323 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protocol Checklist - Pure Blue Fish</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f7fa;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: #fff;
+      border-inline-start: 1px solid #e0e0e0;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    /* Language toggle */
+    .lang-toggle {
+      display: flex;
+      background: #f0f0f0;
+      border-radius: 8px;
+      padding: 4px;
+      margin-bottom: 16px;
+    }
+
+    .lang-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #666;
+      transition: all 0.15s ease;
+    }
+
+    .lang-btn.active {
+      background: #fff;
+      color: #0066cc;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .lang-btn:hover:not(.active) {
+      color: #333;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #0066cc;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    .category {
+      margin-bottom: 16px;
+    }
+
+    .category-header {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .protocol-btn {
+      display: block;
+      width: 100%;
+      text-align: start;
+      padding: 10px 12px;
+      margin-bottom: 4px;
+      background: #f8f9fa;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #333;
+      transition: all 0.15s ease;
+    }
+
+    .protocol-btn:hover {
+      background: #e8f4fc;
+      border-color: #b3d9f7;
+    }
+
+    .protocol-btn.active {
+      background: #0066cc;
+      color: #fff;
+      border-color: #0066cc;
+    }
+
+    .frequency {
+      font-size: 0.75rem;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .protocol-btn.active .frequency {
+      color: rgba(255,255,255,0.8);
+    }
+
+    .btn-title {
+      display: block;
+    }
+
+    /* Main content */
+    .main {
+      padding: 24px 32px;
+      overflow-y: auto;
+    }
+
+    .checklist-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .checklist-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+
+    .checklist-meta {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .print-btn {
+      padding: 10px 20px;
+      background: #0066cc;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.15s ease;
+    }
+
+    .print-btn:hover {
+      background: #0055aa;
+    }
+
+    /* Checklist sections */
+    .section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .section-icon.equipment { background: #e3f2fd; }
+    .section-icon.steps { background: #e8f5e9; }
+    .section-icon.warning { background: #fff3e0; }
+    .section-icon.problems { background: #fce4ec; }
+
+    /* Checklist items */
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .checklist-item:last-child {
+      border-bottom: none;
+    }
+
+    .checkbox {
+      width: 22px;
+      height: 22px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      margin-inline-end: 12px;
+      flex-shrink: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .checkbox:hover {
+      border-color: #0066cc;
+    }
+
+    .checkbox.checked {
+      background: #0066cc;
+      border-color: #0066cc;
+    }
+
+    .checkbox.checked::after {
+      content: '✓';
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .item-text {
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    .item-note {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    /* Problem table */
+    .problem-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .problem-table th {
+      text-align: start;
+      padding: 10px 12px;
+      background: #f8f9fa;
+      font-weight: 600;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .problem-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: top;
+    }
+
+    .problem-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Warning box */
+    .warning-box {
+      background: #fff3e0;
+      border: 1px solid #ffcc80;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .warning-title {
+      font-weight: 600;
+      color: #e65100;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .warning-list {
+      margin: 0;
+      padding-inline-start: 20px;
+      color: #5d4037;
+    }
+
+    .warning-list li {
+      margin-bottom: 4px;
+    }
+
+    /* Progress bar */
+    .progress-container {
+      position: sticky;
+      top: 0;
+      background: #f5f7fa;
+      padding: 12px 0;
+      margin-bottom: 12px;
+      z-index: 10;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #4caf50;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 80px 40px;
+      color: #888;
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+    }
+
+    /* Print styles */
+    @media print {
+      .sidebar, .print-btn, .progress-container {
+        display: none !important;
+      }
+      .container {
+        display: block;
+      }
+      .main {
+        padding: 0;
+      }
+      .section {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+      .checkbox {
+        border: 2px solid #333;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="logo">🐟 Pure Blue Fish</div>
+      <div class="subtitle" id="subtitle">צ'קליסטים לעובדי החווה</div>
+
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="he">עברית</button>
+        <button class="lang-btn" data-lang="en">English</button>
+      </div>
+
+      <div class="category">
+        <div class="category-header">הגעת דגים</div>
+        <button class="protocol-btn" data-id="prep-quarantine">
+          <span class="btn-title">הכנת קרנטינה למשלוח</span>
+          <div class="frequency">שבוע לפני</div>
+        </button>
+        <button class="protocol-btn" data-id="open-boxes">
+          <span class="btn-title">פתיחת ארגזים ורישום</span>
+          <div class="frequency">בהגעת משלוח</div>
+        </button>
+        <button class="protocol-btn" data-id="acclimate">
+          <span class="btn-title">אקלום דגים</span>
+          <div class="frequency">בהגעת משלוח</div>
+        </button>
+      </div>
+
+      <div class="category">
+        <div class="category-header">האכלה</div>
+        <button class="protocol-btn" data-id="feed-quarantine">
+          <span class="btn-title">האכלה בקרנטינה</span>
+          <div class="frequency">10 פעמים ביום</div>
+        </button>
+        <button class="protocol-btn" data-id="feed-fattening">
+          <span class="btn-title">האכלה בפיטום</span>
+          <div class="frequency">10 פעמים ביום</div>
+        </button>
+      </div>
+
+      <div class="category">
+        <div class="category-header">פרוצדורות מיכלים</div>
+        <button class="protocol-btn" data-id="daily-clean">
+          <span class="btn-title">ניקוי יומי</span>
+          <div class="frequency">יומי</div>
+        </button>
+        <button class="protocol-btn" data-id="dead-fish">
+          <span class="btn-title">פינוי דגים מתים</span>
+          <div class="frequency">כל משמרת</div>
+        </button>
+        <button class="protocol-btn" data-id="drain-tank">
+          <span class="btn-title">ריקון מיכל</span>
+          <div class="frequency">לפי צורך</div>
+        </button>
+        <button class="protocol-btn" data-id="fill-tank">
+          <span class="btn-title">מילוי מיכל</span>
+          <div class="frequency">לפי צורך</div>
+        </button>
+      </div>
+
+      <div class="category">
+        <div class="category-header">מעקב ובדיקות - קרנטינה</div>
+        <button class="protocol-btn" data-id="oxygen">
+          <span class="btn-title">מדידת חמצן</span>
+          <div class="frequency">כל 4 שעות</div>
+        </button>
+        <button class="protocol-btn" data-id="weighing">
+          <span class="btn-title">שקילה ממוצעת</span>
+          <div class="frequency">שבועי/דו-שבועי</div>
+        </button>
+      </div>
+
+      <div class="category">
+        <div class="category-header">איכות מים - פיטום</div>
+        <button class="protocol-btn" data-id="oxygen-fattening">
+          <span class="btn-title">מדידת חמצן</span>
+          <div class="frequency">כל שעתיים</div>
+        </button>
+        <button class="protocol-btn" data-id="ph-fattening">
+          <span class="btn-title">מדידת pH</span>
+          <div class="frequency">3 פעמים ביום</div>
+        </button>
+        <button class="protocol-btn" data-id="ammonia-fattening">
+          <span class="btn-title">דגימת אמוניה</span>
+          <div class="frequency">יומי</div>
+        </button>
+        <button class="protocol-btn" data-id="co2-fattening">
+          <span class="btn-title">מדידת CO2</span>
+          <div class="frequency">שבועי/יומי</div>
+        </button>
+      </div>
+
+      <div class="category">
+        <div class="category-header">מעבדה</div>
+        <button class="protocol-btn" data-id="lab-nitrite">
+          <span class="btn-title">בדיקת ניטריט</span>
+          <div class="frequency">שבועי</div>
+        </button>
+        <button class="protocol-btn" data-id="lab-nitrate">
+          <span class="btn-title">בדיקת ניטראט</span>
+          <div class="frequency">ימים א' וד'</div>
+        </button>
+        <button class="protocol-btn" data-id="lab-alkalinity">
+          <span class="btn-title">בדיקת אלקליניות</span>
+          <div class="frequency">יומי</div>
+        </button>
+      </div>
+
+      <div class="category">
+        <div class="category-header">טיפולים</div>
+        <button class="protocol-btn" data-id="formalin">
+          <span class="btn-title">טיפול פורמלין</span>
+          <div class="frequency">לפי הוראה</div>
+        </button>
+        <button class="protocol-btn" data-id="copper">
+          <span class="btn-title">טיפול נחושת</span>
+          <div class="frequency">לפי הוראה</div>
+        </button>
+        <button class="protocol-btn" data-id="sorting">
+          <span class="btn-title">מיון גודל</span>
+          <div class="frequency">לפי צורך</div>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main" id="main-content">
+      <!-- Content rendered by JavaScript -->
+    </main>
+  </div>
+
+  <script>
+    // Current language state
+    let currentLang = 'he';
+
+    // UI translations
+    const ui = {
+      he: {
+        subtitle: 'צ\'קליסטים לעובדי החווה',
+        emptyState: 'בחר פרוטוקול מהתפריט כדי להציג את הצ\'קליסט',
+        print: '🖨️ הדפס',
+        progress: (done, total, pct) => `${done} מתוך ${total} משימות הושלמו (${pct}%)`,
+        categories: {
+          fishArrival: 'הגעת דגים',
+          feeding: 'האכלה',
+          tankProcedures: 'פרוצדורות מיכלים',
+          quarantineMonitoring: 'מעקב ובדיקות - קרנטינה',
+          fatteningWaterQuality: 'איכות מים - פיטום',
+          lab: 'מעבדה',
+          treatments: 'טיפולים'
+        },
+        buttons: {
+          'prep-quarantine': { title: 'הכנת קרנטינה למשלוח', freq: 'שבוע לפני' },
+          'open-boxes': { title: 'פתיחת ארגזים ורישום', freq: 'בהגעת משלוח' },
+          'acclimate': { title: 'אקלום דגים', freq: 'בהגעת משלוח' },
+          'feed-quarantine': { title: 'האכלה בקרנטינה', freq: '10 פעמים ביום' },
+          'feed-fattening': { title: 'האכלה בפיטום', freq: '10 פעמים ביום' },
+          'daily-clean': { title: 'ניקוי יומי', freq: 'יומי' },
+          'dead-fish': { title: 'פינוי דגים מתים', freq: 'כל משמרת' },
+          'drain-tank': { title: 'ריקון מיכל', freq: 'לפי צורך' },
+          'fill-tank': { title: 'מילוי מיכל', freq: 'לפי צורך' },
+          'oxygen': { title: 'מדידת חמצן', freq: 'כל 4 שעות' },
+          'weighing': { title: 'שקילה ממוצעת', freq: 'שבועי/דו-שבועי' },
+          'oxygen-fattening': { title: 'מדידת חמצן', freq: 'כל שעתיים' },
+          'ph-fattening': { title: 'מדידת pH', freq: '3 פעמים ביום' },
+          'ammonia-fattening': { title: 'דגימת אמוניה', freq: 'יומי' },
+          'co2-fattening': { title: 'מדידת CO2', freq: 'שבועי/יומי' },
+          'lab-nitrite': { title: 'בדיקת ניטריט', freq: 'שבועי' },
+          'lab-nitrate': { title: 'בדיקת ניטראט', freq: 'ימים א\' וד\'' },
+          'lab-alkalinity': { title: 'בדיקת אלקליניות', freq: 'יומי' },
+          'formalin': { title: 'טיפול פורמלין', freq: 'לפי הוראה' },
+          'copper': { title: 'טיפול נחושת', freq: 'לפי הוראה' },
+          'sorting': { title: 'מיון גודל', freq: 'לפי צורך' }
+        }
+      },
+      en: {
+        subtitle: 'Farm Worker Checklists',
+        emptyState: 'Select a protocol from the menu to display the checklist',
+        print: '🖨️ Print',
+        progress: (done, total, pct) => `${done} of ${total} tasks completed (${pct}%)`,
+        categories: {
+          fishArrival: 'Fish Arrival',
+          feeding: 'Feeding',
+          tankProcedures: 'Tank Procedures',
+          quarantineMonitoring: 'Quarantine Monitoring',
+          fatteningWaterQuality: 'Water Quality - Fattening',
+          lab: 'Laboratory',
+          treatments: 'Treatments'
+        },
+        buttons: {
+          'prep-quarantine': { title: 'Prepare Quarantine for Shipment', freq: 'Week before' },
+          'open-boxes': { title: 'Open Boxes & Register', freq: 'On shipment arrival' },
+          'acclimate': { title: 'Fish Acclimation', freq: 'On shipment arrival' },
+          'feed-quarantine': { title: 'Quarantine Feeding', freq: '10 times/day' },
+          'feed-fattening': { title: 'Fattening Feeding', freq: '10 times/day' },
+          'daily-clean': { title: 'Daily Cleaning', freq: 'Daily' },
+          'dead-fish': { title: 'Dead Fish Removal', freq: 'Every shift' },
+          'drain-tank': { title: 'Drain Tank', freq: 'As needed' },
+          'fill-tank': { title: 'Fill Tank', freq: 'As needed' },
+          'oxygen': { title: 'Oxygen Measurement', freq: 'Every 4 hours' },
+          'weighing': { title: 'Average Weighing', freq: 'Weekly/Bi-weekly' },
+          'oxygen-fattening': { title: 'Oxygen Measurement', freq: 'Every 2 hours' },
+          'ph-fattening': { title: 'pH Measurement', freq: '3 times/day' },
+          'ammonia-fattening': { title: 'Ammonia Sampling', freq: 'Daily' },
+          'co2-fattening': { title: 'CO2 Measurement', freq: 'Weekly/Daily' },
+          'lab-nitrite': { title: 'Nitrite Test', freq: 'Weekly' },
+          'lab-nitrate': { title: 'Nitrate Test', freq: 'Sun & Wed' },
+          'lab-alkalinity': { title: 'Alkalinity Test', freq: 'Daily' },
+          'formalin': { title: 'Formalin Treatment', freq: 'As directed' },
+          'copper': { title: 'Copper Treatment', freq: 'As directed' },
+          'sorting': { title: 'Size Sorting', freq: 'As needed' }
+        }
+      }
+    };
+
+    // Protocol data - Hebrew
+    const protocolsHe = {
+      'feed-quarantine': {
+        title: 'האכלת דגים בקרנטינה',
+        meta: 'PRO.1.2.2.1 | 10 פעמים ביום',
+        sections: [
+          {
+            title: 'שעות האכלה',
+            icon: '⏰',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>משמרת</th><th>שעות</th></tr>
+                <tr><td>לילה</td><td>00:00, 06:00</td></tr>
+                <tr><td>בוקר</td><td>08:00, 10:00, 12:00, 14:00</td></tr>
+                <tr><td>ערב</td><td>16:00, 18:00, 20:00, 22:00</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'לפני האכלה',
+            icon: '🧤',
+            iconClass: 'equipment',
+            items: [
+              'חטא ידיים',
+              'וודא שמיכל המזון ממוספר נכון (תואם למיכל הדגים)',
+              'בדוק כמות מזון בטבלה היומית'
+            ]
+          },
+          {
+            title: 'שלבי האכלה - לכל מיכל',
+            icon: '🔄',
+            iconClass: 'steps',
+            items: [
+              'הוצא חופני מזון ממיכל המזון',
+              'פזר באופן אחיד על פני המיכל',
+              { text: 'צפה בהתנהגות הדגים', note: 'האם מגיבים? אוכלים נורמלי?' },
+              { text: 'מלא התרשמות בדף ביקורת המשמרת', note: '' },
+              { text: 'חצי שעה אחרי - בדוק חמצן ידנית', note: '' }
+            ]
+          },
+          {
+            title: 'בעיות ופתרונות',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>מצב</th><th>מה לעשות</th><th>מתי לדווח</th></tr>
+                <tr><td>דגים לא מגיבים למזון</td><td>עצור האכלה מיד!</td><td>דווח מיד לביולוג/מנהל</td></tr>
+                <tr><td>דגים הפסיקו לאכול באמצע</td><td>עצור, נסה שוב אחרי 10 דק'</td><td>דווח לביולוג</td></tr>
+                <tr><td>נשאר מזון בסוף היום</td><td>שקול אותו, רשום בדוח</td><td>דווח לביולוג</td></tr>
+                <tr><td>נראה שהדגים רוצים עוד</td><td>המשך לעקוב</td><td>דווח לביולוג - אל תוסיף בלי אישור!</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'סימני אזהרה - עצור ודווח מיד',
+            icon: '🚨',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'דגים לא מגיבים בכלל למזון',
+              'התנהגות משונה בזמן אכילה',
+              'הרבה מזון שוקע לקרקעית'
+            ]
+          }
+        ]
+      },
+      'dead-fish': {
+        title: 'פינוי ותיעוד דגים מתים',
+        meta: 'PRO.1.8.2 | כל משמרת',
+        sections: [
+          {
+            title: 'ציוד נדרש',
+            icon: '🧰',
+            iconClass: 'equipment',
+            items: [
+              'רשת איסוף (קצ\'ר) עם מקל ארוך',
+              'דלי',
+              'שקיות',
+              'טבלת רישום / אפליקציה'
+            ]
+          },
+          {
+            title: 'שלב 1: איסוף',
+            icon: '1️⃣',
+            iconClass: 'steps',
+            items: [
+              'סרוק כל מיכל - חפש על הקרקעית, צפים, דבוקים לרשתות',
+              'אסוף בעזרת הרשת והוצא מהמיכל',
+              'העבר לדלי תוך ספירה לפי מיכל'
+            ]
+          },
+          {
+            title: 'שלב 2: רישום ואחסון',
+            icon: '2️⃣',
+            iconClass: 'steps',
+            items: [
+              'רשום בטבלה: תאריך, מספר מיכל, כמות מתים',
+              'הכנס לשקית עם תווית: תאריך + מחלקה + מיכל + כמות',
+              'אחסן במקפיא דגים בקרנטינה'
+            ]
+          },
+          {
+            title: 'שלב 3: ניקוי ציוד',
+            icon: '3️⃣',
+            iconClass: 'steps',
+            items: [
+              'נקה וחטא את הקצ\'ר',
+              'נקה וחטא את הדלי',
+              'נקה כל ציוד נוסף שנגע בדגים'
+            ]
+          },
+          {
+            title: 'בעיות ופתרונות',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>מצב</th><th>פעולה</th><th>מתי להזעיק</th></tr>
+                <tr><td>כמות מתים חריגה ביום</td><td>דווח מיד לביולוג/מנהל</td><td>מיד</td></tr>
+                <tr><td>דגים עם סימנים חשודים</td><td>קח מדגם לבדיקה תחת בינקולר</td><td>מיד לביולוג</td></tr>
+                <tr><td>לא בטוח אם חריג</td><td>בדוק ממוצע ימים קודמים</td><td>שאל ביולוג</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'oxygen': {
+        title: 'מדידת חמצן בקרנטינה',
+        meta: 'PRO.1.3.1.2 | כל 4 שעות',
+        sections: [
+          {
+            title: 'שעות בדיקה ידנית',
+            icon: '⏰',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>משמרת</th><th>שעות</th></tr>
+                <tr><td>בוקר</td><td>08:00, 12:00</td></tr>
+                <tr><td>ערב</td><td>16:00, 20:00</td></tr>
+                <tr><td>לילה</td><td>00:00, 04:00</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'לפני הבדיקה',
+            icon: '🔧',
+            iconClass: 'equipment',
+            items: [
+              'קח מד חמצן ידני מעמדת הניהול',
+              { text: 'בדוק שהמד מציג 100% באוויר', note: 'סטייה מותרת: ±2%' }
+            ]
+          },
+          {
+            title: 'ביצוע הבדיקה',
+            icon: '📊',
+            iconClass: 'steps',
+            items: [
+              'מדוד בכל מיכל בנפרד',
+              { text: 'רשום תוצאות', note: 'אל תסתמך על מיכל אחד - כל מיכל שונה!' }
+            ]
+          },
+          {
+            title: 'רישום מאלקטרודות (כל שעתיים)',
+            icon: '💻',
+            iconClass: 'steps',
+            items: [
+              'קרא נתונים מהלוגרים או ממחשב הבקרה',
+              'רשום בטבלה'
+            ]
+          },
+          {
+            title: 'תחזוקה יומית',
+            icon: '🧹',
+            iconClass: 'steps',
+            items: [
+              'נקה אלקטרודות',
+              'נקה רשתות סביב הצינורות המגנים',
+              'השווה קריאת אלקטרודה לקריאה ידנית'
+            ]
+          },
+          {
+            title: 'בעיות ופתרונות',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>מצב</th><th>פעולה</th></tr>
+                <tr><td>סטייה > 0.5 mg/L בין ידני לאלקטרודה</td><td>דווח לביולוג/מנהל מיד</td></tr>
+                <tr><td>סטייה > 10%</td><td>דווח לביולוג/מנהל מיד</td></tr>
+                <tr><td>מד ידני לא מראה 100% באוויר</td><td>נקה אלקטרודה, בדוק כיול</td></tr>
+                <tr><td>חמצן נמוך במיכל</td><td>בדוק מערכת חמצון, דווח מיד</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'daily-clean': {
+        title: 'ניקוי יומי של מיכלי קרנטינה',
+        meta: 'PRO.1.8.1 | יומי',
+        sections: [
+          {
+            title: 'ציוד נדרש',
+            icon: '🧰',
+            iconClass: 'equipment',
+            items: [
+              'מברשת יד',
+              'מטאטא מקרצף עם מקל ארוך',
+              'סקוטש',
+              'סט רשתות ספייר (רזרבי)',
+              'סט סטנד-פייפים ספייר (רזרבי)'
+            ]
+          },
+          {
+            title: 'לפני שמתחילים',
+            icon: '✋',
+            iconClass: 'warning',
+            items: [
+              'ידיים נקיות ומחוטאות',
+              'עומד בנהלי biosecurity',
+              'כל ציוד הניקיון מחוטא'
+            ]
+          },
+          {
+            title: 'ניקוי רשת סינון',
+            icon: '1️⃣',
+            iconClass: 'steps',
+            items: [
+              'טאטא עם מטאטא יד את הרשת עד שנקייה',
+              { text: 'אם רשת סתומה לגמרי:', note: 'הוצא רשת ישנה (היזהר - אל תתן לדגים להיכנס לתא!), הכנס רשת ספייר באותו גודל' }
+            ]
+          },
+          {
+            title: 'ניקוי סטנד-פייפ',
+            icon: '2️⃣',
+            iconClass: 'steps',
+            items: [
+              'טאטא את הסטנד-פייפ בתא החיצוני',
+              'טאטא את דפנות התא',
+              'טאטא רשת סטנד-פייפ מרכזי (עם מטאטא מקל ארוך)'
+            ]
+          },
+          {
+            title: 'דפנות ופלאשינג',
+            icon: '3️⃣',
+            iconClass: 'steps',
+            items: [
+              'בדוק ביופילם עבה מעל מפלס המים - נקה אם יש',
+              'הורד ברך ניקוז תחתונה עד גובה פני המים',
+              'המתן עד שהמים ביציאה צלולים',
+              { text: 'החזר ברך למקום בחוליה המסומנת בשרשרת', note: 'חשוב! זה מבטיח זרימה נכונה לביופילטר' }
+            ]
+          },
+          {
+            title: 'ניקוי סאמפ ותעלות',
+            icon: '4️⃣',
+            iconClass: 'steps',
+            items: [
+              'העבר מטאטא על רצפת בורות השאיבה בסאמפ',
+              'העבר מטאטא על רצפת התעלות'
+            ]
+          }
+        ]
+      },
+      'acclimate': {
+        title: 'אקלום דגים בקרנטינה',
+        meta: 'PRO.1.1.5 | משלוח מחו"ל',
+        sections: [
+          {
+            title: 'תפקידים בצוות',
+            icon: '👥',
+            iconClass: 'equipment',
+            items: [
+              'אחראי קליטה ראשי',
+              'אחראי רישום ונתונים',
+              'אחראי מדידות ובדיקת שקיות',
+              'אחראי שפיכה למיכל (על הסולם)'
+            ]
+          },
+          {
+            title: 'גבולות קצב אקלום',
+            icon: '⚡',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>פרמטר</th><th>שינוי מקסימלי לחצי שעה</th></tr>
+                <tr><td>pH</td><td>עד 0.3 יחידות</td></tr>
+                <tr><td>טמפרטורה</td><td>עד 2°C</td></tr>
+                <tr><td>מליחות</td><td>עד 3 ppt</td></tr>
+                <tr><td>חמצן</td><td>מינימלי! הגבר רק אם < 6 ppm</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'שלב 1: פריקה וסידור',
+            icon: '📦',
+            iconClass: 'steps',
+            items: [
+              'פרוק ארגזים ממשאית וסדר בשורות',
+              'פתח שקיות דוגמה (עד 10%)',
+              'מדוד ורשום מדדי הגעה',
+              { text: 'סמן שקיות עם DOA גבוה', note: 'ישארו לסוף!' }
+            ]
+          },
+          {
+            title: 'שלב 2: הכנת מערכת',
+            icon: '⚙️',
+            iconClass: 'steps',
+            items: [
+              'מקם מיכלי אקלום בסמוך למיכלי היעד',
+              'חבר משאבה טבולה עם צינור וברז',
+              { text: 'וודא אוורור/חמצון סגור במיכל המקור', note: 'מניעת gas bubble disease' },
+              'הכנס דפיוזר חמצן למיכל האקלום'
+            ]
+          },
+          {
+            title: 'שלב 3: הוספת מים לשקיות',
+            icon: '💧',
+            iconClass: 'steps',
+            items: [
+              'פתח שקיות',
+              'שפוך ליטר אחד מים ממי המיכלים',
+              'המתן 10 דקות',
+              'שפוך ליטר שני'
+            ]
+          },
+          {
+            title: 'שלב 4: שפיכה למיכל אקלום',
+            icon: '🐟',
+            iconClass: 'steps',
+            items: [
+              'העבר שקיות לאחראי שפיכה',
+              'שפוך בעדינות למיכל',
+              { text: 'שפיכה ראשונית: לפחות 30 ליטר שקיות', note: '' },
+              'הוסף חומר סופח אמוניה (לפי הוראת ביולוג)'
+            ]
+          },
+          {
+            title: 'שלב 5: האקלום',
+            icon: '📊',
+            iconClass: 'steps',
+            items: [
+              'הזרם מי מערכת בספיקה איטית',
+              { text: 'מדוד כל 30 דקות: pH, טמפ\', מליחות', note: '' },
+              'התאם ספיקה לפי גבולות הקצב',
+              { text: 'סיום: פרמטרים זהים למערכת + דגים מתנהגים נורמלי', note: '' }
+            ]
+          },
+          {
+            title: 'סימני אזהרה',
+            icon: '🚨',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'pH עולה מהר מדי - האט זרימת מים',
+              'חמצן יורד מתחת ל-6 - הגבר חמצון בזהירות',
+              'דגים מתנהגים לא נורמלי - דווח לביולוג מיד'
+            ]
+          }
+        ]
+      },
+      'formalin': {
+        title: 'טיפול בפורמלין',
+        meta: 'PRO.1.5.2.2 | טיפול קצר (אמבט)',
+        sections: [
+          {
+            title: 'אזהרת בטיחות - פורמלין חומר מסוכן!',
+            icon: '☠️',
+            iconClass: 'warning',
+            items: [
+              'כפפות',
+              'חלוק',
+              'מסכת פילטר',
+              'משקפי מגן'
+            ]
+          },
+          {
+            title: 'ציוד נדרש',
+            icon: '🧰',
+            iconClass: 'equipment',
+            items: [
+              'קנקן 1 ליטר',
+              'דלי 5 ליטר',
+              'פורמלין (מאגף חומ"ס)'
+            ]
+          },
+          {
+            title: 'חישוב מינון',
+            icon: '🧮',
+            type: 'info',
+            content: `
+              <div style="padding: 12px; background: #f0f0f0; border-radius: 8px;">
+                <strong>למיכל 10 קוב בריכוז 30 ppm:</strong><br>
+                <span style="font-size: 1.2rem; font-weight: bold;">300 מ"ל פורמלין לכל מיכל</span><br><br>
+                <em>זכור: פורמלין מסיר 1 mg/L חמצן על כל 5 mg/L פורמלין!</em>
+              </div>
+            `
+          },
+          {
+            title: 'לפני הטיפול',
+            icon: '⚠️',
+            iconClass: 'warning',
+            items: [
+              'הרעב דגים לפחות 12 שעות',
+              'בצע בדיקת פורמלין במים',
+              'סגור משאבות סחרור במערכת',
+              'הפעל חמצון נוסף'
+            ]
+          },
+          {
+            title: 'שלבי הטיפול',
+            icon: '🔬',
+            iconClass: 'steps',
+            items: [
+              'לבש ציוד מגן מלא',
+              'הבא פורמלין ממאצרת החומ"ס',
+              'מלא דלי ב-3/4 מים ממערכת',
+              'הוסף 300 מ"ל פורמלין וערבב',
+              'שפוך באיטיות על בועות האוורור (לפיזור טוב)',
+              { text: 'צפה בהתנהגות דגים', note: 'אם מתנשפים - דווח מיד!' },
+              'בדוק חמצן ברציפות',
+              'אחרי שעה - פתח ברזי כניסה ויציאה'
+            ]
+          },
+          {
+            title: 'בדיקת המשך',
+            icon: '📋',
+            iconClass: 'steps',
+            items: [
+              'שטוף וחטא כל הציוד',
+              'אחרי 24 שעות - בצע בדיקת פורמלין',
+              'וודא הסרה מהמערכת'
+            ]
+          }
+        ]
+      },
+      'copper': {
+        title: 'טיפול בנחושת',
+        meta: 'PRO.1.5.2.1',
+        sections: [
+          {
+            title: 'אזהרת בטיחות',
+            icon: '☠️',
+            iconClass: 'warning',
+            items: [
+              'כפפות',
+              'חלוק',
+              'מסכת פילטר',
+              'משקפי מגן'
+            ]
+          },
+          {
+            title: 'סוגי טיפול',
+            icon: '📊',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>סוג</th><th>ריכוז</th><th>משך</th></tr>
+                <tr><td>קצר (אמבט)</td><td>0.5-0.8 ppm</td><td>שעות</td></tr>
+                <tr><td>ארוך</td><td>0.3 ppm</td><td>14-21 יום</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'טיפול קצר - שלבים',
+            icon: '⚡',
+            iconClass: 'steps',
+            items: [
+              'הרעב דגים 12 שעות',
+              'בצע בדיקת נחושת במים',
+              'חשב כמות להוספה',
+              'לבש ציוד מגן',
+              'שקול אבקה לדלי + מים חמים + ערבב',
+              'סגור כניסה ויציאת מים מהמיכל',
+              'הוסף באיטיות תוך דילול',
+              { text: 'עקוב אחרי הדגים ברציפות!', note: 'מצוקה → פתח כניסה/יציאה מיד' },
+              'בדוק חמצן ברציפות',
+              'אחרי שעתיים - בדוק ריכוז והשלם',
+              'בסיום - פתח כניסה ויציאת מים'
+            ]
+          },
+          {
+            title: 'אזהרה קריטית',
+            icon: '🚨',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'אם מתרחשת קריסטליזציה בזמן מהילה - לא להשתמש!',
+              'התמיסה עלולה להיות רעילה מאוד',
+              'סלק לפי נוהל חומ"ס'
+            ]
+          }
+        ]
+      },
+      'weighing': {
+        title: 'שקילה ממוצעת',
+        meta: 'קרנטינה: שבועי | פיטום: דו-שבועי',
+        sections: [
+          {
+            title: 'חשוב! לא להאכיל בבוקר השקילה',
+            icon: '🚫',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'דיוק השקילה (ללא מזון בבטן)',
+              'הפחתת סטרס לדגים'
+            ]
+          },
+          {
+            title: 'ציוד נדרש',
+            icon: '🧰',
+            iconClass: 'equipment',
+            items: [
+              'רשתות יד (קצ\'ר)',
+              'דלי שקילה',
+              'משקל (דיוק עשירית גרם)',
+              'דפיוזר אויר/חמצן',
+              'מד חמצן',
+              'מחברת רישום',
+              'מחשבון'
+            ]
+          },
+          {
+            title: 'טבלת כמויות',
+            icon: '📊',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>קבוצת משקל</th><th>מס\' דגים</th><th>משקל כללי</th></tr>
+                <tr><td>1-5 גרם</td><td>200</td><td>200-1000 גרם</td></tr>
+                <tr><td>5-10 גרם</td><td>200</td><td>1000-2000 גרם</td></tr>
+                <tr><td>10-20 גרם</td><td>150</td><td>1500-3000 גרם</td></tr>
+                <tr><td>20-100 גרם</td><td>100</td><td>2000-10000 גרם</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'שלבי עבודה',
+            icon: '⚖️',
+            iconClass: 'steps',
+            items: [
+              'מלא דלי עד מחצית במים מהמערכת',
+              'הנח על משקל ואפס (Tare)',
+              'לכוד דגים ברשת קיר או קצ\'רים',
+              'העבר לדלי ללא מים עודפים',
+              'רשום משקל כללי',
+              { text: 'העבר דגים חזרה וספור כל אחד', note: '' },
+              'חשב ממוצע: משקל כללי ÷ מספר דגים',
+              'עדכן במחשב ובטבלת הזנה'
+            ]
+          }
+        ]
+      },
+      'sorting': {
+        title: 'מיון גודל דגים',
+        meta: 'PRO.1.5.1.1 | לפי צורך',
+        sections: [
+          {
+            title: 'ציוד נדרש',
+            icon: '🧰',
+            iconClass: 'equipment',
+            items: [
+              'ביגוד תקני',
+              'רשת קיר',
+              'רשתות יד',
+              '2 מכלי דולב גדולים',
+              'מסננות מיון (grader)',
+              'אבני אויר/חמצן',
+              'מד חמצן',
+              'משקל + דליי שקילה'
+            ]
+          },
+          {
+            title: 'ניסוי מעבר (יום לפני)',
+            icon: '🧪',
+            iconClass: 'steps',
+            items: [
+              'קח מדגם 30-40 דגים',
+              'קבע גודל ממיינת לפי מראה',
+              'שפוך לממיינת וספור כמה עברו',
+              { text: 'מיון אופטימלי: 20-30% עוברים', note: '' },
+              'עברו יותר מ-30%? סגור ממיינת בקליק',
+              'עברו פחות מ-20%? פתח ממיינת בקליק',
+              'רשום את הגודל שנקבע!'
+            ]
+          },
+          {
+            title: 'ביצוע המיון',
+            icon: '🔄',
+            iconClass: 'steps',
+            items: [
+              'וודא צום 12 שעות',
+              'הכן 2 דולבים עם מים + אוורור',
+              'הורד מפלס מים וצמצם דגים ברשת קיר',
+              'לכוד דגים והעבר לממיינת',
+              'קטנים עוברים → דולב 1',
+              'גדולים נשארים → דולב 2',
+              { text: 'בדוק חמצן ברציפות בשני הדולבים!', note: '' },
+              'בצע שקילה ממוצעת לכל קבוצה',
+              'העבר למיכלים מיועדים'
+            ]
+          },
+          {
+            title: 'סיום',
+            icon: '✅',
+            iconClass: 'steps',
+            items: [
+              'חטא רשתות, דליים, דולבים',
+              'רשום נתונים בטבלה ובמחשב',
+              'עדכן טבלאות הזנה לכל מיכל'
+            ]
+          }
+        ]
+      },
+      'prep-quarantine': {
+        title: 'הכנת הקרנטינה לקבלת משלוח',
+        meta: 'PRO.1.1.2 | שבוע+ לפני המשלוח',
+        sections: [
+          {
+            title: 'פרמטרי מים (שבוע לפני!)',
+            icon: '🧪',
+            iconClass: 'steps',
+            items: [
+              { text: 'ביופילטרציה: תסף אמוניה וודא שהמערכת מתמודדת', note: 'אם לא מספק - יש שבוע לשיפור' },
+              'מליחות: השווה למקור הדגים, וודא פער מינימלי',
+              { text: 'טמפרטורה: השווה למקור הדגים', note: 'הפרש מקסימלי: 5°C' },
+              'pH: בדוק ורשום'
+            ]
+          },
+          {
+            title: 'ניקיון והכנת מיכלים',
+            icon: '🧹',
+            iconClass: 'steps',
+            items: [
+              'נקה מכלי דגים (כולל צנרת אוויר וחמצן)',
+              'נקה וחטא את כל שטח הקרנטינה',
+              'החלף רשתות יציאת מים בגודל מתאים לדגיגים'
+            ]
+          },
+          {
+            title: 'ציוד לקבלת דגים',
+            icon: '🧰',
+            iconClass: 'equipment',
+            items: [
+              'מכלי אקלום דגים',
+              'מד pH + טרמומטר',
+              'מד מליחות',
+              'סלייטים לרישום',
+              'קנקנים לבדיקות מים',
+              'צנרת אוורור וחמצון',
+              'מד חמצן',
+              'חומר סופח אמוניה',
+              'רשתות יד בגודל מתאים',
+              'דליי עבודה + משקל'
+            ]
+          },
+          {
+            title: 'הכנת המעבדה',
+            icon: '🔬',
+            iconClass: 'equipment',
+            items: [
+              { text: 'ערכות מדידת אמוניה מוכנות', note: 'בדיקה תיעשה בקרנטינה, לא במעבדה' },
+              { text: 'כלי ניתוח ומיקרוסקופ מוכנים', note: 'בדיקות דגים רק בסיום הקליטה!' }
+            ]
+          }
+        ]
+      },
+      'open-boxes': {
+        title: 'פתיחת ארגזים ורישום',
+        meta: 'PRO.1.1.4 | בהגעת משלוח',
+        sections: [
+          {
+            title: 'חשוב לזכור',
+            icon: '💡',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'עדיפות ראשונה: קליטה מהירה',
+              'עדיפות שנייה: רישום פרמטרים',
+              'רישום לא מעכב את הקליטה!'
+            ]
+          },
+          {
+            title: 'רישום ארגזים',
+            icon: '📋',
+            iconClass: 'steps',
+            items: [
+              'השווה לשטר מטען: כמות ומספרים סידוריים',
+              'רשום בטבלת קבלת משלוח',
+              { text: 'וודא שהכול הגיע ונפרק', note: 'בלי רישום - עלולים להישאר ארגזים בשדה!' }
+            ]
+          },
+          {
+            title: 'פתיחת ארגזים',
+            icon: '📦',
+            iconClass: 'steps',
+            items: [
+              'פתח כל הקרטונים והמכסים',
+              'הזז חומר אריזה מיותר',
+              'התבונן דרך השקיות: מצב דגים, מים צלולים/עכורים, תמותה',
+              'דווח למנהל אקלום'
+            ]
+          },
+          {
+            title: 'שקיות מדגם (5-10%)',
+            icon: '🧪',
+            iconClass: 'steps',
+            items: [
+              'קבל הנחייה על כמות ממנהל אקלום',
+              'פתח שקיות מייצגות',
+              'בצע בדיקות מים: אמוניה, טמפ\', מליחות, pH',
+              'רשום בטבלה והעבר תוצאות'
+            ]
+          },
+          {
+            title: 'תיעוד וצילום',
+            icon: '📸',
+            iconClass: 'steps',
+            items: [
+              'צלם מצב הדגים בפתיחת שקיות',
+              'תעד שקיות עם עכירות או תמותה',
+              { text: 'שקיות עם תמותה גבוהה', note: 'לא לטפל עד גמר הקליטה!' }
+            ]
+          }
+        ]
+      },
+      'feed-fattening': {
+        title: 'האכלת דגים בפיטום',
+        meta: 'PRO.2.2.1 | 10 פעמים ביום',
+        sections: [
+          {
+            title: 'שעות האכלה',
+            icon: '⏰',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>משמרת</th><th>שעות</th></tr>
+                <tr><td>בוקר</td><td>08:00, 10:00, 12:00, 14:00</td></tr>
+                <tr><td>ערב</td><td>16:00, 18:00, 20:00, 22:00</td></tr>
+                <tr><td>לילה</td><td>00:00, 06:00</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'לפני האכלה',
+            icon: '🧤',
+            iconClass: 'equipment',
+            items: [
+              'חטא ידיים',
+              'לבש כפפות חד פעמיות',
+              'וודא שפח המזון מסומן נכון (תואם לבריכה)',
+              'בדוק כמות מזון בטבלה היומית'
+            ]
+          },
+          {
+            title: 'שלבי האכלה',
+            icon: '🐟',
+            iconClass: 'steps',
+            items: [
+              'הוצא חופני מזון מפח המזון',
+              'פזר באופן אחיד על פני הבריכה',
+              { text: 'זמן מיטבי ל-4 בריכות: 10-15 דקות', note: '' },
+              'צפה בהתנהגות הדגים',
+              'מלא התרשמות בדף ביקורת'
+            ]
+          },
+          {
+            title: 'האכלת בוקר ראשונה (08:00)',
+            icon: '🌅',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'הדגים הכי רעבים - ההתנהגות הכי מלמדת',
+              'התבונן היטב בתגובה',
+              'רשום כל חריגה'
+            ]
+          },
+          {
+            title: 'בעיות ופתרונות',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>מצב</th><th>פעולה</th><th>דיווח</th></tr>
+                <tr><td>דגים לא מגיבים</td><td>עצור האכלה מיד!</td><td>מיד לביולוג</td></tr>
+                <tr><td>הפסיקו באמצע</td><td>עצור, נסה אחרי 10-20 דק'</td><td>לביולוג</td></tr>
+                <tr><td>נשאר מזון</td><td>שקול, רשום בדוח</td><td>לביולוג</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'drain-tank': {
+        title: 'ריקון מיכלי קרנטינה',
+        meta: 'PRO.1.8.3',
+        sections: [
+          {
+            title: 'קיבולת מאגר',
+            icon: '📏',
+            type: 'info',
+            content: `<div style="padding: 12px; background: #e3f2fd; border-radius: 8px; text-align: center; font-size: 1.1rem;"><strong>מאגר מים עודפים: 10 קוב (= מיכל מלא)</strong></div>`
+          },
+          {
+            title: 'ריקון מלא - ללא דגים',
+            icon: '1️⃣',
+            iconClass: 'steps',
+            items: [
+              'וודא אין מים במאגר העודפים',
+              'סגור ברז כניסת מים למיכל',
+              'סגור ברז אוורור למיכל',
+              'סגור פלואומטר חמצן למיכל',
+              'הרם צינור ניקוז תחתון (ברך)',
+              'הורד ברך כניסת מים למאגר עודפים',
+              'פתח ברז ניקוז תחתון'
+            ]
+          },
+          {
+            title: 'הורדת מפלס לחצי - יש דגים',
+            icon: '2️⃣',
+            iconClass: 'steps',
+            items: [
+              { text: 'אל תעצור אוורור וחמצון!', note: 'חוק ברזל' },
+              'הורד ברך כניסת מים למאגר עודפים',
+              'הוצא סטנד פייפ עליון',
+              'וודא כניסת מים רציפה למאגר',
+              { text: 'הישאר בקשר עין עם המיכל!', note: 'לא לתת לו להתרוקן לגמרי' }
+            ]
+          },
+          {
+            title: 'בעיות ופתרונות',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>בעיה</th><th>פעולה מידית</th></tr>
+                <tr><td>תעלות מציפות</td><td>ספוק ברז + החזר סטנד פייפ</td></tr>
+                <tr><td>תא שאיבה מציף</td><td>ספוק ברז + מלא לאט</td></tr>
+                <tr><td>מיכל מתרוקן מהר (יש דגים)</td><td>החזר סטנד פייפ מיד!</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'fill-tank': {
+        title: 'מילוי מיכלי קרנטינה',
+        meta: 'PRO.1.8.4',
+        sections: [
+          {
+            title: 'לפני מילוי',
+            icon: '✅',
+            iconClass: 'steps',
+            items: [
+              { text: 'אם עבר ניקוי בויריקון:', note: 'וודא שטיפה, שאיבה וייבוש' },
+              { text: 'אם עבר הכלרה (מחלה ויראלית):', note: 'וודא סתירת כלור + בדיקה' },
+              'וודא סטנד פייפ מוכנס היטב'
+            ]
+          },
+          {
+            title: 'שלבי מילוי',
+            icon: '💧',
+            iconClass: 'steps',
+            items: [
+              'הפעל משאבת ריקון מאגר מים',
+              'וודא כניסת מים רציפה לסאמפ',
+              'וודא ברך מילוי מאגר מורמת',
+              'פתח כניסת מים למיכל בספיקה זהה למשאבה'
+            ]
+          },
+          {
+            title: 'מעקב בזמן מילוי',
+            icon: '👁️',
+            iconClass: 'warning',
+            items: [
+              { text: 'הישאר בקשר עין עם מפלס בתא השאיבה!', note: '' },
+              'אם מפלס מתקרב לסף תחתון - סגור כניסה, המתן, פתח שוב',
+              'וודא משאבות לא מפסיקות',
+              'וודא מערכת פיצוי אידוי סגורה'
+            ]
+          }
+        ]
+      },
+      'oxygen-fattening': {
+        title: 'מדידת חמצן בפיטום',
+        meta: 'PRO.2.4.1.2 | כל שעתיים',
+        sections: [
+          {
+            title: 'ערכים תקינים',
+            icon: '📊',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>פרמטר</th><th>יעד</th><th>סטייה מותרת</th></tr>
+                <tr><td>DO (חמצן מומס)</td><td>לפי הגדרת ביולוג</td><td>±0.5 mg/L</td></tr>
+                <tr><td>סטורציה באוויר</td><td>100%</td><td>±2%</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'מדידות ידניות - כל שעתיים',
+            icon: '📋',
+            iconClass: 'steps',
+            items: [
+              'קח מד חמצן מעמדת הניהול',
+              { text: 'וודא שמציג 100% (±2%) באוויר', note: '' },
+              { text: 'בדוק כל בריכה בנפרד', note: 'אין להסתמך על בריכה אחת!' },
+              'רשום ערכים'
+            ]
+          },
+          {
+            title: 'מדידות רציפות - Aqua Manager',
+            icon: '💻',
+            iconClass: 'steps',
+            items: [
+              'קרא ערכים מאלקטרודות',
+              'השווה למדידות ידניות',
+              'וודא התאמה'
+            ]
+          },
+          {
+            title: 'תחזוקה יומית',
+            icon: '🔧',
+            iconClass: 'equipment',
+            items: [
+              'נקה אלקטרודות',
+              'כייל אל מול מדים ידניים'
+            ]
+          },
+          {
+            title: 'בעיות ופתרונות',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>מצב</th><th>פעולה</th></tr>
+                <tr><td>סטייה מעל 0.5 mg/L או 10%</td><td>דווח לביולוג/מנהל חווה</td></tr>
+                <tr><td>חמצן נמוך בבריכה</td><td>בדוק מערכת העשרת חמצן</td></tr>
+                <tr><td>אלקטרודה לא מכוילת</td><td>כייל מחדש</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'ph-fattening': {
+        title: 'מדידת pH בפיטום',
+        meta: 'PRO.2.4.2.2 | 3 פעמים ביום',
+        sections: [
+          {
+            title: 'ערכים תקינים',
+            icon: '📊',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>מיקום</th><th>טווח תקין</th></tr>
+                <tr><td>בריכת דגים (ידני)</td><td>7.2 - 7.8</td></tr>
+                <tr><td>אלקטרודות רציפות</td><td>7.6 - 7.8</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'זמני מדידה',
+            icon: '⏰',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>שעה</th><th>משמרת</th></tr>
+                <tr><td>08:00</td><td>בוקר</td></tr>
+                <tr><td>16:00</td><td>ערב</td></tr>
+                <tr><td>00:00</td><td>לילה</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'מדידות ידניות',
+            icon: '📋',
+            iconClass: 'steps',
+            items: [
+              { text: 'קח מים מהבריכה הצפופה ביותר', note: 'pH הכי נמוך שם' },
+              'הכנס בקר pH + טמפרטורה למים',
+              'הנע במים עד קריאה יציבה',
+              'רשום ערך'
+            ]
+          },
+          {
+            title: 'בעיות ופתרונות',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>מצב</th><th>פעולה</th></tr>
+                <tr><td>pH מחוץ לטווח 7.2-7.8</td><td>דווח לביולוג</td></tr>
+                <tr><td>pH חורג</td><td>וודא מערכת בקרת pH עובדת</td></tr>
+                <tr><td>לא חוזר לטווח</td><td>מדוד כל שעה עד נורמה</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'ammonia-fattening': {
+        title: 'דגימת אמוניה בפיטום',
+        meta: 'PRO.2.4.7.2 | יומי',
+        sections: [
+          {
+            title: 'ערכים קריטיים',
+            icon: '🚨',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              { text: 'אמוניה רעילה (NH3-): 0.01-0.02 ppm = סטרס', note: '' },
+              'גורמת לכוויות באפידרמיס, זימים, עיניים',
+              'עלולה לגרום למוות גם בריכוזים נמוכים'
+            ]
+          },
+          {
+            title: 'דגימת בריכה - יומי',
+            icon: '🐟',
+            iconClass: 'steps',
+            items: [
+              { text: 'זמן מומלץ: צהריים, אחרי 3 האכלות לפחות', note: 'כשאמוניה הכי גבוהה' },
+              'קח דגימת מים מיציאת הבריכה העמוסה ביותר',
+              'העבר למעבדה',
+              'בצע בדיקת אמוניה לפי פרוטוקול מעבדה',
+              'חשב אמוניה רעילה NH3-',
+              'הזן למערכת מעקב',
+              'דווח לביולוג'
+            ]
+          },
+          {
+            title: 'דגימת פילטר - יומי',
+            icon: '🔬',
+            iconClass: 'steps',
+            items: [
+              { text: 'מטרה: לזהות כשלים לפני שמשפיעים על בריכות', note: '' },
+              'קח דגימה מכניסה לפילטר',
+              'קח דגימה מיציאה מפילטר',
+              'בצע בדיקה לשתי הדגימות',
+              'הזן למערכת מעקב',
+              'דווח לביולוג'
+            ]
+          },
+          {
+            title: 'בעיות ופתרונות',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>מצב</th><th>פעולה</th></tr>
+                <tr><td>תוצאות חריגות</td><td>בצע סדרת בדיקות נוספת בערב</td></tr>
+                <tr><td>אמוניה גבוהה בבריכה</td><td>בדוק תפקוד פילטר אירובי</td></tr>
+                <tr><td>אין הפרש בין כניסה ליציאה</td><td>בעיה בפילטר - דווח מיד</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'co2-fattening': {
+        title: 'מדידת CO2 בפיטום',
+        meta: 'PRO.2.4.6.2 | שבועי (יומי בצפיפות גבוהה)',
+        sections: [
+          {
+            title: 'מתי בודקים?',
+            icon: '📅',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>מצב</th><th>תדירות</th></tr>
+                <tr><td>שגרה</td><td>פעם בשבוע בכל בריכה (ידני)</td></tr>
+                <tr><td>צפיפות מעל 80 ק"ג/קוב</td><td>כל יום בבריכה הצפופה</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'מדידה ידנית - Oxyguard',
+            icon: '📋',
+            iconClass: 'steps',
+            items: [
+              'קח מכשיר Oxyguard מהמעבדה/עמדת ניהול',
+              'הדלק כשאלקטרודה מחוץ למים',
+              'המתן דקה',
+              'הכנס אלקטרודה למים',
+              'המתן 5 דקות עד התייצבות',
+              'קרא ערך ב-ppm',
+              'שטוף אלקטרודה במים מתוקים',
+              'יבש'
+            ]
+          },
+          {
+            title: 'חישוב מ-pH ואלקליניות',
+            icon: '🧮',
+            iconClass: 'steps',
+            items: [
+              'מדוד pH',
+              'מדוד אלקליניות',
+              'הזן למחשבון CO2 באקסל',
+              'בדוק ערך Free CO2',
+              'השווה לתוצאת מדידה'
+            ]
+          }
+        ]
+      },
+      'lab-nitrite': {
+        title: 'בדיקת מעבדה לניטריט',
+        meta: 'PRO.3.2.2 | שבועי',
+        sections: [
+          {
+            title: 'ערכים תקינים',
+            icon: '📊',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>פרמטר</th><th>טווח תקין</th><th>סכנה</th></tr>
+                <tr><td>ניטריט</td><td>קרוב ל-0</td><td>מעל 150 ppm = רעיל</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'Hanna Marine Nitrite Low Range',
+            icon: '🧪',
+            iconClass: 'steps',
+            items: [
+              'הדלק צ\'קר → יופיע C1',
+              'מלא קיווטה ב-10 מ"ל מי בדיקה',
+              'נגב קיווטה עם מטלית מיקרופייבר',
+              'הכנס לצ\'קר ולחץ → יופיע C2',
+              'הוצא קיווטה, הוסף אבקת ריאגנט',
+              'שקשק עד היעלמות המשקע',
+              'נגב והכנס חזרה',
+              'המתן 15 דקות',
+              { text: 'קרא תוצאה (ppb)', note: 'להמרה: תוצאה × 3.29 ÷ 1000 = ppm' }
+            ]
+          },
+          {
+            title: 'בעיות ופתרונות',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>מצב</th><th>פעולה</th></tr>
+                <tr><td>ניטריט עולה</td><td>בדוק תפקוד פילטר אירובי</td></tr>
+                <tr><td>ערכים גבוהים פתאום</td><td>בדוק pH, חמצן, טמפ' בפילטר</td></tr>
+                <tr><td>לא קרוב ל-0</td><td>דווח מיד לביולוג</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'lab-nitrate': {
+        title: 'בדיקת מעבדה לניטראט',
+        meta: 'PRO.3.2.3 | ימים א\' וד\'',
+        sections: [
+          {
+            title: 'איפה דוגמים?',
+            icon: '📍',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>מיקום</th><th>סוג בדיקה</th></tr>
+                <tr><td>בריכת דגים</td><td>Hanna - ניטראט כללי</td></tr>
+                <tr><td>מרכז פילטר אנאירובי 1</td><td>Hach - יעילות הפילטר</td></tr>
+                <tr><td>מרכז פילטר אנאירובי 2</td><td>Hach - יעילות הפילטר</td></tr>
+              </table>
+              <div style="margin-top: 8px; color: #d32f2f;"><strong>חשוב:</strong> קח את כל הדגימות באותו זמן!</div>
+            `
+          },
+          {
+            title: 'Hanna Marine Nitrate High Range',
+            icon: '🧪',
+            iconClass: 'steps',
+            items: [
+              { text: 'בצע מיהול עם מים מזוקקים (עדיף 1:4)', note: '' },
+              'הדלק צ\'קר → יופיע C1',
+              'מלא קיווטה ב-10 מ"ל מי בדיקה מהולים',
+              'נגב עם מטלית מיקרופייבר',
+              'הכנס לצ\'קר ולחץ → יופיע C2',
+              'הוצא, הוסף אבקת ריאגנט',
+              'שקשק עד היעלמות משקע',
+              'נגב והכנס חזרה',
+              'המתן 7 דקות',
+              { text: 'קרא תוצאה', note: 'תוצאה × מקדם מיהול = ניטראט בפועל' }
+            ]
+          },
+          {
+            title: 'בעיות ופתרונות',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>מצב</th><th>פעולה</th></tr>
+                <tr><td>ניטראט עולה</td><td>בדוק תפקוד פילטר אנאירובי</td></tr>
+                <tr><td>אין הפרש בין כניסה ליציאה</td><td>דווח - יעילות פילטר ירודה</td></tr>
+                <tr><td>ערכים גבוהים</td><td>דווח מיד לביולוג</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'lab-alkalinity': {
+        title: 'בדיקת אלקליניות',
+        meta: 'PRO.2.4.5.2 | יומי',
+        sections: [
+          {
+            title: 'ערכים תקינים',
+            icon: '📊',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>פרמטר</th><th>טווח תקין</th><th>יחידות חלופיות</th></tr>
+                <tr><td>אלקליניות</td><td>100-200 ppm CaCO₃</td><td>6-12 dKH</td></tr>
+              </table>
+              <div style="margin-top: 8px;">מי ים טבעיים: ~125 ppm</div>
+            `
+          },
+          {
+            title: 'למה זה חשוב?',
+            icon: '💡',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'אלקליניות = יכולת המים לנטרל חומצה',
+              'שומרת על pH יציב',
+              'אלקליניות נמוכה = pH לא יציב = סטרס'
+            ]
+          },
+          {
+            title: 'לקיחת דגימה',
+            icon: '📋',
+            iconClass: 'steps',
+            items: [
+              'קח דגימת מים מיציאת מיכל הדגים',
+              'העבר למעבדה',
+              'בצע בדיקה לפי פרוטוקול המעבדה',
+              'רשום בטבלת מעקב',
+              'הזן למערכת ממוחשבת',
+              'דווח לביולוג'
+            ]
+          },
+          {
+            title: 'בעיות ופתרונות',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>מצב</th><th>פעולה</th></tr>
+                <tr><td>אלקליניות מתחת ל-150 ppm</td><td>בצע פרוטוקול הוספת סודיום ביקרבונט</td></tr>
+                <tr><td>אלקליניות נמוכה מאוד</td><td>דווח מיד לביולוג + הוסף ביקרבונט</td></tr>
+                <tr><td>pH לא יציב</td><td>בדוק אלקליניות</td></tr>
+              </table>
+            `
+          }
+        ]
+      }
+    };
+
+    // Protocol data - English
+    const protocolsEn = {
+      'feed-quarantine': {
+        title: 'Quarantine Fish Feeding',
+        meta: 'PRO.1.2.2.1 | 10 times/day',
+        sections: [
+          {
+            title: 'Feeding Schedule',
+            icon: '⏰',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>Shift</th><th>Times</th></tr>
+                <tr><td>Night</td><td>00:00, 06:00</td></tr>
+                <tr><td>Morning</td><td>08:00, 10:00, 12:00, 14:00</td></tr>
+                <tr><td>Evening</td><td>16:00, 18:00, 20:00, 22:00</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'Before Feeding',
+            icon: '🧤',
+            iconClass: 'equipment',
+            items: [
+              'Sanitize hands',
+              'Verify feed container is correctly numbered (matches fish tank)',
+              'Check feed quantity in daily table'
+            ]
+          },
+          {
+            title: 'Feeding Steps - Per Tank',
+            icon: '🔄',
+            iconClass: 'steps',
+            items: [
+              'Take handfuls of feed from feed container',
+              'Spread evenly across tank surface',
+              { text: 'Observe fish behavior', note: 'Are they responding? Eating normally?' },
+              { text: 'Record observations in shift report', note: '' },
+              { text: 'Check oxygen manually 30 min after', note: '' }
+            ]
+          },
+          {
+            title: 'Problems & Solutions',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>Situation</th><th>Action</th><th>When to Report</th></tr>
+                <tr><td>Fish not responding to feed</td><td>Stop feeding immediately!</td><td>Report to biologist/manager immediately</td></tr>
+                <tr><td>Fish stopped eating mid-feed</td><td>Stop, try again after 10 min</td><td>Report to biologist</td></tr>
+                <tr><td>Feed remaining at end of day</td><td>Weigh it, record in report</td><td>Report to biologist</td></tr>
+                <tr><td>Fish seem to want more</td><td>Continue monitoring</td><td>Report to biologist - don't add without approval!</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'Warning Signs - Stop and Report Immediately',
+            icon: '🚨',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'Fish not responding to feed at all',
+              'Unusual behavior during feeding',
+              'Lots of feed sinking to bottom'
+            ]
+          }
+        ]
+      },
+      'dead-fish': {
+        title: 'Dead Fish Removal & Documentation',
+        meta: 'PRO.1.8.2 | Every shift',
+        sections: [
+          {
+            title: 'Required Equipment',
+            icon: '🧰',
+            iconClass: 'equipment',
+            items: [
+              'Collection net (catcher) with long handle',
+              'Bucket',
+              'Bags',
+              'Recording table / app'
+            ]
+          },
+          {
+            title: 'Step 1: Collection',
+            icon: '1️⃣',
+            iconClass: 'steps',
+            items: [
+              'Scan each tank - check bottom, floating, stuck to nets',
+              'Collect with net and remove from tank',
+              'Transfer to bucket while counting per tank'
+            ]
+          },
+          {
+            title: 'Step 2: Recording & Storage',
+            icon: '2️⃣',
+            iconClass: 'steps',
+            items: [
+              'Record in table: date, tank number, dead count',
+              'Put in bag with label: date + section + tank + quantity',
+              'Store quarantine fish in freezer'
+            ]
+          },
+          {
+            title: 'Step 3: Equipment Cleaning',
+            icon: '3️⃣',
+            iconClass: 'steps',
+            items: [
+              'Clean and disinfect the catcher',
+              'Clean and disinfect the bucket',
+              'Clean any additional equipment that touched fish'
+            ]
+          },
+          {
+            title: 'Problems & Solutions',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>Situation</th><th>Action</th><th>When to Alert</th></tr>
+                <tr><td>Abnormal mortality for the day</td><td>Report immediately to biologist/manager</td><td>Immediately</td></tr>
+                <tr><td>Fish with suspicious signs</td><td>Take sample for examination under binoculars</td><td>Immediately to biologist</td></tr>
+                <tr><td>Unsure if abnormal</td><td>Check average from previous days</td><td>Ask biologist</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'oxygen': {
+        title: 'Oxygen Measurement in Quarantine',
+        meta: 'PRO.1.3.1.2 | Every 4 hours',
+        sections: [
+          {
+            title: 'Manual Check Schedule',
+            icon: '⏰',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>Shift</th><th>Times</th></tr>
+                <tr><td>Morning</td><td>08:00, 12:00</td></tr>
+                <tr><td>Evening</td><td>16:00, 20:00</td></tr>
+                <tr><td>Night</td><td>00:00, 04:00</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'Before Testing',
+            icon: '🔧',
+            iconClass: 'equipment',
+            items: [
+              'Get handheld oxygen meter from management station',
+              { text: 'Verify meter shows 100% in air', note: 'Allowed deviation: ±2%' }
+            ]
+          },
+          {
+            title: 'Performing the Test',
+            icon: '📊',
+            iconClass: 'steps',
+            items: [
+              'Measure each tank separately',
+              { text: 'Record results', note: 'Don\'t rely on one tank - each tank is different!' }
+            ]
+          },
+          {
+            title: 'Electrode Reading (every 2 hours)',
+            icon: '💻',
+            iconClass: 'steps',
+            items: [
+              'Read data from loggers or control computer',
+              'Record in table'
+            ]
+          },
+          {
+            title: 'Daily Maintenance',
+            icon: '🧹',
+            iconClass: 'steps',
+            items: [
+              'Clean electrodes',
+              'Clean nets around protective pipes',
+              'Compare electrode reading to manual reading'
+            ]
+          },
+          {
+            title: 'Problems & Solutions',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>Situation</th><th>Action</th></tr>
+                <tr><td>Deviation > 0.5 mg/L between manual and electrode</td><td>Report to biologist/manager immediately</td></tr>
+                <tr><td>Deviation > 10%</td><td>Report to biologist/manager immediately</td></tr>
+                <tr><td>Manual meter not showing 100% in air</td><td>Clean electrode, check calibration</td></tr>
+                <tr><td>Low oxygen in tank</td><td>Check oxygenation system, report immediately</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'daily-clean': {
+        title: 'Daily Quarantine Tank Cleaning',
+        meta: 'PRO.1.8.1 | Daily',
+        sections: [
+          {
+            title: 'Required Equipment',
+            icon: '🧰',
+            iconClass: 'equipment',
+            items: [
+              'Hand brush',
+              'Scrubbing broom with long handle',
+              'Scotch pad',
+              'Spare filter net set',
+              'Spare standpipe set'
+            ]
+          },
+          {
+            title: 'Before Starting',
+            icon: '✋',
+            iconClass: 'warning',
+            items: [
+              'Hands clean and sanitized',
+              'Following biosecurity protocols',
+              'All cleaning equipment sanitized'
+            ]
+          },
+          {
+            title: 'Filter Net Cleaning',
+            icon: '1️⃣',
+            iconClass: 'steps',
+            items: [
+              'Sweep with hand broom until net is clean',
+              { text: 'If net is completely clogged:', note: 'Remove old net (careful - don\'t let fish into the chamber!), insert spare net of same size' }
+            ]
+          },
+          {
+            title: 'Standpipe Cleaning',
+            icon: '2️⃣',
+            iconClass: 'steps',
+            items: [
+              'Sweep the standpipe in outer chamber',
+              'Sweep chamber walls',
+              'Sweep central standpipe net (with long handle broom)'
+            ]
+          },
+          {
+            title: 'Walls and Flushing',
+            icon: '3️⃣',
+            iconClass: 'steps',
+            items: [
+              'Check for thick biofilm above water level - clean if present',
+              'Lower bottom drain elbow to water level',
+              'Wait until outlet water is clear',
+              { text: 'Return elbow to marked chain link', note: 'Important! This ensures correct flow to biofilter' }
+            ]
+          },
+          {
+            title: 'Sump and Channel Cleaning',
+            icon: '4️⃣',
+            iconClass: 'steps',
+            items: [
+              'Sweep pump pit floor in sump',
+              'Sweep channel floors'
+            ]
+          }
+        ]
+      },
+      'acclimate': {
+        title: 'Fish Acclimation in Quarantine',
+        meta: 'PRO.1.1.5 | International shipment',
+        sections: [
+          {
+            title: 'Team Roles',
+            icon: '👥',
+            iconClass: 'equipment',
+            items: [
+              'Main receiving coordinator',
+              'Recording and data coordinator',
+              'Measurements and bag checking coordinator',
+              'Tank pouring coordinator (on ladder)'
+            ]
+          },
+          {
+            title: 'Acclimation Rate Limits',
+            icon: '⚡',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>Parameter</th><th>Max Change per 30 min</th></tr>
+                <tr><td>pH</td><td>Up to 0.3 units</td></tr>
+                <tr><td>Temperature</td><td>Up to 2°C</td></tr>
+                <tr><td>Salinity</td><td>Up to 3 ppt</td></tr>
+                <tr><td>Oxygen</td><td>Minimal! Increase only if < 6 ppm</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'Step 1: Unloading & Arrangement',
+            icon: '📦',
+            iconClass: 'steps',
+            items: [
+              'Unload boxes from truck and arrange in rows',
+              'Open sample bags (up to 10%)',
+              'Measure and record arrival parameters',
+              { text: 'Mark bags with high DOA', note: 'Leave these for last!' }
+            ]
+          },
+          {
+            title: 'Step 2: System Preparation',
+            icon: '⚙️',
+            iconClass: 'steps',
+            items: [
+              'Position acclimation tanks near destination tanks',
+              'Connect submersible pump with hose and valve',
+              { text: 'Ensure aeration/oxygenation is OFF at source tank', note: 'Prevents gas bubble disease' },
+              'Insert oxygen diffuser into acclimation tank'
+            ]
+          },
+          {
+            title: 'Step 3: Adding Water to Bags',
+            icon: '💧',
+            iconClass: 'steps',
+            items: [
+              'Open bags',
+              'Pour one liter of tank water',
+              'Wait 10 minutes',
+              'Pour second liter'
+            ]
+          },
+          {
+            title: 'Step 4: Pouring into Acclimation Tank',
+            icon: '🐟',
+            iconClass: 'steps',
+            items: [
+              'Pass bags to pouring coordinator',
+              'Pour gently into tank',
+              { text: 'Initial pour: at least 30 liters of bags', note: '' },
+              'Add ammonia-absorbing material (per biologist instruction)'
+            ]
+          },
+          {
+            title: 'Step 5: The Acclimation',
+            icon: '📊',
+            iconClass: 'steps',
+            items: [
+              'Flow system water at slow rate',
+              { text: 'Measure every 30 min: pH, temp, salinity', note: '' },
+              'Adjust flow rate according to rate limits',
+              { text: 'Completion: parameters match system + fish behaving normally', note: '' }
+            ]
+          },
+          {
+            title: 'Warning Signs',
+            icon: '🚨',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'pH rising too fast - slow down water flow',
+              'Oxygen dropping below 6 - carefully increase oxygenation',
+              'Fish behaving abnormally - report to biologist immediately'
+            ]
+          }
+        ]
+      },
+      'formalin': {
+        title: 'Formalin Treatment',
+        meta: 'PRO.1.5.2.2 | Short treatment (bath)',
+        sections: [
+          {
+            title: 'Safety Warning - Formalin is Hazardous!',
+            icon: '☠️',
+            iconClass: 'warning',
+            items: [
+              'Gloves',
+              'Coat',
+              'Filter mask',
+              'Safety goggles'
+            ]
+          },
+          {
+            title: 'Required Equipment',
+            icon: '🧰',
+            iconClass: 'equipment',
+            items: [
+              '1 liter pitcher',
+              '5 liter bucket',
+              'Formalin (from hazmat storage)'
+            ]
+          },
+          {
+            title: 'Dosage Calculation',
+            icon: '🧮',
+            type: 'info',
+            content: `
+              <div style="padding: 12px; background: #f0f0f0; border-radius: 8px;">
+                <strong>For 10 cubic meter tank at 30 ppm concentration:</strong><br>
+                <span style="font-size: 1.2rem; font-weight: bold;">300 ml formalin per tank</span><br><br>
+                <em>Remember: Formalin removes 1 mg/L oxygen for every 5 mg/L formalin!</em>
+              </div>
+            `
+          },
+          {
+            title: 'Before Treatment',
+            icon: '⚠️',
+            iconClass: 'warning',
+            items: [
+              'Starve fish for at least 12 hours',
+              'Perform formalin test in water',
+              'Turn off circulation pumps in system',
+              'Activate additional oxygenation'
+            ]
+          },
+          {
+            title: 'Treatment Steps',
+            icon: '🔬',
+            iconClass: 'steps',
+            items: [
+              'Wear full protective equipment',
+              'Get formalin from hazmat storage',
+              'Fill bucket 3/4 with system water',
+              'Add 300 ml formalin and mix',
+              'Pour slowly over aeration bubbles (for good dispersion)',
+              { text: 'Watch fish behavior', note: 'If gasping - report immediately!' },
+              'Monitor oxygen continuously',
+              'After one hour - open inlet and outlet valves'
+            ]
+          },
+          {
+            title: 'Follow-up Check',
+            icon: '📋',
+            iconClass: 'steps',
+            items: [
+              'Rinse and disinfect all equipment',
+              'After 24 hours - perform formalin test',
+              'Verify removal from system'
+            ]
+          }
+        ]
+      },
+      'copper': {
+        title: 'Copper Treatment',
+        meta: 'PRO.1.5.2.1',
+        sections: [
+          {
+            title: 'Safety Warning',
+            icon: '☠️',
+            iconClass: 'warning',
+            items: [
+              'Gloves',
+              'Coat',
+              'Filter mask',
+              'Safety goggles'
+            ]
+          },
+          {
+            title: 'Treatment Types',
+            icon: '📊',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>Type</th><th>Concentration</th><th>Duration</th></tr>
+                <tr><td>Short (bath)</td><td>0.5-0.8 ppm</td><td>Hours</td></tr>
+                <tr><td>Long</td><td>0.3 ppm</td><td>14-21 days</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'Short Treatment - Steps',
+            icon: '⚡',
+            iconClass: 'steps',
+            items: [
+              'Starve fish 12 hours',
+              'Perform copper test in water',
+              'Calculate amount to add',
+              'Wear protective equipment',
+              'Weigh powder into bucket + hot water + mix',
+              'Close water inlet and outlet from tank',
+              'Add slowly while diluting',
+              { text: 'Monitor fish continuously!', note: 'Distress → open inlet/outlet immediately' },
+              'Check oxygen continuously',
+              'After two hours - check concentration and complete',
+              'At end - open water inlet and outlet'
+            ]
+          },
+          {
+            title: 'Critical Warning',
+            icon: '🚨',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'If crystallization occurs during mixing - do not use!',
+              'The solution may be highly toxic',
+              'Dispose according to hazmat protocol'
+            ]
+          }
+        ]
+      },
+      'weighing': {
+        title: 'Average Weighing',
+        meta: 'Quarantine: Weekly | Fattening: Bi-weekly',
+        sections: [
+          {
+            title: 'Important! Do Not Feed on Weighing Morning',
+            icon: '🚫',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'Weighing accuracy (no food in stomach)',
+              'Reduced stress for fish'
+            ]
+          },
+          {
+            title: 'Required Equipment',
+            icon: '🧰',
+            iconClass: 'equipment',
+            items: [
+              'Hand nets (catchers)',
+              'Weighing bucket',
+              'Scale (0.1 gram precision)',
+              'Air/oxygen diffuser',
+              'Oxygen meter',
+              'Recording notebook',
+              'Calculator'
+            ]
+          },
+          {
+            title: 'Quantity Table',
+            icon: '📊',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>Weight Group</th><th>Fish Count</th><th>Total Weight</th></tr>
+                <tr><td>1-5 grams</td><td>200</td><td>200-1000 grams</td></tr>
+                <tr><td>5-10 grams</td><td>200</td><td>1000-2000 grams</td></tr>
+                <tr><td>10-20 grams</td><td>150</td><td>1500-3000 grams</td></tr>
+                <tr><td>20-100 grams</td><td>100</td><td>2000-10000 grams</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'Work Steps',
+            icon: '⚖️',
+            iconClass: 'steps',
+            items: [
+              'Fill bucket halfway with system water',
+              'Place on scale and tare',
+              'Catch fish with wall net or catchers',
+              'Transfer to bucket without excess water',
+              'Record total weight',
+              { text: 'Transfer fish back while counting each one', note: '' },
+              'Calculate average: total weight ÷ fish count',
+              'Update in computer and feeding table'
+            ]
+          }
+        ]
+      },
+      'sorting': {
+        title: 'Fish Size Sorting',
+        meta: 'PRO.1.5.1.1 | As needed',
+        sections: [
+          {
+            title: 'Required Equipment',
+            icon: '🧰',
+            iconClass: 'equipment',
+            items: [
+              'Standard clothing',
+              'Wall net',
+              'Hand nets',
+              '2 large dolev containers',
+              'Sorting screens (grader)',
+              'Air/oxygen stones',
+              'Oxygen meter',
+              'Scale + weighing buckets'
+            ]
+          },
+          {
+            title: 'Passage Test (day before)',
+            icon: '🧪',
+            iconClass: 'steps',
+            items: [
+              'Take sample of 30-40 fish',
+              'Set grader size by appearance',
+              'Pour into grader and count how many passed',
+              { text: 'Optimal sorting: 20-30% pass through', note: '' },
+              'More than 30% passed? Close grader one click',
+              'Less than 20% passed? Open grader one click',
+              'Record the determined size!'
+            ]
+          },
+          {
+            title: 'Performing the Sort',
+            icon: '🔄',
+            iconClass: 'steps',
+            items: [
+              'Verify 12 hour fast',
+              'Prepare 2 dolevs with water + aeration',
+              'Lower water level and crowd fish with wall net',
+              'Catch fish and transfer to grader',
+              'Small ones pass through → dolev 1',
+              'Large ones stay → dolev 2',
+              { text: 'Check oxygen continuously in both dolevs!', note: '' },
+              'Perform average weighing for each group',
+              'Transfer to designated tanks'
+            ]
+          },
+          {
+            title: 'Completion',
+            icon: '✅',
+            iconClass: 'steps',
+            items: [
+              'Disinfect nets, buckets, dolevs',
+              'Record data in table and computer',
+              'Update feeding tables for each tank'
+            ]
+          }
+        ]
+      },
+      'prep-quarantine': {
+        title: 'Preparing Quarantine for Shipment',
+        meta: 'PRO.1.1.2 | Week+ before shipment',
+        sections: [
+          {
+            title: 'Water Parameters (week before!)',
+            icon: '🧪',
+            iconClass: 'steps',
+            items: [
+              { text: 'Biofiltration: add ammonia and verify system handles it', note: 'If insufficient - week to improve' },
+              'Salinity: compare to fish source, verify minimal difference',
+              { text: 'Temperature: compare to fish source', note: 'Max difference: 5°C' },
+              'pH: check and record'
+            ]
+          },
+          {
+            title: 'Cleaning and Tank Preparation',
+            icon: '🧹',
+            iconClass: 'steps',
+            items: [
+              'Clean fish tanks (including air and oxygen piping)',
+              'Clean and disinfect entire quarantine area',
+              'Replace outlet water nets with size suitable for fingerlings'
+            ]
+          },
+          {
+            title: 'Fish Receiving Equipment',
+            icon: '🧰',
+            iconClass: 'equipment',
+            items: [
+              'Fish acclimation tanks',
+              'pH meter + thermometer',
+              'Salinity meter',
+              'Recording slates',
+              'Water testing pitchers',
+              'Aeration and oxygenation piping',
+              'Oxygen meter',
+              'Ammonia absorbing material',
+              'Appropriately sized hand nets',
+              'Work buckets + scale'
+            ]
+          },
+          {
+            title: 'Laboratory Preparation',
+            icon: '🔬',
+            iconClass: 'equipment',
+            items: [
+              { text: 'Ammonia measurement kits ready', note: 'Testing will be done in quarantine, not lab' },
+              { text: 'Dissection tools and microscope ready', note: 'Fish examinations only after intake complete!' }
+            ]
+          }
+        ]
+      },
+      'open-boxes': {
+        title: 'Opening Boxes & Registration',
+        meta: 'PRO.1.1.4 | On shipment arrival',
+        sections: [
+          {
+            title: 'Important to Remember',
+            icon: '💡',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'First priority: quick intake',
+              'Second priority: parameter recording',
+              'Recording does not delay intake!'
+            ]
+          },
+          {
+            title: 'Box Registration',
+            icon: '📋',
+            iconClass: 'steps',
+            items: [
+              'Compare to bill of lading: quantity and serial numbers',
+              'Record in shipment receiving table',
+              { text: 'Verify everything arrived and unloaded', note: 'Without registration - boxes may be left in field!' }
+            ]
+          },
+          {
+            title: 'Opening Boxes',
+            icon: '📦',
+            iconClass: 'steps',
+            items: [
+              'Open all cartons and lids',
+              'Move unnecessary packing material',
+              'Observe through bags: fish condition, clear/murky water, mortality',
+              'Report to acclimation manager'
+            ]
+          },
+          {
+            title: 'Sample Bags (5-10%)',
+            icon: '🧪',
+            iconClass: 'steps',
+            items: [
+              'Get instruction on quantity from acclimation manager',
+              'Open representative bags',
+              'Perform water tests: ammonia, temp, salinity, pH',
+              'Record in table and pass results'
+            ]
+          },
+          {
+            title: 'Documentation & Photography',
+            icon: '📸',
+            iconClass: 'steps',
+            items: [
+              'Photograph fish condition at bag opening',
+              'Document bags with turbidity or mortality',
+              { text: 'Bags with high mortality', note: 'Don\'t handle until intake complete!' }
+            ]
+          }
+        ]
+      },
+      'feed-fattening': {
+        title: 'Fattening Fish Feeding',
+        meta: 'PRO.2.2.1 | 10 times/day',
+        sections: [
+          {
+            title: 'Feeding Schedule',
+            icon: '⏰',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>Shift</th><th>Times</th></tr>
+                <tr><td>Morning</td><td>08:00, 10:00, 12:00, 14:00</td></tr>
+                <tr><td>Evening</td><td>16:00, 18:00, 20:00, 22:00</td></tr>
+                <tr><td>Night</td><td>00:00, 06:00</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'Before Feeding',
+            icon: '🧤',
+            iconClass: 'equipment',
+            items: [
+              'Sanitize hands',
+              'Wear disposable gloves',
+              'Verify feed bin is correctly marked (matches pool)',
+              'Check feed quantity in daily table'
+            ]
+          },
+          {
+            title: 'Feeding Steps',
+            icon: '🐟',
+            iconClass: 'steps',
+            items: [
+              'Take handfuls of feed from feed bin',
+              'Spread evenly across pool surface',
+              { text: 'Optimal time for 4 pools: 10-15 minutes', note: '' },
+              'Observe fish behavior',
+              'Record observations in inspection sheet'
+            ]
+          },
+          {
+            title: 'First Morning Feeding (08:00)',
+            icon: '🌅',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'Fish are hungriest - behavior is most informative',
+              'Observe response carefully',
+              'Record any abnormalities'
+            ]
+          },
+          {
+            title: 'Problems & Solutions',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>Situation</th><th>Action</th><th>Report</th></tr>
+                <tr><td>Fish not responding</td><td>Stop feeding immediately!</td><td>Immediately to biologist</td></tr>
+                <tr><td>Stopped mid-feed</td><td>Stop, try after 10-20 min</td><td>To biologist</td></tr>
+                <tr><td>Feed remaining</td><td>Weigh, record in report</td><td>To biologist</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'drain-tank': {
+        title: 'Draining Quarantine Tanks',
+        meta: 'PRO.1.8.3',
+        sections: [
+          {
+            title: 'Reservoir Capacity',
+            icon: '📏',
+            type: 'info',
+            content: `<div style="padding: 12px; background: #e3f2fd; border-radius: 8px; text-align: center; font-size: 1.1rem;"><strong>Excess water reservoir: 10 cubic meters (= one full tank)</strong></div>`
+          },
+          {
+            title: 'Full Drain - No Fish',
+            icon: '1️⃣',
+            iconClass: 'steps',
+            items: [
+              'Verify no water in excess reservoir',
+              'Close water inlet valve to tank',
+              'Close aeration valve to tank',
+              'Close oxygen flowmeter to tank',
+              'Raise bottom drain pipe (elbow)',
+              'Lower water inlet elbow to excess reservoir',
+              'Open bottom drain valve'
+            ]
+          },
+          {
+            title: 'Lower Level to Half - Fish Present',
+            icon: '2️⃣',
+            iconClass: 'steps',
+            items: [
+              { text: 'Do not stop aeration and oxygenation!', note: 'Iron rule' },
+              'Lower water inlet elbow to excess reservoir',
+              'Remove upper standpipe',
+              'Verify continuous water flow to reservoir',
+              { text: 'Stay in visual contact with the tank!', note: 'Don\'t let it drain completely' }
+            ]
+          },
+          {
+            title: 'Problems & Solutions',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>Problem</th><th>Immediate Action</th></tr>
+                <tr><td>Channels flooding</td><td>Close valve + return standpipe</td></tr>
+                <tr><td>Pump pit flooding</td><td>Close valve + fill slowly</td></tr>
+                <tr><td>Tank draining fast (fish present)</td><td>Return standpipe immediately!</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'fill-tank': {
+        title: 'Filling Quarantine Tanks',
+        meta: 'PRO.1.8.4',
+        sections: [
+          {
+            title: 'Before Filling',
+            icon: '✅',
+            iconClass: 'steps',
+            items: [
+              { text: 'If cleaned with Virkon:', note: 'Verify rinsing, pumping and drying' },
+              { text: 'If chlorinated (viral disease):', note: 'Verify chlorine neutralization + test' },
+              'Verify standpipe properly inserted'
+            ]
+          },
+          {
+            title: 'Filling Steps',
+            icon: '💧',
+            iconClass: 'steps',
+            items: [
+              'Activate reservoir drain pump',
+              'Verify continuous water flow to sump',
+              'Verify reservoir fill elbow is raised',
+              'Open water inlet to tank at same flow rate as pump'
+            ]
+          },
+          {
+            title: 'Monitoring During Fill',
+            icon: '👁️',
+            iconClass: 'warning',
+            items: [
+              { text: 'Stay in visual contact with pump pit level!', note: '' },
+              'If level approaches lower threshold - close inlet, wait, reopen',
+              'Verify pumps don\'t stop',
+              'Verify evaporation compensation system is closed'
+            ]
+          }
+        ]
+      },
+      'oxygen-fattening': {
+        title: 'Oxygen Measurement in Fattening',
+        meta: 'PRO.2.4.1.2 | Every 2 hours',
+        sections: [
+          {
+            title: 'Normal Values',
+            icon: '📊',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>Parameter</th><th>Target</th><th>Allowed Deviation</th></tr>
+                <tr><td>DO (dissolved oxygen)</td><td>Per biologist setting</td><td>±0.5 mg/L</td></tr>
+                <tr><td>Air saturation</td><td>100%</td><td>±2%</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'Manual Measurements - Every 2 Hours',
+            icon: '📋',
+            iconClass: 'steps',
+            items: [
+              'Get oxygen meter from management station',
+              { text: 'Verify shows 100% (±2%) in air', note: '' },
+              { text: 'Check each pool separately', note: 'Don\'t rely on one pool!' },
+              'Record values'
+            ]
+          },
+          {
+            title: 'Continuous Measurements - Aqua Manager',
+            icon: '💻',
+            iconClass: 'steps',
+            items: [
+              'Read values from electrodes',
+              'Compare to manual measurements',
+              'Verify match'
+            ]
+          },
+          {
+            title: 'Daily Maintenance',
+            icon: '🔧',
+            iconClass: 'equipment',
+            items: [
+              'Clean electrodes',
+              'Calibrate against manual meters'
+            ]
+          },
+          {
+            title: 'Problems & Solutions',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>Situation</th><th>Action</th></tr>
+                <tr><td>Deviation over 0.5 mg/L or 10%</td><td>Report to biologist/farm manager</td></tr>
+                <tr><td>Low oxygen in pool</td><td>Check oxygen enrichment system</td></tr>
+                <tr><td>Electrode not calibrated</td><td>Recalibrate</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'ph-fattening': {
+        title: 'pH Measurement in Fattening',
+        meta: 'PRO.2.4.2.2 | 3 times/day',
+        sections: [
+          {
+            title: 'Normal Values',
+            icon: '📊',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>Location</th><th>Normal Range</th></tr>
+                <tr><td>Fish pool (manual)</td><td>7.2 - 7.8</td></tr>
+                <tr><td>Continuous electrodes</td><td>7.6 - 7.8</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'Measurement Times',
+            icon: '⏰',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>Time</th><th>Shift</th></tr>
+                <tr><td>08:00</td><td>Morning</td></tr>
+                <tr><td>16:00</td><td>Evening</td></tr>
+                <tr><td>00:00</td><td>Night</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'Manual Measurements',
+            icon: '📋',
+            iconClass: 'steps',
+            items: [
+              { text: 'Take water from most crowded pool', note: 'Lowest pH there' },
+              'Insert pH + temperature controller into water',
+              'Move in water until stable reading',
+              'Record value'
+            ]
+          },
+          {
+            title: 'Problems & Solutions',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>Situation</th><th>Action</th></tr>
+                <tr><td>pH outside 7.2-7.8 range</td><td>Report to biologist</td></tr>
+                <tr><td>pH exceeds limits</td><td>Verify pH control system working</td></tr>
+                <tr><td>Not returning to range</td><td>Measure hourly until normal</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'ammonia-fattening': {
+        title: 'Ammonia Sampling in Fattening',
+        meta: 'PRO.2.4.7.2 | Daily',
+        sections: [
+          {
+            title: 'Critical Values',
+            icon: '🚨',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              { text: 'Toxic ammonia (NH3-): 0.01-0.02 ppm = stress', note: '' },
+              'Causes burns to epidermis, gills, eyes',
+              'Can cause death even at low concentrations'
+            ]
+          },
+          {
+            title: 'Pool Sampling - Daily',
+            icon: '🐟',
+            iconClass: 'steps',
+            items: [
+              { text: 'Recommended time: noon, after at least 3 feedings', note: 'When ammonia is highest' },
+              'Take water sample from outlet of most loaded pool',
+              'Transfer to laboratory',
+              'Perform ammonia test per lab protocol',
+              'Calculate toxic ammonia NH3-',
+              'Enter into tracking system',
+              'Report to biologist'
+            ]
+          },
+          {
+            title: 'Filter Sampling - Daily',
+            icon: '🔬',
+            iconClass: 'steps',
+            items: [
+              { text: 'Purpose: identify failures before they affect pools', note: '' },
+              'Take sample from filter inlet',
+              'Take sample from filter outlet',
+              'Test both samples',
+              'Enter into tracking system',
+              'Report to biologist'
+            ]
+          },
+          {
+            title: 'Problems & Solutions',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>Situation</th><th>Action</th></tr>
+                <tr><td>Abnormal results</td><td>Perform additional test series in evening</td></tr>
+                <tr><td>High ammonia in pool</td><td>Check aerobic filter function</td></tr>
+                <tr><td>No difference between inlet and outlet</td><td>Filter problem - report immediately</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'co2-fattening': {
+        title: 'CO2 Measurement in Fattening',
+        meta: 'PRO.2.4.6.2 | Weekly (daily at high density)',
+        sections: [
+          {
+            title: 'When to Test?',
+            icon: '📅',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>Condition</th><th>Frequency</th></tr>
+                <tr><td>Routine</td><td>Once weekly in each pool (manual)</td></tr>
+                <tr><td>Density over 80 kg/m³</td><td>Daily in densest pool</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'Manual Measurement - Oxyguard',
+            icon: '📋',
+            iconClass: 'steps',
+            items: [
+              'Get Oxyguard device from lab/management station',
+              'Turn on with electrode out of water',
+              'Wait one minute',
+              'Insert electrode into water',
+              'Wait 5 minutes until stabilized',
+              'Read value in ppm',
+              'Rinse electrode in fresh water',
+              'Dry'
+            ]
+          },
+          {
+            title: 'Calculation from pH and Alkalinity',
+            icon: '🧮',
+            iconClass: 'steps',
+            items: [
+              'Measure pH',
+              'Measure alkalinity',
+              'Enter into CO2 calculator in Excel',
+              'Check Free CO2 value',
+              'Compare to measurement result'
+            ]
+          }
+        ]
+      },
+      'lab-nitrite': {
+        title: 'Laboratory Nitrite Test',
+        meta: 'PRO.3.2.2 | Weekly',
+        sections: [
+          {
+            title: 'Normal Values',
+            icon: '📊',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>Parameter</th><th>Normal Range</th><th>Danger</th></tr>
+                <tr><td>Nitrite</td><td>Close to 0</td><td>Above 150 ppm = toxic</td></tr>
+              </table>
+            `
+          },
+          {
+            title: 'Hanna Marine Nitrite Low Range',
+            icon: '🧪',
+            iconClass: 'steps',
+            items: [
+              'Turn on checker → C1 will appear',
+              'Fill cuvette with 10 ml test water',
+              'Wipe cuvette with microfiber cloth',
+              'Insert into checker and press → C2 will appear',
+              'Remove cuvette, add reagent powder',
+              'Shake until precipitate disappears',
+              'Wipe and reinsert',
+              'Wait 15 minutes',
+              { text: 'Read result (ppb)', note: 'For conversion: result × 3.29 ÷ 1000 = ppm' }
+            ]
+          },
+          {
+            title: 'Problems & Solutions',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>Situation</th><th>Action</th></tr>
+                <tr><td>Nitrite rising</td><td>Check aerobic filter function</td></tr>
+                <tr><td>Sudden high values</td><td>Check pH, oxygen, temp in filter</td></tr>
+                <tr><td>Not close to 0</td><td>Report immediately to biologist</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'lab-nitrate': {
+        title: 'Laboratory Nitrate Test',
+        meta: 'PRO.3.2.3 | Sun & Wed',
+        sections: [
+          {
+            title: 'Where to Sample?',
+            icon: '📍',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>Location</th><th>Test Type</th></tr>
+                <tr><td>Fish pool</td><td>Hanna - general nitrate</td></tr>
+                <tr><td>Anaerobic filter center 1</td><td>Hach - filter efficiency</td></tr>
+                <tr><td>Anaerobic filter center 2</td><td>Hach - filter efficiency</td></tr>
+              </table>
+              <div style="margin-top: 8px; color: #d32f2f;"><strong>Important:</strong> Take all samples at the same time!</div>
+            `
+          },
+          {
+            title: 'Hanna Marine Nitrate High Range',
+            icon: '🧪',
+            iconClass: 'steps',
+            items: [
+              { text: 'Perform dilution with distilled water (preferably 1:4)', note: '' },
+              'Turn on checker → C1 will appear',
+              'Fill cuvette with 10 ml diluted test water',
+              'Wipe with microfiber cloth',
+              'Insert into checker and press → C2 will appear',
+              'Remove, add reagent powder',
+              'Shake until precipitate disappears',
+              'Wipe and reinsert',
+              'Wait 7 minutes',
+              { text: 'Read result', note: 'Result × dilution factor = actual nitrate' }
+            ]
+          },
+          {
+            title: 'Problems & Solutions',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>Situation</th><th>Action</th></tr>
+                <tr><td>Nitrate rising</td><td>Check anaerobic filter function</td></tr>
+                <tr><td>No difference between inlet and outlet</td><td>Report - poor filter efficiency</td></tr>
+                <tr><td>High values</td><td>Report immediately to biologist</td></tr>
+              </table>
+            `
+          }
+        ]
+      },
+      'lab-alkalinity': {
+        title: 'Alkalinity Test',
+        meta: 'PRO.2.4.5.2 | Daily',
+        sections: [
+          {
+            title: 'Normal Values',
+            icon: '📊',
+            type: 'info',
+            content: `
+              <table class="problem-table">
+                <tr><th>Parameter</th><th>Normal Range</th><th>Alternative Units</th></tr>
+                <tr><td>Alkalinity</td><td>100-200 ppm CaCO₃</td><td>6-12 dKH</td></tr>
+              </table>
+              <div style="margin-top: 8px;">Natural seawater: ~125 ppm</div>
+            `
+          },
+          {
+            title: 'Why is This Important?',
+            icon: '💡',
+            iconClass: 'warning',
+            type: 'warning',
+            items: [
+              'Alkalinity = water\'s ability to neutralize acid',
+              'Maintains stable pH',
+              'Low alkalinity = unstable pH = stress'
+            ]
+          },
+          {
+            title: 'Taking Sample',
+            icon: '📋',
+            iconClass: 'steps',
+            items: [
+              'Take water sample from fish tank outlet',
+              'Transfer to laboratory',
+              'Perform test per lab protocol',
+              'Record in tracking table',
+              'Enter into computerized system',
+              'Report to biologist'
+            ]
+          },
+          {
+            title: 'Problems & Solutions',
+            icon: '⚠️',
+            iconClass: 'problems',
+            type: 'table',
+            content: `
+              <table class="problem-table">
+                <tr><th>Situation</th><th>Action</th></tr>
+                <tr><td>Alkalinity below 150 ppm</td><td>Perform sodium bicarbonate addition protocol</td></tr>
+                <tr><td>Very low alkalinity</td><td>Report immediately to biologist + add bicarbonate</td></tr>
+                <tr><td>Unstable pH</td><td>Check alkalinity</td></tr>
+              </table>
+            `
+          }
+        ]
+      }
+    };
+
+    // Get protocols for current language
+    function getProtocols() {
+      return currentLang === 'he' ? protocolsHe : protocolsEn;
+    }
+
+    // State
+    let currentProtocol = null;
+    const checked = {};
+
+    // DOM elements
+    const mainContent = document.getElementById('main-content');
+    const protocolBtns = document.querySelectorAll('.protocol-btn');
+    const langBtns = document.querySelectorAll('.lang-btn');
+
+    // Language toggle event listeners
+    langBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.dataset.lang;
+        if (lang !== currentLang) {
+          currentLang = lang;
+          updateLanguage();
+        }
+      });
+    });
+
+    // Protocol button event listeners
+    protocolBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        selectProtocol(id);
+      });
+    });
+
+    function updateLanguage() {
+      // Update HTML direction
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
+
+      // Update language buttons
+      langBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === currentLang);
+      });
+
+      // Update subtitle
+      document.getElementById('subtitle').textContent = ui[currentLang].subtitle;
+
+      // Update category headers
+      const categoryMap = {
+        'fishArrival': 0,
+        'feeding': 1,
+        'tankProcedures': 2,
+        'quarantineMonitoring': 3,
+        'fatteningWaterQuality': 4,
+        'lab': 5,
+        'treatments': 6
+      };
+      const categoryHeaders = document.querySelectorAll('.category-header');
+      const categories = Object.keys(ui[currentLang].categories);
+      categories.forEach((cat, idx) => {
+        if (categoryHeaders[idx]) {
+          categoryHeaders[idx].textContent = ui[currentLang].categories[cat];
+        }
+      });
+
+      // Update protocol buttons
+      protocolBtns.forEach(btn => {
+        const id = btn.dataset.id;
+        const btnData = ui[currentLang].buttons[id];
+        if (btnData) {
+          const titleSpan = btn.querySelector('.btn-title');
+          if (titleSpan) {
+            titleSpan.textContent = btnData.title;
+          }
+          const freqDiv = btn.querySelector('.frequency');
+          if (freqDiv) {
+            freqDiv.textContent = btnData.freq;
+          }
+        }
+      });
+
+      // Re-render main content
+      render();
+    }
+
+    function selectProtocol(id) {
+      currentProtocol = id;
+
+      // Update buttons
+      protocolBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.id === id);
+      });
+
+      // Initialize checked state for this protocol
+      if (!checked[id]) {
+        checked[id] = {};
+      }
+
+      // Render
+      render();
+    }
+
+    function render() {
+      const protocols = getProtocols();
+      if (!currentProtocol || !protocols[currentProtocol]) {
+        mainContent.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <div>${ui[currentLang].emptyState}</div>
+          </div>
+        `;
+        return;
+      }
+
+      const protocol = protocols[currentProtocol];
+      const state = checked[currentProtocol];
+
+      // Count items and checked
+      let totalItems = 0;
+      let checkedItems = 0;
+
+      protocol.sections.forEach((section, sIdx) => {
+        if (section.items) {
+          section.items.forEach((item, iIdx) => {
+            totalItems++;
+            if (state[`${sIdx}-${iIdx}`]) checkedItems++;
+          });
+        }
+      });
+
+      const progress = totalItems > 0 ? Math.round((checkedItems / totalItems) * 100) : 0;
+
+      let html = `
+        <div class="checklist-header">
+          <div>
+            <h1 class="checklist-title">${protocol.title}</h1>
+            <div class="checklist-meta">${protocol.meta}</div>
+          </div>
+          <button class="print-btn" onclick="window.print()">${ui[currentLang].print}</button>
+        </div>
+
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${progress}%"></div>
+          </div>
+          <div class="progress-text">${ui[currentLang].progress(checkedItems, totalItems, progress)}</div>
+        </div>
+      `;
+
+      protocol.sections.forEach((section, sIdx) => {
+        html += `<div class="section">`;
+        html += `<div class="section-title">`;
+        html += `<span class="section-icon ${section.iconClass || ''}">${section.icon}</span>`;
+        html += `${section.title}</div>`;
+
+        if (section.type === 'info' || section.type === 'table') {
+          html += section.content;
+        } else if (section.type === 'warning') {
+          html += `<div class="warning-box">`;
+          html += `<ul class="warning-list">`;
+          section.items.forEach(item => {
+            const text = typeof item === 'string' ? item : item.text;
+            html += `<li>${text}</li>`;
+          });
+          html += `</ul></div>`;
+        } else if (section.items) {
+          section.items.forEach((item, iIdx) => {
+            const text = typeof item === 'string' ? item : item.text;
+            const note = typeof item === 'object' ? item.note : null;
+            const isChecked = state[`${sIdx}-${iIdx}`];
+
+            html += `<div class="checklist-item">`;
+            html += `<div class="checkbox ${isChecked ? 'checked' : ''}" data-section="${sIdx}" data-item="${iIdx}"></div>`;
+            html += `<div class="item-text">${text}`;
+            if (note) {
+              html += `<div class="item-note">${note}</div>`;
+            }
+            html += `</div></div>`;
+          });
+        }
+
+        html += `</div>`;
+      });
+
+      mainContent.innerHTML = html;
+
+      // Add checkbox listeners
+      document.querySelectorAll('.checkbox').forEach(cb => {
+        cb.addEventListener('click', () => {
+          const sIdx = cb.dataset.section;
+          const iIdx = cb.dataset.item;
+          const key = `${sIdx}-${iIdx}`;
+          state[key] = !state[key];
+          render();
+        });
+      });
+    }
+
+    // Initial render
+    render();
+  </script>
+</body>
+</html>
