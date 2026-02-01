@@ -6,7 +6,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "pureblue2024";
 
 interface Protocol {
   slug: string;
@@ -49,14 +48,23 @@ export default function AdminPage() {
     setLoading(false);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      sessionStorage.setItem("admin_auth", "true");
-      setAuthenticated(true);
-      setError("");
-    } else {
-      setError("סיסמה שגויה");
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (res.ok) {
+        sessionStorage.setItem("admin_auth", "true");
+        setAuthenticated(true);
+        setError("");
+      } else {
+        setError("סיסמה שגויה");
+      }
+    } catch {
+      setError("שגיאת התחברות");
     }
   };
 
