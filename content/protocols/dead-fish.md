@@ -1,6 +1,6 @@
 ---
 title: "פינוי ותיעוד דגים מתים"
-category: "other"
+category: "monitoring"
 protocolNumber: "PRO.1.8.2"
 frequency: "כל משמרת"
 ---

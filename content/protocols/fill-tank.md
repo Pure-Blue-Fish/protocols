@@ -1,6 +1,6 @@
 ---
 title: "מילוי מיכלי קרנטינה"
-category: "other"
+category: "tank-procedures"
 protocolNumber: "PRO.1.8.4"
 frequency: ""
 ---

@@ -1,6 +1,6 @@
 ---
 title: "ריקון מיכלי קרנטינה"
-category: "other"
+category: "tank-procedures"
 protocolNumber: "PRO.1.8.3"
 frequency: ""
 ---

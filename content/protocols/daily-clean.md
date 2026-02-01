@@ -1,6 +1,6 @@
 ---
 title: "ניקוי יומי של מיכלי קרנטינה"
-category: "other"
+category: "tank-procedures"
 protocolNumber: "PRO.1.8.1"
 frequency: "יומי"
 ---

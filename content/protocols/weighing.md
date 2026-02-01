@@ -1,6 +1,6 @@
 ---
 title: "שקילה ממוצעת"
-category: "other"
+category: "monitoring"
 protocolNumber: "קרנטינה: שבועי"
 frequency: "פיטום: דו-שבועי"
 ---

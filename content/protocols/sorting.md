@@ -1,6 +1,6 @@
 ---
 title: "מיון גודל דגים"
-category: "other"
+category: "monitoring"
 protocolNumber: "PRO.1.5.1.1"
 frequency: "לפי צורך"
 ---

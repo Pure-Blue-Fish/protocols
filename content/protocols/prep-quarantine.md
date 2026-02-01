@@ -1,6 +1,6 @@
 ---
 title: "הכנת הקרנטינה לקבלת משלוח"
-category: "other"
+category: "arrival"
 protocolNumber: "PRO.1.1.2"
 frequency: "שבוע+ לפני המשלוח"
 ---

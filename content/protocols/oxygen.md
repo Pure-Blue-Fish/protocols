@@ -1,6 +1,6 @@
 ---
 title: "מדידת חמצן בקרנטינה"
-category: "other"
+category: "water-quality"
 protocolNumber: "PRO.1.3.1.2"
 frequency: "כל 4 שעות"
 ---

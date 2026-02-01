@@ -1,6 +1,6 @@
 ---
 title: "פתיחת ארגזים ורישום"
-category: "other"
+category: "arrival"
 protocolNumber: "PRO.1.1.4"
 frequency: "בהגעת משלוח"
 ---
