@@ -1,11 +1,10 @@
-// ABOUTME: Admin page with password protection and protocol editor
-// ABOUTME: Simple markdown editor for protocols
+// ABOUTME: Admin page for protocol editing
+// ABOUTME: Simple markdown editor (auth handled by middleware)
 
 "use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-
 
 interface Protocol {
   slug: string;
@@ -14,27 +13,15 @@ interface Protocol {
 }
 
 export default function AdminPage() {
-  const [password, setPassword] = useState("");
-  const [authenticated, setAuthenticated] = useState(false);
-  const [error, setError] = useState("");
   const [protocols, setProtocols] = useState<Protocol[]>([]);
   const [selected, setSelected] = useState<Protocol | null>(null);
   const [editContent, setEditContent] = useState("");
   const [saving, setSaving] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const saved = sessionStorage.getItem("admin_auth");
-    if (saved === "true") {
-      setAuthenticated(true);
-    }
+    loadProtocols();
   }, []);
-
-  useEffect(() => {
-    if (authenticated) {
-      loadProtocols();
-    }
-  }, [authenticated]);
 
   const loadProtocols = async () => {
     setLoading(true);
@@ -42,30 +29,10 @@ export default function AdminPage() {
       const res = await fetch("/api/protocols");
       const data = await res.json();
       setProtocols(data);
-    } catch (e) {
-      setError("שגיאה בטעינת פרוטוקולים");
+    } catch {
+      console.error("Failed to load protocols");
     }
     setLoading(false);
-  };
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-      });
-      if (res.ok) {
-        sessionStorage.setItem("admin_auth", "true");
-        setAuthenticated(true);
-        setError("");
-      } else {
-        setError("סיסמה שגויה");
-      }
-    } catch {
-      setError("שגיאת התחברות");
-    }
   };
 
   const selectProtocol = (p: Protocol) => {
@@ -98,7 +65,7 @@ export default function AdminPage() {
       } else {
         alert("שגיאה בשמירה: " + JSON.stringify(data.error));
       }
-    } catch (e) {
+    } catch {
       alert("שגיאה בשמירה");
     }
     setSaving(false);
@@ -108,31 +75,6 @@ export default function AdminPage() {
     const match = content.match(/title:\s*["']?([^"'\n]+)["']?/);
     return match ? match[1] : "ללא כותרת";
   };
-
-  if (!authenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <form onSubmit={handleLogin} className="bg-white p-8 rounded-xl shadow-lg w-80">
-          <h1 className="text-xl font-bold mb-6 text-center">כניסת מנהל</h1>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="סיסמה"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 text-right"
-            autoFocus
-          />
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
-          >
-            כניסה
-          </button>
-        </form>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex bg-gray-50">
