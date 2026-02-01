@@ -1,0 +1,37 @@
+backend:
+  name: github
+  repo: Pure-Blue-Fish/protocols
+  branch: master
+
+locale: he
+
+media_folder: public/images
+public_folder: /images
+
+collections:
+  - name: protocols
+    label: פרוטוקולים
+    folder: content/protocols
+    create: true
+    slug: "{{slug}}"
+    extension: md
+    format: frontmatter
+    fields:
+      - { label: "כותרת", name: "title", widget: "string" }
+      - label: "קטגוריה"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "האכלה", value: "feeding" }
+          - { label: "איכות מים", value: "water-quality" }
+          - { label: "טיפולים", value: "treatments" }
+          - { label: "פרוצדורות מיכלים", value: "tank-procedures" }
+          - { label: "פרוצדורות בריכות", value: "pool-procedures" }
+          - { label: "העברות", value: "transfers" }
+          - { label: "מעקב דגים", value: "monitoring" }
+          - { label: "הגעת דגים", value: "arrival" }
+          - { label: "מעבדה", value: "lab" }
+          - { label: "אחר", value: "other" }
+      - { label: "מספר פרוטוקול", name: "protocolNumber", widget: "string" }
+      - { label: "תדירות", name: "frequency", widget: "string", required: false }
+      - { label: "תוכן", name: "body", widget: "markdown" }

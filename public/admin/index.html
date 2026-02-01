@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>ניהול פרוטוקולים</title>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    // Hebrew locale
+    CMS.registerLocale('he', {
+      app: {
+        header: {
+          content: 'תוכן',
+          workflow: 'זרימת עבודה',
+          media: 'מדיה',
+          quickAdd: 'הוספה מהירה',
+        },
+        app: {
+          errorHeader: 'שגיאה בטעינת CMS',
+          configErrors: 'שגיאות הגדרות',
+          checkConfigYml: 'בדוק את קובץ config.yml',
+          loadingConfig: 'טוען הגדרות...',
+          waitingBackend: 'ממתין לשרת...',
+        },
+        notFoundPage: {
+          header: 'לא נמצא',
+        },
+      },
+      collection: {
+        sidebar: {
+          collections: 'אוספים',
+          allCollections: 'כל האוספים',
+          searchAll: 'חפש הכל',
+          searchIn: 'חפש ב',
+        },
+        collectionTop: {
+          sortBy: 'מיין לפי',
+          viewAs: 'הצג כ',
+          newButton: 'חדש %{collectionLabel}',
+          ascending: 'עולה',
+          descending: 'יורד',
+          searchResults: 'תוצאות חיפוש עבור "%{searchTerm}"',
+          searchResultsInCollection: 'תוצאות חיפוש עבור "%{searchTerm}" ב%{collection}',
+          filterBy: 'סנן לפי',
+          groupBy: 'קבץ לפי',
+        },
+        entries: {
+          loadingEntries: 'טוען רשומות...',
+          cachingEntries: 'שומר רשומות בזיכרון...',
+          longerLoading: 'זה עשוי לקחת כמה דקות',
+          noEntries: 'אין רשומות',
+        },
+        defaultFields: {
+          author: {
+            label: 'מחבר',
+          },
+          updatedOn: {
+            label: 'עודכן ב',
+          },
+        },
+      },
+      editor: {
+        editorControl: {
+          field: {
+            optional: 'אופציונלי',
+          },
+        },
+        editorControlPane: {
+          widget: {
+            required: '%{fieldLabel} נדרש.',
+            regexPattern: '%{fieldLabel} לא תואם לדפוס: %{pattern}.',
+            processing: '%{fieldLabel} מעבד.',
+            range: '%{fieldLabel} חייב להיות בין %{minValue} ל%{maxValue}.',
+            min: '%{fieldLabel} חייב להיות לפחות %{minValue}.',
+            max: '%{fieldLabel} חייב להיות %{maxValue} או פחות.',
+            rangeCount: '%{fieldLabel} חייב לכלול בין %{minCount} ל%{maxCount} פריטים.',
+            rangeCountExact: '%{fieldLabel} חייב לכלול בדיוק %{count} פריטים.',
+            rangeMin: '%{fieldLabel} חייב לכלול לפחות %{minCount} פריטים.',
+            rangeMax: '%{fieldLabel} חייב לכלול %{maxCount} פריטים או פחות.',
+          },
+        },
+        editor: {
+          onLeavePage: 'האם אתה בטוח שברצונך לעזוב דף זה?',
+          onUpdatingWithUnsavedChanges: 'יש לך שינויים שלא נשמרו, אנא שמור לפני עדכון סטטוס.',
+          onPublishingNotReady: 'אנא עדכן את הסטטוס ל"מוכן" לפני פרסום.',
+          onPublishingWithUnsavedChanges: 'יש לך שינויים שלא נשמרו, אנא שמור לפני פרסום.',
+          onPublishing: 'האם אתה בטוח שברצונך לפרסם רשומה זו?',
+          onUnpublishing: 'האם אתה בטוח שברצונך לבטל פרסום רשומה זו?',
+          onDeleteWithUnsavedChanges: 'האם אתה בטוח שברצונך למחוק רשומה זו?',
+          onDeletePublishedEntry: 'האם אתה בטוח שברצונך למחוק רשומה מפורסמת זו?',
+          onDeleteUnpublishedChangesWithUnsavedChanges: 'פעולה זו תמחק את כל השינויים שלא פורסמו ברשומה זו.',
+          loadingEntry: 'טוען רשומה...',
+          confirmLoadBackup: 'גיבוי מקומי נמצא עבור רשומה זו, האם תרצה להשתמש בו?',
+        },
+        editorInterface: {
+          toggleI18n: 'החלף שפה',
+          togglePreview: 'החלף תצוגה מקדימה',
+          toggleScrollSync: 'סנכרן גלילה',
+        },
+        editorToolbar: {
+          publishing: 'מפרסם...',
+          publish: 'פרסם',
+          published: 'פורסם',
+          unpublish: 'בטל פרסום',
+          duplicate: 'שכפל',
+          unpublishing: 'מבטל פרסום...',
+          publishAndCreateNew: 'פרסם וצור חדש',
+          publishAndDuplicate: 'פרסם ושכפל',
+          deleteUnpublishedChanges: 'מחק שינויים לא מפורסמים',
+          deleteUnpublishedEntry: 'מחק רשומה לא מפורסמת',
+          deletePublishedEntry: 'מחק רשומה מפורסמת',
+          deleteEntry: 'מחק רשומה',
+          saving: 'שומר...',
+          save: 'שמור',
+          statusInfoTooltipDraft: 'מצב הרשומה מוגדר כטיוטה.',
+          statusInfoTooltipInReview: 'מצב הרשומה מוגדר כבבדיקה.',
+          deleting: 'מוחק...',
+          updating: 'מעדכן...',
+          status: 'סטטוס: %{status}',
+          backCollection: 'כתיבה באוסף %{collectionLabel}',
+          unsavedChanges: 'שינויים לא נשמרו',
+          changesSaved: 'השינויים נשמרו',
+          draft: 'טיוטה',
+          inReview: 'בבדיקה',
+          ready: 'מוכן',
+          publishNow: 'פרסם עכשיו',
+          deployPreviewPendingButtonLabel: 'בדוק תצוגה מקדימה',
+          deployPreviewButtonLabel: 'צפה בתצוגה מקדימה',
+          deployButtonLabel: 'צפה באתר',
+        },
+        editorWidgets: {
+          markdown: {
+            bold: 'מודגש',
+            italic: 'נטוי',
+            code: 'קוד',
+            link: 'קישור',
+            linkPrompt: 'הכנס כתובת URL',
+            headings: 'כותרות',
+            quote: 'ציטוט',
+            bulletedList: 'רשימה עם תבליטים',
+            numberedList: 'רשימה ממוספרת',
+            addComponent: 'הוסף רכיב',
+            richText: 'טקסט עשיר',
+            markdown: 'Markdown',
+          },
+          image: {
+            choose: 'בחר תמונה',
+            chooseDifferent: 'בחר תמונה אחרת',
+            remove: 'הסר תמונה',
+          },
+          file: {
+            choose: 'בחר קובץ',
+            chooseDifferent: 'בחר קובץ אחר',
+            remove: 'הסר קובץ',
+          },
+          unknownControl: {
+            noControl: "אין שליטה עבור יישומון '%{widget}'.",
+          },
+          unknownPreview: {
+            noPreview: "אין תצוגה מקדימה עבור יישומון '%{widget}'.",
+          },
+          headingOptions: {
+            headingOne: 'כותרת 1',
+            headingTwo: 'כותרת 2',
+            headingThree: 'כותרת 3',
+            headingFour: 'כותרת 4',
+            headingFive: 'כותרת 5',
+            headingSix: 'כותרת 6',
+          },
+          datetime: {
+            now: 'עכשיו',
+          },
+          list: {
+            add: 'הוסף %{item}',
+            addType: 'הוסף פריט מסוג %{item}',
+          },
+        },
+      },
+      mediaLibrary: {
+        mediaLibraryCard: {
+          draft: 'טיוטה',
+          copy: 'העתק',
+          copyUrl: 'העתק URL',
+          copyPath: 'העתק נתיב',
+          copyName: 'העתק שם',
+          copied: 'הועתק',
+        },
+        mediaLibrary: {
+          onDelete: 'האם אתה בטוח שברצונך למחוק את המדיה שנבחרה?',
+          fileTooLarge: 'הקובץ גדול מדי.\nמוגדר לא לקבל קבצים גדולים מ-%{size} קילובייט.',
+        },
+        mediaLibraryModal: {
+          loading: 'טוען...',
+          noResults: 'אין תוצאות.',
+          noAssetsFound: 'לא נמצאו נכסים.',
+          noImagesFound: 'לא נמצאו תמונות.',
+          private: 'פרטי ',
+          images: 'תמונות',
+          mediaAssets: 'נכסי מדיה',
+          search: 'חפש...',
+          uploading: 'מעלה...',
+          upload: 'העלה',
+          download: 'הורד',
+          deleting: 'מוחק...',
+          deleteSelected: 'מחק נבחרים',
+          chooseSelected: 'בחר נבחרים',
+        },
+      },
+      ui: {
+        default: {
+          goBackToSite: 'חזור לאתר',
+        },
+        errorBoundary: {
+          title: 'שגיאה',
+          details: 'אירעה שגיאה - אנא ',
+          reportIt: 'דווח על כך.',
+          detailsHeading: 'פרטים',
+          privacyWarning: 'פתיחת דיווח ממלאת אותו מראש בהודעת השגיאה ונתוני ניפוי.',
+          recoveredEntry: {
+            heading: 'מסמך משוחזר',
+            warning: 'אנא העתק/הדבק זאת במקום אחר לפני ניווט החוצה!',
+            copyButtonLabel: 'העתק ללוח',
+          },
+        },
+        settingsDropdown: {
+          logOut: 'התנתק',
+        },
+        toast: {
+          onFailToLoadEntries: 'נכשל בטעינת רשומה: %{details}',
+          onFailToLoadDeployPreview: 'נכשל בטעינת תצוגה מקדימה: %{details}',
+          onFailToPersist: 'נכשל בשמירת רשומה: %{details}',
+          onFailToDelete: 'נכשל במחיקת רשומה: %{details}',
+          onFailToUpdateStatus: 'נכשל בעדכון סטטוס: %{details}',
+          missingRequiredField: 'אופס, פספסת שדה נדרש. אנא מלא אותו לפני שמירה.',
+          entrySaved: 'הרשומה נשמרה',
+          entryPublished: 'הרשומה פורסמה',
+          entryUnpublished: 'פרסום הרשומה בוטל',
+          onFailToPublishEntry: 'נכשל בפרסום רשומה: %{details}',
+          onFailToUnpublishEntry: 'נכשל בביטול פרסום רשומה: %{details}',
+          entryUpdated: 'מצב הרשומה עודכן',
+          onDeleteUnpublishedChanges: 'השינויים הלא מפורסמים נמחקו',
+          onFailToAuth: '%{details}',
+          onLoggedOut: 'התנתקת, אנא גבה נתונים ותתחבר שוב',
+          onBackendDown: 'שירות השרת חווה הפרעה. ראה %{details} למידע נוסף',
+        },
+      },
+      workflow: {
+        workflow: {
+          loading: 'טוען רשומות זרימת עבודה של עריכה',
+          workflowHeading: 'זרימת עבודה של עריכה',
+          newPost: 'פוסט חדש',
+          description: '%{smart_count} רשומה ממתינה לסקירה, %{readyCount} מוכנה לפרסום. |||| %{smart_count} רשומות ממתינות לסקירה, %{readyCount} מוכנות לפרסום.',
+          dateFormat: 'MMMM D',
+        },
+        workflowCard: {
+          lastChange: '%{date} על ידי %{author}',
+          lastChangeNoAuthor: '%{date}',
+          lastChangeNoDate: 'על ידי %{author}',
+          deleteChanges: 'מחק שינויים',
+          deleteNewEntry: 'מחק רשומה חדשה',
+          publishChanges: 'פרסם שינויים',
+          publishNewEntry: 'פרסם רשומה חדשה',
+        },
+        workflowList: {
+          onDeleteEntry: 'האם אתה בטוח שברצונך למחוק רשומה זו?',
+          onPublishingNotReadyEntry: 'רק פריטים עם סטטוס "מוכן" ניתנים לפרסום. אנא גרור את הכרטיס לעמודת "מוכן" כדי לאפשר פרסום.',
+          onPublishEntry: 'האם אתה בטוח שברצונך לפרסם רשומה זו?',
+          draftHeader: 'טיוטות',
+          inReviewHeader: 'בבדיקה',
+          readyHeader: 'מוכן',
+          currentEntries: '%{smart_count} רשומה |||| %{smart_count} רשומות',
+        },
+      },
+    });
+  </script>
+</body>
+</html>
