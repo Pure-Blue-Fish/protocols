@@ -1,29 +1,58 @@
+// ABOUTME: Protocol detail page with i18n support
+// ABOUTME: Shows single protocol content with sidebar navigation
+
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import {
   getProtocol,
-  getAllProtocolSlugs,
+  getAllLanguageSlugs,
   getProtocolsByCategory,
   CATEGORIES,
+  UI_STRINGS,
+  type Language,
 } from "@/lib/protocols";
 import PrintButton from "@/components/PrintButton";
+import LanguageToggle from "@/components/LanguageToggle";
 
 export async function generateStaticParams() {
-  const slugs = getAllProtocolSlugs();
-  return slugs.map((slug) => ({ slug }));
+  const slugs = getAllLanguageSlugs();
+  return slugs.map(({ lang, slug }) => ({ slug, lang }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ lang?: string }>;
+}) {
   const { slug } = await params;
-  const protocol = await getProtocol(slug);
-  if (!protocol) return { title: "לא נמצא" };
+  const sp = await searchParams;
+  const lang = (sp.lang || "he") as Language;
+  const protocol = await getProtocol(slug, lang);
+  if (!protocol) return { title: "Not Found" };
   return { title: `${protocol.title} - Pure Blue Fish` };
 }
 
-export default async function ProtocolPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProtocolPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ lang?: string }>;
+}) {
   const { slug } = await params;
-  const protocol = await getProtocol(slug);
-  const protocolsByCategory = getProtocolsByCategory();
+  const sp = await searchParams;
+  const cookieStore = await cookies();
+  const cookieLang = cookieStore.get("lang")?.value;
+  const lang = (sp.lang || cookieLang || "he") as Language;
+
+  const protocol = await getProtocol(slug, lang);
+  const protocolsByCategory = getProtocolsByCategory(lang);
+  const categories = CATEGORIES[lang];
+  const ui = UI_STRINGS[lang];
 
   if (!protocol) {
     notFound();
@@ -32,16 +61,26 @@ export default async function ProtocolPage({ params }: { params: Promise<{ slug:
   return (
     <div className="min-h-screen flex">
       {/* Sidebar */}
-      <aside className="w-72 bg-white border-s border-gray-200 p-5 overflow-y-auto no-print">
-        <div className="mb-6">
-          <Link href="/">
-            <h1 className="text-xl font-bold text-blue-600">Pure Blue Fish</h1>
-            <p className="text-sm text-gray-500">פרוטוקולים לעובדי החווה</p>
+      <aside className="w-72 bg-white border-e border-gray-200 p-5 overflow-y-auto no-print">
+        <div className="mb-4">
+          <Link href={`/?lang=${lang}`} className="block">
+            <Image
+              src="/logo.png"
+              alt="Pure Blue Fish"
+              width={140}
+              height={56}
+              className="h-14 w-auto mb-2"
+            />
+            <p className="text-sm text-gray-500">{ui.farmProtocols}</p>
           </Link>
         </div>
 
+        <div className="mb-6">
+          <LanguageToggle currentLang={lang} />
+        </div>
+
         <nav className="space-y-4">
-          {Object.entries(CATEGORIES).map(([key, label]) => {
+          {Object.entries(categories).map(([key, label]) => {
             const protocols = protocolsByCategory[key] || [];
             if (protocols.length === 0) return null;
 
@@ -54,7 +93,7 @@ export default async function ProtocolPage({ params }: { params: Promise<{ slug:
                   {protocols.map((p) => (
                     <li key={p.slug}>
                       <Link
-                        href={`/${p.slug}`}
+                        href={`/${p.slug}?lang=${lang}`}
                         className={`block px-3 py-2 text-sm rounded-lg ${
                           p.slug === slug
                             ? "bg-blue-600 text-white"
@@ -72,8 +111,11 @@ export default async function ProtocolPage({ params }: { params: Promise<{ slug:
         </nav>
 
         <div className="mt-8 pt-4 border-t border-gray-100">
-          <Link href="/admin" className="text-xs text-gray-400 hover:text-gray-600">
-            כניסת מנהל
+          <Link
+            href={`/admin?lang=${lang}`}
+            className="text-xs text-gray-400 hover:text-gray-600"
+          >
+            {ui.adminLogin}
           </Link>
         </div>
       </aside>
@@ -88,7 +130,7 @@ export default async function ProtocolPage({ params }: { params: Promise<{ slug:
                 {protocol.protocolNumber} | {protocol.frequency}
               </p>
             </div>
-            <PrintButton />
+            <PrintButton label={ui.print} />
           </div>
 
           <div

@@ -1,4 +1,4 @@
-// ABOUTME: Protocol reading and parsing utilities
+// ABOUTME: Protocol reading and parsing utilities with i18n support
 // ABOUTME: Reads markdown files with frontmatter, converts to HTML
 
 import fs from "fs";
@@ -8,7 +8,9 @@ import { remark } from "remark";
 import html from "remark-html";
 import gfm from "remark-gfm";
 
-const protocolsDirectory = path.join(process.cwd(), "content/protocols");
+export type Language = "he" | "en";
+
+const contentDirectory = path.join(process.cwd(), "content/protocols");
 
 export interface Protocol {
   slug: string;
@@ -27,20 +29,72 @@ export interface ProtocolMeta {
   frequency: string;
 }
 
-export const CATEGORIES: Record<string, string> = {
-  feeding: "האכלה",
-  "water-quality": "איכות מים",
-  treatments: "טיפולים",
-  "tank-procedures": "פרוצדורות מיכלים",
-  "pool-procedures": "פרוצדורות בריכות",
-  transfers: "העברות",
-  monitoring: "מעקב דגים",
-  arrival: "הגעת דגים",
-  lab: "מעבדה",
-  other: "אחר",
+export const CATEGORIES: Record<Language, Record<string, string>> = {
+  he: {
+    feeding: "האכלה",
+    "water-quality": "איכות מים",
+    treatments: "טיפולים",
+    "tank-procedures": "פרוצדורות מיכלים",
+    "pool-procedures": "פרוצדורות בריכות",
+    transfers: "העברות",
+    monitoring: "מעקב דגים",
+    arrival: "הגעת דגים",
+    lab: "מעבדה",
+    other: "אחר",
+  },
+  en: {
+    feeding: "Feeding",
+    "water-quality": "Water Quality",
+    treatments: "Treatments",
+    "tank-procedures": "Tank Procedures",
+    "pool-procedures": "Pool Procedures",
+    transfers: "Transfers",
+    monitoring: "Fish Monitoring",
+    arrival: "Fish Arrival",
+    lab: "Laboratory",
+    other: "Other",
+  },
 };
 
-export function getAllProtocols(): ProtocolMeta[] {
+export const UI_STRINGS: Record<Language, Record<string, string>> = {
+  he: {
+    protocolBook: "ספר הפרוטוקולים",
+    protocols: "פרוטוקולים",
+    categories: "קטגוריות",
+    quickAccess: "גישה מהירה",
+    edit: "עריכה",
+    adminLogin: "כניסת מנהל",
+    farmProtocols: "פרוטוקולים לעובדי החווה",
+    fishFarm: "חוות דגים",
+    feedingProtocols: "פרוטוקולי האכלה",
+    waterProtocols: "פרוטוקולי מים",
+    print: "הדפסה",
+  },
+  en: {
+    protocolBook: "Protocol Book",
+    protocols: "Protocols",
+    categories: "Categories",
+    quickAccess: "Quick Access",
+    edit: "Edit",
+    adminLogin: "Admin Login",
+    farmProtocols: "Farm Worker Protocols",
+    fishFarm: "Fish Farm",
+    feedingProtocols: "Feeding Protocols",
+    waterProtocols: "Water Protocols",
+    print: "Print",
+  },
+};
+
+function getProtocolsDirectory(lang: Language): string {
+  return path.join(contentDirectory, lang);
+}
+
+export function getAllProtocols(lang: Language = "he"): ProtocolMeta[] {
+  const protocolsDirectory = getProtocolsDirectory(lang);
+  if (!fs.existsSync(protocolsDirectory)) {
+    return [];
+  }
+
   const fileNames = fs.readdirSync(protocolsDirectory);
   return fileNames
     .filter((fileName) => fileName.endsWith(".md"))
@@ -58,11 +112,13 @@ export function getAllProtocols(): ProtocolMeta[] {
         frequency: data.frequency || "",
       };
     })
-    .sort((a, b) => a.title.localeCompare(b.title, "he"));
+    .sort((a, b) => a.title.localeCompare(b.title, lang));
 }
 
-export function getProtocolsByCategory(): Record<string, ProtocolMeta[]> {
-  const protocols = getAllProtocols();
+export function getProtocolsByCategory(
+  lang: Language = "he"
+): Record<string, ProtocolMeta[]> {
+  const protocols = getAllProtocols(lang);
   const byCategory: Record<string, ProtocolMeta[]> = {};
 
   for (const protocol of protocols) {
@@ -76,7 +132,11 @@ export function getProtocolsByCategory(): Record<string, ProtocolMeta[]> {
   return byCategory;
 }
 
-export async function getProtocol(slug: string): Promise<Protocol | null> {
+export async function getProtocol(
+  slug: string,
+  lang: Language = "he"
+): Promise<Protocol | null> {
+  const protocolsDirectory = getProtocolsDirectory(lang);
   const fullPath = path.join(protocolsDirectory, `${slug}.md`);
 
   if (!fs.existsSync(fullPath)) {
@@ -105,9 +165,26 @@ export async function getProtocol(slug: string): Promise<Protocol | null> {
   };
 }
 
-export function getAllProtocolSlugs(): string[] {
+export function getAllProtocolSlugs(lang: Language = "he"): string[] {
+  const protocolsDirectory = getProtocolsDirectory(lang);
+  if (!fs.existsSync(protocolsDirectory)) {
+    return [];
+  }
+
   const fileNames = fs.readdirSync(protocolsDirectory);
   return fileNames
     .filter((fileName) => fileName.endsWith(".md"))
     .map((fileName) => fileName.replace(/\.md$/, ""));
+}
+
+export function getAllLanguageSlugs(): { lang: Language; slug: string }[] {
+  const slugs: { lang: Language; slug: string }[] = [];
+
+  for (const lang of ["he", "en"] as Language[]) {
+    for (const slug of getAllProtocolSlugs(lang)) {
+      slugs.push({ lang, slug });
+    }
+  }
+
+  return slugs;
 }
