@@ -46,44 +46,46 @@ export default async function HomePage({
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <Image
-              src="/logo.png"
-              alt="Pure Blue Fish"
-              width={120}
-              height={48}
-              className="h-12 w-auto"
-            />
-            <p className="text-sm text-gray-500">{ui.protocolBook}</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <LanguageToggle currentLang={lang} />
-            <Link
-              href={`/recommendations?lang=${lang}`}
-              className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 text-sm"
-            >
-              {ui.recommendations}
-            </Link>
-            <Link
-              href={`/admin?lang=${lang}`}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm flex items-center gap-2"
-            >
-              <span>{ui.edit}</span>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <Image
+                src="/logo.png"
+                alt="Pure Blue Fish"
+                width={120}
+                height={48}
+                className="h-8 sm:h-12 w-auto"
+              />
+              <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">{ui.protocolBook}</p>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-4">
+              <LanguageToggle currentLang={lang} />
+              <Link
+                href={`/recommendations?lang=${lang}`}
+                className="px-2 sm:px-4 py-1.5 sm:py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 text-xs sm:text-sm"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                />
-              </svg>
-            </Link>
+                {ui.recommendations}
+              </Link>
+              <Link
+                href={`/admin?lang=${lang}`}
+                className="px-2 sm:px-4 py-1.5 sm:py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-xs sm:text-sm flex items-center gap-1 sm:gap-2"
+              >
+                <span className="hidden sm:inline">{ui.edit}</span>
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
       </header>

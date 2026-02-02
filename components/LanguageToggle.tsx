@@ -33,26 +33,28 @@ export default function LanguageToggle({ currentLang }: LanguageToggleProps) {
   );
 
   return (
-    <div className="flex bg-gray-100 rounded-lg p-1 gap-1">
+    <div className="flex bg-gray-100 rounded-lg p-0.5 sm:p-1 gap-0.5 sm:gap-1">
       <button
         onClick={() => switchLanguage("he")}
-        className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
+        className={`px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all ${
           currentLang === "he"
             ? "bg-white text-blue-600 shadow-sm"
             : "text-gray-600 hover:text-gray-900"
         }`}
       >
-        עברית
+        <span className="sm:hidden">עב</span>
+        <span className="hidden sm:inline">עברית</span>
       </button>
       <button
         onClick={() => switchLanguage("en")}
-        className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
+        className={`px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all ${
           currentLang === "en"
             ? "bg-white text-blue-600 shadow-sm"
             : "text-gray-600 hover:text-gray-900"
         }`}
       >
-        English
+        <span className="sm:hidden">EN</span>
+        <span className="hidden sm:inline">English</span>
       </button>
     </div>
   );
