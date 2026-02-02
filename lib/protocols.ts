@@ -69,6 +69,7 @@ export const UI_STRINGS: Record<Language, Record<string, string>> = {
     feedingProtocols: "פרוטוקולי האכלה",
     waterProtocols: "פרוטוקולי מים",
     print: "הדפסה",
+    recommendations: "המלצות",
   },
   en: {
     protocolBook: "Protocol Book",
@@ -82,6 +83,7 @@ export const UI_STRINGS: Record<Language, Record<string, string>> = {
     feedingProtocols: "Feeding Protocols",
     waterProtocols: "Water Protocols",
     print: "Print",
+    recommendations: "Recommendations",
   },
 };
 

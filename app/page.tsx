@@ -60,6 +60,12 @@ export default async function HomePage({
           <div className="flex items-center gap-4">
             <LanguageToggle currentLang={lang} />
             <Link
+              href={`/recommendations?lang=${lang}`}
+              className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 text-sm"
+            >
+              {ui.recommendations}
+            </Link>
+            <Link
               href={`/admin?lang=${lang}`}
               className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm flex items-center gap-2"
             >
