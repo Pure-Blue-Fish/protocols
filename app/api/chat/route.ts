@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   ];
 
   const stream = await openai.chat.completions.create({
-    model: "gemini-2.5-flash-preview-05-20",
+    model: "gemini-3-flash-preview",
     messages: openaiMessages,
     stream: true,
   });
