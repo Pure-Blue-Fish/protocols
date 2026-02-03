@@ -70,6 +70,8 @@ export const UI_STRINGS: Record<Language, Record<string, string>> = {
     waterProtocols: "פרוטוקולי מים",
     print: "הדפסה",
     recommendations: "המלצות",
+    chatTitle: "עוזר פרוטוקולים",
+    chatPlaceholder: "שאל שאלה...",
   },
   en: {
     protocolBook: "Protocol Book",
@@ -84,6 +86,8 @@ export const UI_STRINGS: Record<Language, Record<string, string>> = {
     waterProtocols: "Water Protocols",
     print: "Print",
     recommendations: "Recommendations",
+    chatTitle: "Protocol Assistant",
+    chatPlaceholder: "Ask a question...",
   },
 };
 

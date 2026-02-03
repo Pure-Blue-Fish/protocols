@@ -4,6 +4,8 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import "./globals.css";
+import { UI_STRINGS, type Language } from "@/lib/protocols";
+import ChatWidget from "@/components/ChatWidget";
 
 export const metadata: Metadata = {
   title: "Protocols - Pure Blue Fish",
@@ -16,12 +18,20 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const lang = (cookieStore.get("lang")?.value as "he" | "en") || "he";
+  const lang = (cookieStore.get("lang")?.value as Language) || "he";
   const dir = lang === "he" ? "rtl" : "ltr";
+  const ui = UI_STRINGS[lang];
 
   return (
     <html lang={lang} dir={dir}>
-      <body className="antialiased bg-gray-50 text-gray-900">{children}</body>
+      <body className="antialiased bg-gray-50 text-gray-900">
+        {children}
+        <ChatWidget
+          lang={lang}
+          title={ui.chatTitle}
+          placeholder={ui.chatPlaceholder}
+        />
+      </body>
     </html>
   );
 }
