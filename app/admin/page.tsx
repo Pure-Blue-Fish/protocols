@@ -10,6 +10,7 @@ interface Protocol {
   slug: string;
   sha: string;
   content: string;
+  lang: string;
 }
 
 export default function AdminPage() {
@@ -18,15 +19,17 @@ export default function AdminPage() {
   const [editContent, setEditContent] = useState("");
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [lang, setLang] = useState("he");
 
   useEffect(() => {
-    loadProtocols();
-  }, []);
+    loadProtocols(lang);
+  }, [lang]);
 
-  const loadProtocols = async () => {
+  const loadProtocols = async (language: string) => {
     setLoading(true);
+    setSelected(null);
     try {
-      const res = await fetch("/api/protocols");
+      const res = await fetch(`/api/protocols?lang=${language}`);
       const data = await res.json();
       setProtocols(data);
     } catch {
@@ -50,6 +53,7 @@ export default function AdminPage() {
         body: JSON.stringify({
           content: editContent,
           sha: selected.sha,
+          lang: selected.lang,
           message: `עדכון ${selected.slug}`,
         }),
       });
@@ -85,6 +89,20 @@ export default function AdminPage() {
           <Link href="/" className="text-sm text-blue-600 hover:underline">
             חזרה
           </Link>
+        </div>
+        <div className="mb-4 flex gap-2">
+          <button
+            onClick={() => setLang("he")}
+            className={`px-3 py-1 rounded text-sm ${lang === "he" ? "bg-blue-600 text-white" : "bg-gray-100"}`}
+          >
+            עברית
+          </button>
+          <button
+            onClick={() => setLang("en")}
+            className={`px-3 py-1 rounded text-sm ${lang === "en" ? "bg-blue-600 text-white" : "bg-gray-100"}`}
+          >
+            English
+          </button>
         </div>
         {loading ? (
           <p className="text-gray-500">טוען...</p>

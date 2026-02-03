@@ -25,14 +25,16 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
+  const { searchParams } = new URL(request.url);
+  const lang = searchParams.get("lang") || "he";
   try {
-    const res = await githubRequest(`/contents/content/protocols/${slug}.md`);
+    const res = await githubRequest(`/contents/content/protocols/${lang}/${slug}.md`);
     if (!res.ok) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
     const data = await res.json();
     const content = Buffer.from(data.content, "base64").toString("utf-8");
-    return NextResponse.json({ slug, sha: data.sha, content });
+    return NextResponse.json({ slug, sha: data.sha, content, lang });
   } catch (error) {
     return NextResponse.json({ error: String(error) }, { status: 500 });
   }
@@ -44,9 +46,9 @@ export async function PUT(
 ) {
   const { slug } = await params;
   try {
-    const { content, sha, message } = await request.json();
+    const { content, sha, message, lang = "he" } = await request.json();
 
-    const res = await githubRequest(`/contents/content/protocols/${slug}.md`, {
+    const res = await githubRequest(`/contents/content/protocols/${lang}/${slug}.md`, {
       method: "PUT",
       body: JSON.stringify({
         message: message || `Update ${slug}`,

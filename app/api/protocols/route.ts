@@ -20,9 +20,12 @@ async function githubRequest(path: string, options: RequestInit = {}) {
   return res;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const res = await githubRequest("/contents/content/protocols");
+    const { searchParams } = new URL(request.url);
+    const lang = searchParams.get("lang") || "he";
+
+    const res = await githubRequest(`/contents/content/protocols/${lang}`);
     if (!res.ok) {
       return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });
     }
@@ -32,13 +35,14 @@ export async function GET() {
       files
         .filter((f: { name: string }) => f.name.endsWith(".md"))
         .map(async (f: { name: string; sha: string }) => {
-          const contentRes = await githubRequest(`/contents/content/protocols/${f.name}`);
+          const contentRes = await githubRequest(`/contents/content/protocols/${lang}/${f.name}`);
           const data = await contentRes.json();
           const content = Buffer.from(data.content, "base64").toString("utf-8");
           return {
             slug: f.name.replace(".md", ""),
             sha: data.sha,
             content,
+            lang,
           };
         })
     );
