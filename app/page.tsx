@@ -6,7 +6,6 @@ import Image from "next/image";
 import { cookies } from "next/headers";
 import {
   getProtocolsByCategory,
-  getAllProtocols,
   CATEGORIES,
   UI_STRINGS,
   type Language,
@@ -37,8 +36,6 @@ export default async function HomePage({
   const lang = (params.lang || cookieLang || "he") as Language;
 
   const protocolsByCategory = getProtocolsByCategory(lang);
-  const allProtocols = getAllProtocols(lang);
-  const categoryCount = Object.keys(protocolsByCategory).length;
   const categories = CATEGORIES[lang];
   const ui = UI_STRINGS[lang];
 
@@ -90,40 +87,12 @@ export default async function HomePage({
         </div>
       </header>
 
-      {/* Stats */}
+      {/* Category Cards */}
       <div className="max-w-6xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-            <div className="text-3xl font-bold text-blue-600">
-              {allProtocols.length}
-            </div>
-            <div className="text-sm text-gray-500">{ui.protocols}</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-            <div className="text-3xl font-bold text-cyan-600">
-              {categoryCount}
-            </div>
-            <div className="text-sm text-gray-500">{ui.categories}</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-            <div className="text-3xl font-bold text-green-600">
-              {protocolsByCategory["feeding"]?.length || 0}
-            </div>
-            <div className="text-sm text-gray-500">{ui.feedingProtocols}</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-            <div className="text-3xl font-bold text-purple-600">
-              {protocolsByCategory["water-quality"]?.length || 0}
-            </div>
-            <div className="text-sm text-gray-500">{ui.waterProtocols}</div>
-          </div>
-        </div>
-
-        {/* Category Cards */}
         <h2 className="text-lg font-semibold mb-4 text-gray-700">
           {ui.categories}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {Object.entries(categories).map(([key, label]) => {
             const protocols = protocolsByCategory[key] || [];
             if (protocols.length === 0) return null;
@@ -157,27 +126,6 @@ export default async function HomePage({
               </div>
             );
           })}
-        </div>
-
-        {/* Quick Access */}
-        <h2 className="text-lg font-semibold mb-4 text-gray-700">
-          {ui.quickAccess}
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {allProtocols.slice(0, 8).map((protocol) => (
-            <Link
-              key={protocol.slug}
-              href={`/${protocol.slug}?lang=${lang}`}
-              className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 hover:border-blue-300 hover:shadow transition-all text-sm"
-            >
-              <div className="font-medium text-gray-800 truncate">
-                {protocol.title}
-              </div>
-              <div className="text-xs text-gray-400">
-                {protocol.protocolNumber}
-              </div>
-            </Link>
-          ))}
         </div>
       </div>
 
