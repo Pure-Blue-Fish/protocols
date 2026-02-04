@@ -13,7 +13,7 @@ frequency: "יומי"
 
 ## דגימת בריכה - יומי
 
-- [ ] זמן מומלץ: צהריים, אחרי 3 האכלות לפחות _(כשאמוניה הכי גבוהה)_
+- [ ] זמן מומלץ: צהריים, אחרי 3 האכלות לפחות \_(כשאמוניה הכי גבוהה)\_
 - [ ] קח דגימת מים מיציאת הבריכה העמוסה ביותר
 - [ ] העבר למעבדה
 - [ ] בצע בדיקת אמוניה לפי פרוטוקול מעבדה
@@ -31,5 +31,7 @@ frequency: "יומי"
 - [ ] דווח לביולוג
 
 ## בעיות ופתרונות
+
+<table style="width: 0px;"><colgroup></colgroup><tbody><tr></tr></tbody></table>
 
 <table style="min-width: 50px;"><colgroup><col style="min-width: 25px;"><col style="min-width: 25px;"></colgroup><tbody><tr><th colspan="1" rowspan="1"><p>מצב</p></th><th colspan="1" rowspan="1"><p>פעולה</p></th></tr><tr><td colspan="1" rowspan="1"><p>תוצאות חריגות</p></td><td colspan="1" rowspan="1"><p>בצע סדרת בדיקות נוספת בערב</p></td></tr><tr><td colspan="1" rowspan="1"><p>אמוניה גבוהה בבריכה</p></td><td colspan="1" rowspan="1"><p>בדוק תפקוד פילטר אירובי</p></td></tr><tr><td colspan="1" rowspan="1"><p>אין הפרש בין כניסה ליציאה</p></td><td colspan="1" rowspan="1"><p>בעיה בפילטר - דווח מיד</p></td></tr></tbody></table>
