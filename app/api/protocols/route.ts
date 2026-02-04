@@ -52,3 +52,59 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const { slug, title, category, protocolNumber, frequency, body, lang = "he" } =
+      await request.json();
+
+    if (!slug || !title || !category || !body) {
+      return NextResponse.json(
+        { error: "Missing required fields: slug, title, category, body" },
+        { status: 400 }
+      );
+    }
+
+    const filePath = `content/protocols/${lang}/${slug}.md`;
+
+    // Check if already exists
+    const checkRes = await githubRequest(`/contents/${filePath}?ref=${BRANCH}`);
+    if (checkRes.ok) {
+      return NextResponse.json(
+        { error: "Protocol already exists" },
+        { status: 409 }
+      );
+    }
+
+    // Build markdown content
+    const frontmatter = ["---", `title: "${title}"`, `category: "${category}"`];
+    if (protocolNumber) frontmatter.push(`protocolNumber: "${protocolNumber}"`);
+    if (frequency) frontmatter.push(`frequency: "${frequency}"`);
+    frontmatter.push("---", "");
+    const content = frontmatter.join("\n") + body;
+
+    // Create file
+    const putRes = await githubRequest(`/contents/${filePath}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        message: `Create protocol: ${title}`,
+        content: Buffer.from(content).toString("base64"),
+        branch: BRANCH,
+      }),
+    });
+
+    if (!putRes.ok) {
+      const error = await putRes.text();
+      return NextResponse.json({ error }, { status: 500 });
+    }
+
+    const result = await putRes.json();
+    return NextResponse.json({
+      success: true,
+      slug,
+      sha: result.content.sha,
+    });
+  } catch (error) {
+    return NextResponse.json({ error: String(error) }, { status: 500 });
+  }
+}

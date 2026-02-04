@@ -1,14 +1,12 @@
-// ABOUTME: Streaming chat API endpoint using Gemini 2.5 Flash Preview
-// ABOUTME: Uses OpenAI compatibility layer for cleaner system message support
+// ABOUTME: Streaming chat API endpoint using Gemini with function calling
+// ABOUTME: Handles protocol editing/creation via tool calls
 
-import OpenAI from "openai";
+import { GoogleGenAI, FunctionCallingConfigMode, type Content } from "@google/genai";
 import { buildSystemPrompt, type ChatMessage } from "@/lib/chat";
+import { toolDeclarations, executeTool } from "@/lib/chat-tools";
 import type { Language } from "@/lib/protocols";
 
-const openai = new OpenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
-});
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export async function POST(request: Request) {
   const { messages, lang } = (await request.json()) as {
@@ -18,36 +16,128 @@ export async function POST(request: Request) {
 
   const systemPrompt = buildSystemPrompt(lang);
 
-  // Convert to OpenAI format
-  const openaiMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-    { role: "system", content: systemPrompt },
-    ...messages.map((m) => ({
-      role: m.role as "user" | "assistant",
-      content: m.content,
-    })),
-  ];
+  // Convert messages to Gemini format
+  const contents: Content[] = messages.map((m) => ({
+    role: m.role === "assistant" ? ("model" as const) : ("user" as const),
+    parts: [{ text: m.content }],
+  }));
 
-  const stream = await openai.chat.completions.create({
-    model: "gemini-3-flash-preview",
-    messages: openaiMessages,
-    stream: true,
-  });
-
-  // Return SSE stream
   const encoder = new TextEncoder();
   const readable = new ReadableStream({
     async start(controller) {
       try {
-        for await (const chunk of stream) {
-          const text = chunk.choices[0]?.delta?.content;
+        // Initial generation with tools
+        let response = await ai.models.generateContentStream({
+          model: "gemini-2.5-flash",
+          contents,
+          config: {
+            systemInstruction: systemPrompt,
+            tools: [{ functionDeclarations: toolDeclarations }],
+            toolConfig: {
+              functionCallingConfig: {
+                mode: FunctionCallingConfigMode.AUTO,
+              },
+            },
+          },
+        });
+
+        let fullText = "";
+        let functionCalls: Array<{ name: string; args: Record<string, unknown> }> = [];
+
+        // Stream the response
+        for await (const chunk of response) {
+          // Check for function calls
+          if (chunk.functionCalls && chunk.functionCalls.length > 0) {
+            for (const fc of chunk.functionCalls) {
+              if (fc.name) {
+                functionCalls.push({
+                  name: fc.name,
+                  args: (fc.args || {}) as Record<string, unknown>,
+                });
+              }
+            }
+          }
+
+          // Stream text content
+          const text = chunk.text;
           if (text) {
+            fullText += text;
             controller.enqueue(
               encoder.encode(`data: ${JSON.stringify({ text })}\n\n`)
             );
           }
         }
+
+        // Handle function calls if any
+        if (functionCalls.length > 0) {
+          for (const fc of functionCalls) {
+            // Notify client that tool is being executed
+            controller.enqueue(
+              encoder.encode(
+                `data: ${JSON.stringify({ toolCall: { name: fc.name, args: fc.args } })}\n\n`
+              )
+            );
+
+            // Execute the tool
+            const result = await executeTool(fc.name, fc.args);
+
+            // Notify client of result
+            controller.enqueue(
+              encoder.encode(
+                `data: ${JSON.stringify({ toolResult: result })}\n\n`
+              )
+            );
+
+            // Continue conversation with tool result
+            const followUpContents: Content[] = [
+              ...contents,
+              {
+                role: "model" as const,
+                parts: [
+                  {
+                    functionCall: {
+                      name: fc.name,
+                      args: fc.args,
+                    },
+                  },
+                ],
+              },
+              {
+                role: "user" as const,
+                parts: [
+                  {
+                    functionResponse: {
+                      name: fc.name,
+                      response: result as unknown as Record<string, unknown>,
+                    },
+                  },
+                ],
+              },
+            ];
+
+            // Get follow-up response (no tools needed for this)
+            const followUpResponse = await ai.models.generateContentStream({
+              model: "gemini-2.5-flash",
+              contents: followUpContents,
+              config: {
+                systemInstruction: systemPrompt,
+              },
+            });
+
+            for await (const chunk of followUpResponse) {
+              const text = chunk.text;
+              if (text) {
+                controller.enqueue(
+                  encoder.encode(`data: ${JSON.stringify({ text })}\n\n`)
+                );
+              }
+            }
+          }
+        }
+
         controller.enqueue(encoder.encode("data: [DONE]\n\n"));
       } catch (error) {
+        console.error("Chat error:", error);
         controller.enqueue(
           encoder.encode(
             `data: ${JSON.stringify({ error: String(error) })}\n\n`

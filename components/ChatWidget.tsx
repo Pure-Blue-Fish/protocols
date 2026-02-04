@@ -12,6 +12,12 @@ interface Message {
   content: string;
 }
 
+interface ToolResult {
+  success: boolean;
+  message: string;
+  error?: string;
+}
+
 const STORAGE_KEY = "pbf-chat-history";
 const MAX_MESSAGES = 50;
 
@@ -26,6 +32,8 @@ export default function ChatWidget({ lang, placeholder, title }: ChatWidgetProps
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [toolStatus, setToolStatus] = useState<string | null>(null);
+  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const isRTL = lang === "he";
 
@@ -96,6 +104,30 @@ export default function ChatWidget({ lang, placeholder, title }: ChatWidgetProps
                   };
                   return updated;
                 });
+              }
+              // Handle tool call notification
+              if (data.toolCall) {
+                const toolName = data.toolCall.name;
+                setToolStatus(
+                  lang === "he"
+                    ? toolName === "edit_protocol"
+                      ? "מעדכן פרוטוקול..."
+                      : "יוצר פרוטוקול..."
+                    : toolName === "edit_protocol"
+                      ? "Updating protocol..."
+                      : "Creating protocol..."
+                );
+              }
+              // Handle tool result
+              if (data.toolResult) {
+                setToolStatus(null);
+                const result = data.toolResult as ToolResult;
+                setNotification({
+                  type: result.success ? "success" : "error",
+                  message: result.message,
+                });
+                // Auto-hide notification after 4 seconds
+                setTimeout(() => setNotification(null), 4000);
               }
             } catch {
               // Skip malformed JSON
@@ -216,8 +248,31 @@ export default function ChatWidget({ lang, placeholder, title }: ChatWidgetProps
                   </div>
                 </div>
               )}
+              {toolStatus && (
+                <div className={`flex ${isRTL ? "justify-end" : "justify-start"} mt-2`}>
+                  <div className="bg-blue-50 text-blue-700 rounded-lg px-3 py-2 text-sm flex items-center gap-2">
+                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    {toolStatus}
+                  </div>
+                </div>
+              )}
               <div ref={messagesEndRef} />
             </div>
+
+            {notification && (
+              <div
+                className={`mx-4 mb-2 px-4 py-2 rounded-lg text-sm ${
+                  notification.type === "success"
+                    ? "bg-green-50 text-green-700 border border-green-200"
+                    : "bg-red-50 text-red-700 border border-red-200"
+                }`}
+              >
+                {notification.message}
+              </div>
+            )}
 
             {/* Input */}
             <div className="p-4 border-t">
