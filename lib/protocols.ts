@@ -8,7 +8,8 @@ import { remark } from "remark";
 import html from "remark-html";
 import gfm from "remark-gfm";
 
-export type Language = "he" | "en";
+// Re-export i18n constants so existing server-side imports still work
+export { CATEGORIES, UI_STRINGS, type Language } from "./i18n";
 
 const contentDirectory = path.join(process.cwd(), "content/protocols");
 
@@ -29,67 +30,7 @@ export interface ProtocolMeta {
   frequency: string;
 }
 
-export const CATEGORIES: Record<Language, Record<string, string>> = {
-  he: {
-    feeding: "האכלה",
-    "water-quality": "איכות מים",
-    treatments: "טיפולים",
-    "tank-procedures": "פרוצדורות מיכלים",
-    "pool-procedures": "פרוצדורות בריכות",
-    transfers: "העברות",
-    monitoring: "מעקב דגים",
-    arrival: "הגעת דגים",
-    lab: "מעבדה",
-    other: "אחר",
-  },
-  en: {
-    feeding: "Feeding",
-    "water-quality": "Water Quality",
-    treatments: "Treatments",
-    "tank-procedures": "Tank Procedures",
-    "pool-procedures": "Pool Procedures",
-    transfers: "Transfers",
-    monitoring: "Fish Monitoring",
-    arrival: "Fish Arrival",
-    lab: "Laboratory",
-    other: "Other",
-  },
-};
-
-export const UI_STRINGS: Record<Language, Record<string, string>> = {
-  he: {
-    protocolBook: "ספר הפרוטוקולים",
-    protocols: "פרוטוקולים",
-    categories: "קטגוריות",
-    quickAccess: "גישה מהירה",
-    edit: "עריכה",
-    adminLogin: "כניסת מנהל",
-    farmProtocols: "פרוטוקולים לעובדי החווה",
-    fishFarm: "חוות דגים",
-    feedingProtocols: "פרוטוקולי האכלה",
-    waterProtocols: "פרוטוקולי מים",
-    print: "הדפסה",
-    recommendations: "המלצות",
-    chatTitle: "עוזר פרוטוקולים",
-    chatPlaceholder: "שאל שאלה...",
-  },
-  en: {
-    protocolBook: "Protocol Book",
-    protocols: "Protocols",
-    categories: "Categories",
-    quickAccess: "Quick Access",
-    edit: "Edit",
-    adminLogin: "Admin Login",
-    farmProtocols: "Farm Worker Protocols",
-    fishFarm: "Fish Farm",
-    feedingProtocols: "Feeding Protocols",
-    waterProtocols: "Water Protocols",
-    print: "Print",
-    recommendations: "Recommendations",
-    chatTitle: "Protocol Assistant",
-    chatPlaceholder: "Ask a question...",
-  },
-};
+type Language = "he" | "en";
 
 function getProtocolsDirectory(lang: Language): string {
   return path.join(contentDirectory, lang);

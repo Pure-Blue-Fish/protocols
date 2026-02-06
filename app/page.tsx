@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import {
   getProtocolsByCategory,
   CATEGORIES,
@@ -32,8 +32,11 @@ export default async function HomePage({
 }) {
   const params = await searchParams;
   const cookieStore = await cookies();
+  const headerStore = await headers();
   const cookieLang = cookieStore.get("lang")?.value;
   const lang = (params.lang || cookieLang || "he") as Language;
+  const isManager = headerStore.get("x-is-manager") === "true";
+  const workerId = headerStore.get("x-worker-id");
 
   const protocolsByCategory = getProtocolsByCategory(lang);
   const categories = CATEGORIES[lang];
@@ -57,6 +60,22 @@ export default async function HomePage({
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
               <LanguageToggle currentLang={lang} />
+              {workerId && workerId !== "0" && (
+                <Link
+                  href={`/my-tasks?lang=${lang}`}
+                  className="px-2 sm:px-4 py-1.5 sm:py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 text-xs sm:text-sm"
+                >
+                  {ui.myTasks}
+                </Link>
+              )}
+              {isManager && (
+                <Link
+                  href={`/schedule?lang=${lang}`}
+                  className="px-2 sm:px-4 py-1.5 sm:py-2 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 text-xs sm:text-sm"
+                >
+                  {ui.schedule}
+                </Link>
+              )}
               <Link
                 href={`/recommendations?lang=${lang}`}
                 className="px-2 sm:px-4 py-1.5 sm:py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 text-xs sm:text-sm"

@@ -19,6 +19,7 @@
     "@tiptap/pm": "^2.11.7",
     "@tiptap/react": "^2.11.7",
     "@tiptap/starter-kit": "^2.11.7",
+    "@vercel/postgres": "^0.10.0",
     "gray-matter": "^4.0.3",
     "next": "16.1.6",
     "openai": "^6.17.0",
