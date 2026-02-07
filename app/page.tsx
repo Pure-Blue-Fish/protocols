@@ -80,6 +80,7 @@ export default async function HomePage({
             totalTasks={totalTasks}
             completedTasks={completedTasks}
             activeWorkers={activeWorkers}
+            lang={lang}
             labels={{
               weeklyOverview: ui.weeklyOverview,
               totalTasks: ui.totalTasks,

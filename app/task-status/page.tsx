@@ -97,6 +97,14 @@ function formatTime(isoStr: string): string {
   });
 }
 
+function getInitialStatusFilter(): "all" | "completed" | "pending" {
+  if (typeof window === "undefined") return "all";
+  const params = new URLSearchParams(window.location.search);
+  const s = params.get("status");
+  if (s === "completed" || s === "pending") return s;
+  return "all";
+}
+
 export default function TaskStatusPage() {
   const [data, setData] = useState<StatusResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -105,7 +113,7 @@ export default function TaskStatusPage() {
   const [selectedDay, setSelectedDay] = useState<string>("");
   const [selectedWorker, setSelectedWorker] = useState<string>("all");
   const [selectedProtocol, setSelectedProtocol] = useState<string>("all");
-  const [statusFilter, setStatusFilter] = useState<"all" | "completed" | "pending">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "completed" | "pending">(getInitialStatusFilter);
   const [sortKey, setSortKey] = useState<string>("date");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [lang] = useState<Language>("he");
