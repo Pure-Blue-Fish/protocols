@@ -56,7 +56,7 @@ export default function SchedulePage() {
   const mobileTab = showChat ? "chat" : "calendar";
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50" dir="rtl">
+    <div className="h-dvh flex flex-col bg-gray-50" dir="rtl">
       <div className="flex-shrink-0">
         <MobileNav lang={lang} userName={userName} currentPage="schedule" isManager={isManager} workerId={workerId} />
       </div>
@@ -98,7 +98,7 @@ export default function SchedulePage() {
       )}
 
       {/* Main content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden min-h-0">
         {/* Desktop: side panel chat */}
         {isManager && !isMobile && (
           <div className="w-80 border-l border-gray-200 bg-white flex flex-col flex-shrink-0">
