@@ -53,14 +53,52 @@ export default function SchedulePage() {
     setRefreshTrigger((n) => n + 1);
   }, []);
 
+  const mobileTab = showChat ? "chat" : "calendar";
+
   return (
     <div className="h-screen flex flex-col bg-gray-50" dir="rtl">
       <div className="flex-shrink-0">
         <MobileNav lang={lang} userName={userName} currentPage="schedule" isManager={isManager} workerId={workerId} />
       </div>
 
+      {/* Mobile: tab switcher for managers */}
+      {isManager && isMobile && (
+        <div className="flex-shrink-0 flex border-b border-gray-200 bg-white">
+          <button
+            onClick={() => setShowChat(false)}
+            className={`flex-1 py-2.5 text-sm font-medium text-center transition-colors ${
+              mobileTab === "calendar"
+                ? "text-blue-600 border-b-2 border-blue-600"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            <span className="inline-flex items-center gap-1.5">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              {lang === "he" ? "לוח עבודה" : "Schedule"}
+            </span>
+          </button>
+          <button
+            onClick={() => setShowChat(true)}
+            className={`flex-1 py-2.5 text-sm font-medium text-center transition-colors ${
+              mobileTab === "chat"
+                ? "text-purple-600 border-b-2 border-purple-600"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            <span className="inline-flex items-center gap-1.5">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+              {lang === "he" ? "עוזר AI" : "AI Assistant"}
+            </span>
+          </button>
+        </div>
+      )}
+
       {/* Main content */}
-      <div className="flex-1 flex overflow-hidden relative">
+      <div className="flex-1 flex overflow-hidden">
         {/* Desktop: side panel chat */}
         {isManager && !isMobile && (
           <div className="w-80 border-l border-gray-200 bg-white flex flex-col flex-shrink-0">
@@ -72,8 +110,8 @@ export default function SchedulePage() {
           </div>
         )}
 
-        {/* Calendar — always full width on mobile */}
-        <div className="flex-1 overflow-hidden">
+        {/* Calendar */}
+        <div className={`flex-1 overflow-hidden ${isMobile && isManager && mobileTab === "chat" ? "hidden" : ""}`}>
           <WeeklyCalendar
             lang={lang}
             week={week}
@@ -82,43 +120,15 @@ export default function SchedulePage() {
           />
         </div>
 
-        {/* Mobile: chat overlay */}
-        {isManager && isMobile && showChat && (
-          <div className="absolute inset-x-3 top-3 bottom-3 z-30 bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-200 bg-gray-50 rounded-t-2xl">
-              <span className="text-sm font-medium text-gray-700">
-                {lang === "he" ? "עוזר לוח עבודה" : "Schedule Assistant"}
-              </span>
-              <button
-                onClick={() => setShowChat(false)}
-                className="p-1.5 text-gray-500 hover:bg-gray-200 rounded-lg"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="flex-1 overflow-hidden">
-              <ScheduleChat
-                lang={lang}
-                week={week}
-                onScheduleChange={handleScheduleChange}
-              />
-            </div>
+        {/* Mobile: inline chat tab */}
+        {isManager && isMobile && mobileTab === "chat" && (
+          <div className="flex-1 flex flex-col overflow-hidden bg-white">
+            <ScheduleChat
+              lang={lang}
+              week={week}
+              onScheduleChange={handleScheduleChange}
+            />
           </div>
-        )}
-
-        {/* Mobile: FAB to open chat */}
-        {isManager && isMobile && !showChat && (
-          <button
-            onClick={() => setShowChat(true)}
-            className="absolute bottom-4 right-4 z-20 w-12 h-12 bg-purple-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-purple-700 active:scale-95 transition-transform"
-            aria-label={lang === "he" ? "עוזר לוח עבודה" : "Schedule Assistant"}
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-            </svg>
-          </button>
         )}
       </div>
 
