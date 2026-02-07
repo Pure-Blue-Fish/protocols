@@ -29,6 +29,7 @@ export default function SchedulePage() {
   const [workerId, setWorkerId] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [showChat, setShowChat] = useState(false);
+  const [viewportH, setViewportH] = useState<number | null>(null);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -36,6 +37,16 @@ export default function SchedulePage() {
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  // Track visual viewport height for iOS keyboard handling
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const update = () => setViewportH(vv.height);
+    update();
+    vv.addEventListener("resize", update);
+    return () => vv.removeEventListener("resize", update);
   }, []);
 
   useEffect(() => {
@@ -56,7 +67,11 @@ export default function SchedulePage() {
   const mobileTab = showChat ? "chat" : "calendar";
 
   return (
-    <div className="h-dvh flex flex-col bg-gray-50" dir="rtl">
+    <div
+      className="flex flex-col bg-gray-50"
+      dir="rtl"
+      style={{ height: viewportH ? `${viewportH}px` : "100dvh" }}
+    >
       <div className="flex-shrink-0">
         <MobileNav lang={lang} userName={userName} currentPage="schedule" isManager={isManager} workerId={workerId} />
       </div>
