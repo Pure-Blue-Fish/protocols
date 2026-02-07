@@ -234,8 +234,8 @@ export default function ScheduleChat({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
-      <div className="p-3 border-t border-gray-200">
+      {/* Input — extra bottom padding on mobile to clear protocol chat FAB */}
+      <div className="p-3 pb-22 md:pb-3 border-t border-gray-200">
         <div className="flex gap-2">
           <input
             ref={inputRef}
