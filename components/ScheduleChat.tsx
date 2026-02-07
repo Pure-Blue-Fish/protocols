@@ -111,7 +111,19 @@ export default function ScheduleChat({
             }
 
             if (parsed.error) {
-              assistantText += `\n\nError: ${parsed.error}`;
+              const errorMessages: Record<string, string> = {
+                rate_limit: lang === "he"
+                  ? "יותר מדי בקשות, נסה שוב בעוד דקה"
+                  : "Too many requests, try again in a minute",
+                auth_error: lang === "he"
+                  ? "שגיאת אימות מול שרת ה-AI"
+                  : "AI server authentication error",
+                general_error: lang === "he"
+                  ? "שגיאה, נסה שוב"
+                  : "Error, please try again",
+              };
+              const errorMsg = errorMessages[parsed.error] || errorMessages.general_error;
+              assistantText += assistantText ? `\n\n${errorMsg}` : errorMsg;
               setMessages([
                 ...updatedMessages,
                 { role: "assistant", content: assistantText },
@@ -131,6 +143,8 @@ export default function ScheduleChat({
 
     setIsLoading(false);
     setToolStatus(null);
+    // Re-focus the input after message completes
+    setTimeout(() => inputRef.current?.focus(), 50);
   }, [input, isLoading, messages, week, lang, onScheduleChange]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

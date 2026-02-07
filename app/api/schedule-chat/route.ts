@@ -73,6 +73,10 @@ async function streamGemini(
   }
 
   if (functionCalls.length > 0) {
+    // Execute all tools and collect results
+    const toolParts: Array<{ functionCall: { name: string; args: Record<string, unknown> } }> = [];
+    const responseParts: Array<{ functionResponse: { name: string; response: Record<string, unknown> } }> = [];
+
     for (const fc of functionCalls) {
       controller.enqueue(
         encoder.encode(`data: ${JSON.stringify({ toolCall: { name: fc.name, args: fc.args } })}\n\n`)
@@ -84,30 +88,27 @@ async function streamGemini(
         encoder.encode(`data: ${JSON.stringify({ toolResult: result })}\n\n`)
       );
 
-      // Follow-up with tool result
-      const followUpContents: Content[] = [
-        ...contents,
-        {
-          role: "model" as const,
-          parts: [{ functionCall: { name: fc.name, args: fc.args } }],
-        },
-        {
-          role: "user" as const,
-          parts: [{ functionResponse: { name: fc.name, response: result as unknown as Record<string, unknown> } }],
-        },
-      ];
+      toolParts.push({ functionCall: { name: fc.name, args: fc.args } });
+      responseParts.push({ functionResponse: { name: fc.name, response: result as unknown as Record<string, unknown> } });
+    }
 
-      const followUp = await ai.models.generateContentStream({
-        model: "gemini-2.5-flash",
-        contents: followUpContents,
-        config: { systemInstruction: systemPrompt },
-      });
+    // Single follow-up call with ALL tool results batched together
+    const followUpContents: Content[] = [
+      ...contents,
+      { role: "model" as const, parts: toolParts },
+      { role: "user" as const, parts: responseParts },
+    ];
 
-      for await (const chunk of followUp) {
-        const text = chunk.text;
-        if (text) {
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`));
-        }
+    const followUp = await ai.models.generateContentStream({
+      model: "gemini-2.5-flash",
+      contents: followUpContents,
+      config: { systemInstruction: systemPrompt },
+    });
+
+    for await (const chunk of followUp) {
+      const text = chunk.text;
+      if (text) {
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`));
       }
     }
   }
@@ -217,6 +218,18 @@ async function streamOpenAI(
   }
 }
 
+// Format raw API errors into user-friendly messages
+function formatErrorMessage(error: unknown): string {
+  const msg = String(error);
+  if (msg.includes("429") || msg.includes("RESOURCE_EXHAUSTED") || msg.includes("Too Many Requests")) {
+    return "rate_limit";
+  }
+  if (msg.includes("401") || msg.includes("UNAUTHENTICATED")) {
+    return "auth_error";
+  }
+  return "general_error";
+}
+
 // --- Main handler ---
 export async function POST(request: Request) {
   const headerStore = await headers();
@@ -245,8 +258,9 @@ export async function POST(request: Request) {
         controller.enqueue(encoder.encode("data: [DONE]\n\n"));
       } catch (error) {
         console.error(`Schedule chat error (${provider}):`, error);
+        const errorType = formatErrorMessage(error);
         controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify({ error: String(error) })}\n\n`)
+          encoder.encode(`data: ${JSON.stringify({ error: errorType })}\n\n`)
         );
       }
       controller.close();

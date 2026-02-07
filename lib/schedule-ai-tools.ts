@@ -11,6 +11,8 @@ import {
   getWeekSchedule,
 } from "./schedule";
 import { getAllProtocols } from "./protocols";
+import { getAllEmployees, createEmployee, updateEmployee } from "./employees";
+import { getShiftDefinitions } from "./shifts";
 import type { Language } from "./i18n";
 
 // Fuzzy match a worker name to a worker record
@@ -173,6 +175,49 @@ export const openaiToolDefinitions = [
       },
     },
   },
+  {
+    type: "function" as const,
+    function: {
+      name: "list_employees",
+      description: "List all employees with their roles, default shifts, and active status",
+      parameters: { type: "object", properties: {} },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "add_employee",
+      description: "Add a new employee to the system",
+      parameters: {
+        type: "object",
+        properties: {
+          name: { type: "string", description: "Employee full name (Hebrew)" },
+          role: { type: "string", description: "Job role/title (Hebrew)" },
+          phone: { type: "string", description: "Phone number (10 digits, e.g. 0501234567)" },
+          pin: { type: "string", description: "4-digit PIN code for login" },
+          default_shift: { type: "string", description: "Default shift: morning, afternoon, or night" },
+        },
+        required: ["name", "role", "phone", "pin", "default_shift"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "update_employee",
+      description: "Update an employee's role, default shift, or active status. Cannot change PIN via chat.",
+      parameters: {
+        type: "object",
+        properties: {
+          employee_name: { type: "string", description: "Employee name (Hebrew, can be first name only)" },
+          role: { type: "string", description: "New role (optional)" },
+          default_shift: { type: "string", description: "New default shift (optional)" },
+          active: { type: "boolean", description: "Set to false to deactivate, true to reactivate (optional)" },
+        },
+        required: ["employee_name"],
+      },
+    },
+  },
 ];
 
 // --- Gemini format ---
@@ -239,6 +284,40 @@ export const geminiToolDeclarations: FunctionDeclaration[] = [
         shift: { type: Type.STRING, description: "Optional: morning, afternoon, or night" },
       },
       required: ["date"],
+    },
+  },
+  {
+    name: "list_employees",
+    description: "List all employees with their roles, default shifts, and active status",
+    parameters: { type: Type.OBJECT, properties: {} },
+  },
+  {
+    name: "add_employee",
+    description: "Add a new employee to the system",
+    parameters: {
+      type: Type.OBJECT,
+      properties: {
+        name: { type: Type.STRING, description: "Employee full name (Hebrew)" },
+        role: { type: Type.STRING, description: "Job role/title (Hebrew)" },
+        phone: { type: Type.STRING, description: "Phone number (10 digits, e.g. 0501234567)" },
+        pin: { type: Type.STRING, description: "4-digit PIN code for login" },
+        default_shift: { type: Type.STRING, description: "Default shift: morning, afternoon, or night" },
+      },
+      required: ["name", "role", "phone", "pin", "default_shift"],
+    },
+  },
+  {
+    name: "update_employee",
+    description: "Update an employee's role, default shift, or active status. Cannot change PIN via chat.",
+    parameters: {
+      type: Type.OBJECT,
+      properties: {
+        employee_name: { type: Type.STRING, description: "Employee name (Hebrew, can be first name only)" },
+        role: { type: Type.STRING, description: "New role (optional)" },
+        default_shift: { type: Type.STRING, description: "New default shift (optional)" },
+        active: { type: Type.BOOLEAN, description: "Set to false to deactivate, true to reactivate (optional)" },
+      },
+      required: ["employee_name"],
     },
   },
 ];
@@ -328,7 +407,7 @@ export async function executeScheduleTool(
       const schedule = await getWeekSchedule(week, "he");
       const dates = Object.keys(schedule).sort();
       const lines: string[] = [];
-      const dayNames = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+      const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
       for (let i = 0; i < dates.length; i++) {
         const date = dates[i];
@@ -337,7 +416,7 @@ export async function executeScheduleTool(
         for (const shift of shifts) {
           const assignments = day[shift] || [];
           if (assignments.length > 0) {
-            lines.push(`יום ${dayNames[i]} (${date}) ${shift}:`);
+            lines.push(`${dayNames[i]} (${date}) ${shift}:`);
             for (const a of assignments) {
               lines.push(`  ${a.worker_name}: ${a.protocol_title}`);
             }
@@ -347,7 +426,7 @@ export async function executeScheduleTool(
 
       return {
         success: true,
-        message: lines.length > 0 ? lines.join("\n") : "הלוח ריק לשבוע זה",
+        message: lines.length > 0 ? lines.join("\n") : "Schedule is empty for this week",
       };
     }
 
@@ -360,6 +439,83 @@ export async function executeScheduleTool(
         success: true,
         message: `נמחקו ${cleared} שיבוצים מ-${args.date}${args.shift ? ` (${args.shift})` : ""}`,
       };
+    }
+
+    case "list_employees": {
+      const employees = await getAllEmployees();
+      const lines = employees.map(
+        (e) =>
+          `- ${e.name} (${e.role}) — ${e.default_shift}${e.is_manager ? " [מנהל]" : ""}${!e.active ? " [לא פעיל]" : ""}`
+      );
+      return {
+        success: true,
+        message: lines.length > 0 ? lines.join("\n") : "No employees found",
+      };
+    }
+
+    case "add_employee": {
+      const empName = args.name as string;
+      const role = args.role as string;
+      const phone = (args.phone as string).replace(/\D/g, "");
+      const pin = args.pin as string;
+      const defaultShift = args.default_shift as string;
+
+      if (!empName || !role || !phone || !pin || !defaultShift) {
+        return { success: false, message: "חסרים שדות חובה" };
+      }
+
+      try {
+        const emp = await createEmployee({
+          name: empName,
+          role,
+          phone,
+          pin,
+          default_shift: defaultShift,
+          is_manager: false,
+        });
+        return {
+          success: true,
+          message: `נוסף עובד: ${emp.name} (${emp.role}), טלפון: ${emp.phone}, משמרת: ${emp.default_shift}`,
+        };
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        return { success: false, message: `שגיאה ביצירת עובד: ${msg}` };
+      }
+    }
+
+    case "update_employee": {
+      const worker = await resolveWorker(args.employee_name as string);
+      if (!worker) {
+        return {
+          success: false,
+          message: `לא מצאתי עובד בשם "${args.employee_name}"`,
+          error: "worker_not_found",
+        };
+      }
+
+      const updates: Record<string, unknown> = {};
+      if (args.role) updates.role = args.role;
+      if (args.default_shift) updates.default_shift = args.default_shift;
+      if (args.active !== undefined) updates.active = args.active;
+
+      if (Object.keys(updates).length === 0) {
+        return { success: false, message: "לא צוינו שדות לעדכון" };
+      }
+
+      try {
+        await updateEmployee(worker.id, updates);
+        const parts: string[] = [];
+        if (updates.role) parts.push(`תפקיד: ${updates.role}`);
+        if (updates.default_shift) parts.push(`משמרת: ${updates.default_shift}`);
+        if (updates.active !== undefined) parts.push(updates.active ? "הופעל" : "הושבת");
+        return {
+          success: true,
+          message: `עודכן ${worker.name}: ${parts.join(", ")}`,
+        };
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        return { success: false, message: `שגיאה בעדכון: ${msg}` };
+      }
     }
 
     default:

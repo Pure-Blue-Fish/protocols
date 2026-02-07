@@ -1,5 +1,5 @@
 // ABOUTME: Schedule API - get week schedule and bulk assign tasks
-// ABOUTME: Manager-only endpoints for viewing and modifying the schedule
+// ABOUTME: GET is open to all authenticated users, POST is manager-only
 
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
@@ -8,10 +8,6 @@ import type { Language } from "@/lib/i18n";
 import type { Shift } from "@/lib/db";
 
 export async function GET(request: Request) {
-  const headerStore = await headers();
-  if (headerStore.get("x-is-manager") !== "true") {
-    return NextResponse.json({ error: "Manager access required" }, { status: 403 });
-  }
 
   const url = new URL(request.url);
   const week = url.searchParams.get("week") || getSundayOfWeek(getTodayISO());

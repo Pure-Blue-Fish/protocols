@@ -5,6 +5,7 @@ import { GoogleGenAI, FunctionCallingConfigMode, type Content } from "@google/ge
 import { buildSystemPrompt, type ChatMessage } from "@/lib/chat";
 import { toolDeclarations, executeTool } from "@/lib/chat-tools";
 import type { Language } from "@/lib/protocols";
+import { headers } from "next/headers";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -14,7 +15,9 @@ export async function POST(request: Request) {
     lang: Language;
   };
 
-  const systemPrompt = buildSystemPrompt(lang);
+  const headerStore = await headers();
+  const workerId = parseInt(headerStore.get("x-worker-id") || "0", 10);
+  const systemPrompt = await buildSystemPrompt(lang, workerId);
 
   // Convert messages to Gemini format
   const contents: Content[] = messages.map((m) => ({

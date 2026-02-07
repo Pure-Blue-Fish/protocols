@@ -1,22 +1,14 @@
 // ABOUTME: System prompt builder for the schedule AI agent
-// ABOUTME: Injects workers, protocols, and current schedule into context
+// ABOUTME: Injects workers, protocols, and current schedule into English context
 
 import { getWorkers } from "./db";
 import type { Shift } from "./db";
 import { getAllProtocols } from "./protocols";
 import { getWeekSchedule } from "./schedule";
+import { getShiftDefinitions } from "./shifts";
 import type { Language } from "./i18n";
 
-function formatShift(shift: Shift, lang: Language): string {
-  const labels: Record<Shift, Record<Language, string>> = {
-    morning: { he: "בוקר", en: "morning" },
-    afternoon: { he: "צהריים", en: "afternoon" },
-    night: { he: "לילה", en: "night" },
-  };
-  return labels[shift][lang];
-}
-
-const DAY_NAMES_HE = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+const DAY_NAMES_EN = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 function formatScheduleForPrompt(
   schedule: Record<string, Record<Shift, { worker_name: string; protocol_title: string; notes: string | null }[]>>,
@@ -26,14 +18,14 @@ function formatScheduleForPrompt(
 
   for (let i = 0; i < dates.length; i++) {
     const date = dates[i];
-    const dayName = DAY_NAMES_HE[i] || date;
+    const dayName = DAY_NAMES_EN[i] || date;
     const dayData = schedule[date];
 
     const shifts: Shift[] = ["morning", "afternoon", "night"];
     for (const shift of shifts) {
       const assignments = dayData[shift] || [];
       if (assignments.length > 0) {
-        lines.push(`יום ${dayName} (${date}) - ${formatShift(shift, "he")}:`);
+        lines.push(`${dayName} (${date}) - ${shift}:`);
         for (const a of assignments) {
           lines.push(`  - ${a.worker_name}: ${a.protocol_title}${a.notes ? ` (${a.notes})` : ""}`);
         }
@@ -41,7 +33,7 @@ function formatScheduleForPrompt(
     }
   }
 
-  return lines.length > 0 ? lines.join("\n") : "(לוח ריק - אין משימות השבוע)";
+  return lines.length > 0 ? lines.join("\n") : "(Empty schedule — no tasks this week)";
 }
 
 export async function buildScheduleSystemPrompt(
@@ -51,9 +43,15 @@ export async function buildScheduleSystemPrompt(
   const workers = await getWorkers();
   const protocols = getAllProtocols(lang);
   const schedule = await getWeekSchedule(week, lang);
+  const shiftDefs = await getShiftDefinitions();
 
   const workersSection = workers
-    .map((w) => `- ${w.name} (${w.role}) - משמרת ברירת מחדל: ${formatShift(w.default_shift, "he")}`)
+    .map((w) => `- ${w.name} (${w.role}) - default shift: ${w.default_shift}${w.active ? "" : " [INACTIVE]"}`)
+    .join("\n");
+
+  const shiftDefsSection = shiftDefs
+    .filter((s) => s.active)
+    .map((s) => `- ${s.key}: ${s.display_name_he} (${s.start_time}-${s.end_time})`)
     .join("\n");
 
   const protocolsSection = protocols
@@ -62,36 +60,50 @@ export async function buildScheduleSystemPrompt(
 
   const scheduleSection = formatScheduleForPrompt(schedule);
 
-  return `אתה עוזר ניהול לוח עבודה של חוות הדגים Pure Blue Fish.
-אתה עוזר למנהל (רועי) ליצור ולשנות את לוח העבודה השבועי.
-ענה בעברית. אתה מבין עברית ואנגלית.
+  // Build explicit date list so the AI knows each day's exact date
+  const weekDates: string[] = [];
+  const d = new Date(week + "T12:00:00Z");
+  for (let i = 0; i < 7; i++) {
+    const dateStr = d.toISOString().split("T")[0];
+    weekDates.push(`- ${DAY_NAMES_EN[i]}: ${dateStr}`);
+    d.setUTCDate(d.getUTCDate() + 1);
+  }
+  const weekDatesSection = weekDates.join("\n");
 
-שבוע נוכחי: ${week}
+  return `You are a schedule management assistant for Pure Blue Fish fish farm.
+You help the manager (Roie) create and modify the weekly work schedule.
+Respond in the same language the user writes in. The user typically writes in Hebrew.
 
-עובדים:
+Current week: ${week}
+Week days and their exact dates:
+${weekDatesSection}
+
+Workers:
 ${workersSection}
 
-פרוטוקולים זמינים (משימות שאפשר לשבץ):
+Available protocols (tasks that can be assigned):
 ${protocolsSection}
 
-לוח עבודה נוכחי:
+Current schedule:
 ${scheduleSection}
 
-משמרות:
-- morning (בוקר): 06:00-14:00
-- afternoon (צהריים): 14:00-22:00
-- night (לילה): 22:00-06:00
+Shift definitions:
+${shiftDefsSection}
 
-כללים:
-- לכל עובד יש משמרת ברירת מחדל אבל אפשר לשבץ אותו למשמרות אחרות
-- פרוטוקולים יומיים (כמו חמצן, האכלה) צריכים להיות משובצים כל יום
-- לעובד יכולים להיות מספר פרוטוקולים במשמרת
-- כשמעתיקים שבוע, שמור על המבנה אבל עדכן תאריכים
-- אם לא ברור מה המנהל רוצה, שאל לפני שתבצע שינויים
-- השתמש בשם העובד בעברית (לא ID) כשמזהה עובדים
-- השתמש ב-protocol_slug (באנגלית) כשמזהה פרוטוקולים
+Rules:
+- CRITICAL: When assigning tasks, use the correct date from the "Week days and their exact dates" list above. Each day has a DIFFERENT date!
+- If the manager says "every day" or "all mornings", create a SEPARATE assignment for each of the 7 days with its correct date.
+- Each worker has a default shift but can be assigned to other shifts.
+- Daily protocols (like oxygen, feeding) should be assigned every day.
+- A worker can have multiple protocols per shift.
+- When copying a week, keep the structure but update dates.
+- If the manager's intent is unclear, ask before making changes.
+- Use worker names in Hebrew (not IDs) when identifying workers.
+- Use protocol_slug (in English) when identifying protocols.
+- You can manage employees (add, update, deactivate) and the weekly roster via tools.
+- NEVER set or change PINs via chat — direct the manager to the employees page for that.
 
-כשהמנהל נותן הוראות, השתמש בכלים הזמינים כדי לשנות את הלוח.
-אחרי שינויים, אשר בקצרה מה עשית.
-אם הלוח ריק, תציע להעתיק מהשבוע הקודם.`;
+When the manager gives instructions, use the available tools to modify the schedule.
+After changes, briefly confirm what you did.
+If the schedule is empty, suggest copying from the previous week.`;
 }

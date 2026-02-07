@@ -1,10 +1,12 @@
 // ABOUTME: Chat types and utilities for protocol assistant
-// ABOUTME: Builds system prompt from protocol content
+// ABOUTME: Builds system prompt from protocol content and worker tasks
 
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import type { Language } from "./protocols";
+import { getWorkerById } from "./db";
+import { getWorkerTasksForDate, getTodayISO, getSundayOfWeek, getWeekDates } from "./schedule";
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -13,11 +15,58 @@ export interface ChatMessage {
 
 const contentDirectory = path.join(process.cwd(), "content/protocols");
 
-export function buildSystemPrompt(lang: Language): string {
+const SHIFT_LABELS: Record<string, string> = {
+  morning: "Morning (06:00-14:00)",
+  afternoon: "Afternoon (14:00-22:00)",
+  night: "Night (22:00-06:00)",
+};
+
+const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+async function buildWorkerContext(workerId: number, lang: Language): Promise<string> {
+  if (!workerId) return "";
+
+  const worker = await getWorkerById(workerId);
+  if (!worker) return "";
+
+  const today = getTodayISO();
+  const sunday = getSundayOfWeek(today);
+  const dates = getWeekDates(sunday);
+
+  const lines: string[] = [
+    `\n---\nCURRENT USER: ${worker.name} (${worker.role}), default shift: ${worker.default_shift}`,
+    `Today: ${today}`,
+    `\nThis week's tasks for ${worker.name}:`,
+  ];
+
+  let hasTasks = false;
+  for (let i = 0; i < dates.length; i++) {
+    const tasks = await getWorkerTasksForDate(workerId, dates[i], lang);
+    if (tasks.length > 0) {
+      hasTasks = true;
+      const isToday = dates[i] === today;
+      lines.push(`${DAY_NAMES[i]} (${dates[i]})${isToday ? " [TODAY]" : ""}:`);
+      for (const t of tasks) {
+        const status = t.completed ? "[DONE]" : "[PENDING]";
+        lines.push(`  ${status} ${t.protocol_title} - ${SHIFT_LABELS[t.shift] || t.shift}${t.notes ? ` (${t.notes})` : ""}`);
+      }
+    }
+  }
+
+  if (!hasTasks) {
+    lines.push("(No tasks assigned this week)");
+  }
+
+  return lines.join("\n");
+}
+
+export async function buildSystemPrompt(lang: Language, workerId: number = 0): Promise<string> {
   const protocolsDirectory = path.join(contentDirectory, lang);
 
   if (!fs.existsSync(protocolsDirectory)) {
-    return getBasePrompt(lang);
+    const base = getBasePrompt(lang);
+    const workerCtx = await buildWorkerContext(workerId, lang);
+    return base + workerCtx;
   }
 
   const fileNames = fs.readdirSync(protocolsDirectory);
@@ -37,9 +86,10 @@ export function buildSystemPrompt(lang: Language): string {
   }
 
   const basePrompt = getBasePrompt(lang);
+  const workerCtx = await buildWorkerContext(workerId, lang);
 
   return `${basePrompt}
-
+${workerCtx}
 ---
 PROTOCOLS:
 ${protocolContents.join("\n\n---\n\n")}

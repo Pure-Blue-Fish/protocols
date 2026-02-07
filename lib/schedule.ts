@@ -136,6 +136,73 @@ export async function getWeekSchedule(
   return schedule;
 }
 
+export async function getTaskStatusList(
+  sundayStr: string,
+  lang: Language = "he",
+  workerId?: number
+): Promise<Assignment[]> {
+  const dates = getWeekDates(sundayStr);
+  const titleMap = buildProtocolTitleMap(lang);
+  const startDate = dates[0];
+  const endDate = dates[6];
+
+  const { rows } = workerId
+    ? await sql<{
+        id: number;
+        worker_id: number;
+        worker_name: string;
+        protocol_slug: string;
+        date: string;
+        shift: Shift;
+        notes: string | null;
+        completed_at: string | null;
+      }>`
+        SELECT sa.id, sa.worker_id, w.name as worker_name, sa.protocol_slug,
+               sa.date::text, sa.shift, sa.notes,
+               tc.completed_at::text
+        FROM schedule_assignments sa
+        JOIN workers w ON w.id = sa.worker_id
+        LEFT JOIN task_completions tc ON tc.assignment_id = sa.id
+        WHERE sa.date >= ${startDate} AND sa.date <= ${endDate}
+          AND sa.worker_id = ${workerId}
+        ORDER BY sa.date, w.name,
+          CASE sa.shift WHEN 'morning' THEN 1 WHEN 'afternoon' THEN 2 WHEN 'night' THEN 3 END
+      `
+    : await sql<{
+        id: number;
+        worker_id: number;
+        worker_name: string;
+        protocol_slug: string;
+        date: string;
+        shift: Shift;
+        notes: string | null;
+        completed_at: string | null;
+      }>`
+        SELECT sa.id, sa.worker_id, w.name as worker_name, sa.protocol_slug,
+               sa.date::text, sa.shift, sa.notes,
+               tc.completed_at::text
+        FROM schedule_assignments sa
+        JOIN workers w ON w.id = sa.worker_id
+        LEFT JOIN task_completions tc ON tc.assignment_id = sa.id
+        WHERE sa.date >= ${startDate} AND sa.date <= ${endDate}
+        ORDER BY sa.date, w.name,
+          CASE sa.shift WHEN 'morning' THEN 1 WHEN 'afternoon' THEN 2 WHEN 'night' THEN 3 END
+      `;
+
+  return rows.map((r) => ({
+    id: r.id,
+    worker_id: r.worker_id,
+    worker_name: r.worker_name,
+    protocol_slug: r.protocol_slug,
+    protocol_title: titleMap[r.protocol_slug] || r.protocol_slug,
+    date: r.date,
+    shift: r.shift,
+    notes: r.notes,
+    completed: r.completed_at !== null,
+    completed_at: r.completed_at,
+  })) as Assignment[];
+}
+
 export async function assignTask(
   workerId: number,
   protocolSlug: string,

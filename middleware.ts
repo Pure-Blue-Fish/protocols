@@ -42,14 +42,18 @@ async function verifyTokenEdge(
   };
 }
 
-const PUBLIC_PATHS = ["/login", "/api/auth", "/api/auth/worker"];
-const MANAGER_PATHS = ["/schedule", "/api/schedule", "/api/schedule-chat", "/api/workers"];
+const PUBLIC_PATHS = ["/login", "/api/auth", "/api/auth/worker", "/api/auth/logout"];
+// /api/auth/me is NOT public — it needs auth headers from middleware
+const MANAGER_PATHS = [
+  "/api/schedule-chat", "/api/workers", "/api/task-status", "/task-status",
+  "/api/employees", "/api/shifts", "/employees", "/shifts",
+];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow public paths
-  if (PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
+  // Allow public paths (exact match only to avoid catching /api/auth/me)
+  if (PUBLIC_PATHS.includes(pathname)) {
     return NextResponse.next();
   }
 

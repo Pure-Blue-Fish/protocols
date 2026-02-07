@@ -18,7 +18,7 @@ export default function AssignmentCard({
 }: AssignmentCardProps) {
   return (
     <div
-      className={`px-2 py-1.5 rounded-md text-xs border ${
+      className={`px-2 py-1.5 rounded-md text-xs border transition-colors ${
         completed
           ? "bg-green-50 border-green-200 text-green-700"
           : "bg-white border-gray-200 text-gray-700"

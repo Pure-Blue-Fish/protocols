@@ -47,9 +47,37 @@ async function setup() {
     )
   `;
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS shift_definitions (
+      id SERIAL PRIMARY KEY,
+      key TEXT UNIQUE NOT NULL,
+      display_name_he TEXT NOT NULL,
+      display_name_en TEXT NOT NULL,
+      start_time TEXT NOT NULL,
+      end_time TEXT NOT NULL,
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      active BOOLEAN NOT NULL DEFAULT TRUE
+    )
+  `;
+
   await sql`CREATE INDEX IF NOT EXISTS idx_assignments_date ON schedule_assignments(date)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_assignments_worker_date ON schedule_assignments(worker_id, date)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_completions_assignment ON task_completions(assignment_id)`;
+
+  // Seed default shift definitions
+  const shifts = [
+    { key: "morning", he: "בוקר", en: "Morning", start: "06:00", end: "14:00", order: 1 },
+    { key: "afternoon", he: "צהריים", en: "Afternoon", start: "14:00", end: "22:00", order: 2 },
+    { key: "night", he: "לילה", en: "Night", start: "22:00", end: "06:00", order: 3 },
+  ];
+
+  for (const s of shifts) {
+    await sql`
+      INSERT INTO shift_definitions (key, display_name_he, display_name_en, start_time, end_time, sort_order)
+      VALUES (${s.key}, ${s.he}, ${s.en}, ${s.start}, ${s.end}, ${s.order})
+      ON CONFLICT (key) DO NOTHING
+    `;
+  }
 
   console.log("Tables created.");
 

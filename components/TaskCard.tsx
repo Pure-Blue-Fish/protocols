@@ -6,7 +6,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import ShiftBadge from "./ShiftBadge";
-import type { Language } from "@/lib/i18n";
+import { useToast } from "@/components/ui/Toast";
+import { UI_STRINGS, type Language } from "@/lib/i18n";
 
 interface TaskCardProps {
   assignmentId: number;
@@ -29,6 +30,8 @@ export default function TaskCard({
 }: TaskCardProps) {
   const [completed, setCompleted] = useState(initialCompleted);
   const [toggling, setToggling] = useState(false);
+  const { toast } = useToast();
+  const ui = UI_STRINGS[lang];
 
   const handleToggle = async () => {
     setToggling(true);
@@ -39,18 +42,21 @@ export default function TaskCard({
       if (res.ok) {
         const data = await res.json();
         setCompleted(data.completed);
+        toast("success", data.completed ? ui.taskMarkedDone : ui.taskMarkedUndone);
+      } else {
+        toast("error", ui.errorSaving);
       }
     } catch {
-      // Revert on error
+      toast("error", ui.connectionError);
     }
     setToggling(false);
   };
 
   return (
     <div
-      className={`bg-white rounded-xl p-4 shadow-sm border transition-all ${
+      className={`bg-white rounded-xl p-4 shadow-card border transition-all ${
         completed ? "border-green-200 bg-green-50/50" : "border-gray-100"
-      }`}
+      } ${toggling ? "scale-[0.98]" : ""}`}
     >
       <div className="flex items-start gap-3">
         {/* Checkbox */}
@@ -64,7 +70,7 @@ export default function TaskCard({
           } ${toggling ? "opacity-50" : ""}`}
         >
           {completed && (
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 animate-checkmark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
             </svg>
           )}

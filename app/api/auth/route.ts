@@ -16,6 +16,8 @@ export async function POST(request: NextRequest) {
       sameSite: "lax",
       maxAge: 60 * 60 * 24 * 7, // 1 week
     });
+    // Clear worker auth token to avoid conflict
+    response.cookies.set("auth_token", "", { maxAge: 0, path: "/" });
     return response;
   }
 

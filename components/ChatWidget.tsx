@@ -6,6 +6,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import type { Language } from "@/lib/protocols";
 import ChatMessage from "./ChatMessage";
+import { useToast } from "@/components/ui/Toast";
 
 interface Message {
   role: "user" | "assistant";
@@ -33,7 +34,7 @@ export default function ChatWidget({ lang, placeholder, title }: ChatWidgetProps
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [toolStatus, setToolStatus] = useState<string | null>(null);
-  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const isRTL = lang === "he";
 
@@ -122,12 +123,7 @@ export default function ChatWidget({ lang, placeholder, title }: ChatWidgetProps
               if (data.toolResult) {
                 setToolStatus(null);
                 const result = data.toolResult as ToolResult;
-                setNotification({
-                  type: result.success ? "success" : "error",
-                  message: result.message,
-                });
-                // Auto-hide notification after 4 seconds
-                setTimeout(() => setNotification(null), 4000);
+                toast(result.success ? "success" : "error", result.message);
               }
             } catch {
               // Skip malformed JSON
@@ -261,18 +257,6 @@ export default function ChatWidget({ lang, placeholder, title }: ChatWidgetProps
               )}
               <div ref={messagesEndRef} />
             </div>
-
-            {notification && (
-              <div
-                className={`mx-4 mb-2 px-4 py-2 rounded-lg text-sm ${
-                  notification.type === "success"
-                    ? "bg-green-50 text-green-700 border border-green-200"
-                    : "bg-red-50 text-red-700 border border-red-200"
-                }`}
-              >
-                {notification.message}
-              </div>
-            )}
 
             {/* Input */}
             <div className="p-4 border-t">

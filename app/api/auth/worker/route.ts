@@ -49,6 +49,8 @@ export async function POST(request: Request) {
     maxAge: 7 * 24 * 60 * 60,
     path: "/",
   });
+  // Clear legacy manager cookie to avoid conflict
+  response.cookies.set("auth", "", { maxAge: 0, path: "/" });
 
   return response;
 }

@@ -6,6 +6,13 @@ import { cookies } from "next/headers";
 import "./globals.css";
 import { UI_STRINGS, type Language } from "@/lib/protocols";
 import ChatWidget from "@/components/ChatWidget";
+import { ToastProvider } from "@/components/ui/Toast";
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 export const metadata: Metadata = {
   title: "Protocols - Pure Blue Fish",
@@ -25,7 +32,9 @@ export default async function RootLayout({
   return (
     <html lang={lang} dir={dir}>
       <body className="antialiased bg-gray-50 text-gray-900">
-        {children}
+        <ToastProvider>
+          {children}
+        </ToastProvider>
         <ChatWidget
           lang={lang}
           title={ui.chatTitle}
