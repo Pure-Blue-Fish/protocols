@@ -20,10 +20,10 @@ Manager: Roie (רועי לביא), `is_manager: true` in DB. Worker phone number
 ## Directory Structure
 ```
 app/
-  page.tsx              # Main dashboard with protocol categories
+  page.tsx              # Main dashboard: metrics (managers), protocol search, categories
   [slug]/page.tsx       # Protocol detail view
-  schedule/page.tsx     # Weekly calendar (all users) + AI chat (managers only)
-  task-status/page.tsx  # Manager task status dashboard (day picker + filtered weekly table)
+  schedule/page.tsx     # Weekly calendar + AI chat (mobile: tab switcher, desktop: side panel)
+  task-status/page.tsx  # Manager task status: sortable table, filter chips, skeleton loading
   my-tasks/page.tsx     # Worker's own weekly tasks with completion toggles
   employees/page.tsx    # Manager-only employee CRUD (add, edit, deactivate)
   shifts/page.tsx       # Manager-only shift definitions + weekly roster grid
@@ -59,6 +59,11 @@ components/
   LanguageToggle.tsx    # Hebrew/English switcher
   ChatWidget.tsx        # Protocol chat floating widget
   PrintButton.tsx       # Print protocol
+  MobileNav.tsx         # Top navigation header
+  BottomNav.tsx         # Fixed bottom tab bar for workers (mobile only)
+  DashboardMetrics.tsx  # Manager dashboard stat cards
+  ProtocolSearch.tsx    # Client-side protocol search
+  ui/                   # 14 shared UI components (see MEMORY.md for details)
 lib/
   db.ts                 # Vercel Postgres pool + query helpers
   auth.ts               # Cookie signing, PIN hashing (Node crypto)
