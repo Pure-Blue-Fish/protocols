@@ -17,11 +17,26 @@ interface DashboardMetricsProps {
   };
 }
 
+const METRIC_ICONS: React.ReactNode[] = [
+  <svg key="tasks" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h.01M12 16h.01" />
+  </svg>,
+  <svg key="done" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>,
+  <svg key="rate" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 13h2l3-8 4 16 3-8h6" />
+  </svg>,
+  <svg key="workers" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>,
+];
+
 const METRIC_STYLES = [
-  { icon: "📋", bg: "bg-blue-50", text: "text-blue-700", ring: "ring-blue-200" },
-  { icon: "✅", bg: "bg-green-50", text: "text-green-700", ring: "ring-green-200" },
-  { icon: "📊", bg: "bg-purple-50", text: "text-purple-700", ring: "ring-purple-200" },
-  { icon: "👥", bg: "bg-amber-50", text: "text-amber-700", ring: "ring-amber-200" },
+  { bg: "bg-brand-primary-light", text: "text-brand-primary", ring: "ring-brand-primary/20" },
+  { bg: "bg-brand-success-light", text: "text-brand-success", ring: "ring-brand-success/20" },
+  { bg: "bg-[#f5f3ff]", text: "text-[#7c3aed]", ring: "ring-[#7c3aed]/20" },
+  { bg: "bg-brand-warning-light", text: "text-brand-warning", ring: "ring-brand-warning/20" },
 ];
 
 export default function DashboardMetrics({
@@ -42,7 +57,7 @@ export default function DashboardMetrics({
 
   return (
     <div className="mb-8">
-      <h2 className="text-lg font-semibold mb-3 text-gray-700">{labels.weeklyOverview}</h2>
+      <h2 className="text-lg font-semibold mb-3 text-text-primary font-heading">{labels.weeklyOverview}</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {metrics.map((m, i) => {
           const style = METRIC_STYLES[i];
@@ -50,12 +65,12 @@ export default function DashboardMetrics({
             <Link
               key={m.label}
               href={m.href}
-              className={`${style.bg} rounded-xl p-4 ring-1 ${style.ring} animate-fade-in-up hover:shadow-card-hover transition-shadow`}
+              className={`${style.bg} rounded-2xl p-4 ring-1 ${style.ring} animate-fade-in-up hover:shadow-card-hover hover:translate-y-[-1px] transition-all`}
               style={{ animationDelay: `${i * 50}ms` }}
             >
-              <div className="text-2xl mb-1">{style.icon}</div>
-              <div className={`text-2xl font-bold ${style.text}`}>{m.value}</div>
-              <div className="text-xs text-gray-500 mt-0.5">{m.label}</div>
+              <div className={`mb-2 ${style.text}`}>{METRIC_ICONS[i]}</div>
+              <div className={`text-2xl font-bold font-heading ${style.text}`}>{m.value}</div>
+              <div className="text-xs text-text-muted mt-0.5">{m.label}</div>
             </Link>
           );
         })}

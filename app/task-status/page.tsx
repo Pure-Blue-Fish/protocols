@@ -234,14 +234,14 @@ export default function TaskStatusPage() {
 
   if (!isManager) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50" dir="rtl">
-        <p className="text-gray-500">גישה למנהלים בלבד</p>
+      <div className="min-h-screen flex items-center justify-center bg-surface-page" dir="rtl">
+        <p className="text-text-muted">גישה למנהלים בלבד</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50" dir="rtl">
+    <div className="min-h-screen bg-surface-page" dir="rtl">
       <MobileNav lang={lang} userName="מנהל" currentPage="taskStatus" isManager={true} />
 
       <div className="max-w-6xl mx-auto px-4 py-6">
@@ -249,19 +249,19 @@ export default function TaskStatusPage() {
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={() => setWeek(shiftWeek(week, -7))}
-            className="px-3 py-1.5 text-sm text-gray-600 bg-white rounded-lg border border-gray-200 hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm text-text-secondary bg-surface-card rounded-lg border border-border-default hover:bg-surface-subtle transition-colors"
           >
             {ui.prevWeek}
           </button>
-          <h1 className="text-sm font-medium text-gray-700">
+          <h1 className="text-sm font-medium text-text-primary font-heading">
             {ui.taskStatus}
-            <span className="text-gray-400 mr-2">
+            <span className="text-text-muted mr-2">
               {" "}{formatDateShort(weekDates[0])} - {formatDateShort(weekDates[6])}
             </span>
           </h1>
           <button
             onClick={() => setWeek(shiftWeek(week, 7))}
-            className="px-3 py-1.5 text-sm text-gray-600 bg-white rounded-lg border border-gray-200 hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm text-text-secondary bg-surface-card rounded-lg border border-border-default hover:bg-surface-subtle transition-colors"
           >
             {ui.nextWeek}
           </button>
@@ -274,7 +274,7 @@ export default function TaskStatusPage() {
                 <Skeleton key={i} className="flex-1 h-16 rounded-lg" />
               ))}
             </div>
-            <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-3">
+            <div className="bg-surface-card rounded-xl border border-border-subtle p-4 space-y-3">
               {[1, 2, 3, 4].map((i) => (
                 <Skeleton key={i} className="h-10 w-full" />
               ))}
@@ -296,26 +296,26 @@ export default function TaskStatusPage() {
                     onClick={() => setSelectedDay(date)}
                     className={`flex-1 min-w-[80px] px-2 py-2 rounded-lg text-center border transition-all ${
                       isSelected
-                        ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                        ? "bg-brand-primary text-white border-brand-primary shadow-sm"
                         : hasTasks
-                          ? "bg-white border-gray-200 hover:border-blue-300 hover:bg-blue-50"
-                          : "bg-gray-50 border-gray-100 text-gray-400"
+                          ? "bg-surface-card border-border-default hover:border-brand-primary/30 hover:bg-brand-primary-light"
+                          : "bg-surface-subtle border-border-subtle text-text-muted"
                     }`}
                   >
                     <div className={`text-xs font-medium ${isSelected ? "text-white" : ""}`}>
                       {getDayName(date, lang)}
                     </div>
-                    <div className={`text-[10px] ${isSelected ? "text-blue-100" : "text-gray-400"}`}>
+                    <div className={`text-[10px] ${isSelected ? "text-white/70" : "text-text-muted"}`}>
                       {formatDateShort(date)}
                       {isToday && !isSelected && " *"}
                     </div>
                     {hasTasks && (
                       <div className={`text-[10px] mt-0.5 font-medium ${
                         isSelected
-                          ? "text-blue-100"
+                          ? "text-white/70"
                           : count.completed === count.total
-                            ? "text-green-600"
-                            : "text-gray-500"
+                            ? "text-brand-success"
+                            : "text-text-muted"
                       }`}>
                         {count.completed}/{count.total}
                       </div>
@@ -329,24 +329,24 @@ export default function TaskStatusPage() {
             {selectedDay && (
               <div className="mb-8">
                 <div className="flex items-center gap-3 mb-3">
-                  <h2 className="text-sm font-semibold text-gray-700">
+                  <h2 className="text-sm font-semibold text-text-primary font-heading">
                     {getDayName(selectedDay, lang)} {formatDateShort(selectedDay)}
                     {selectedDay === today && (
-                      <span className="text-[10px] bg-blue-600 text-white px-1.5 py-0.5 rounded-full mr-2">
+                      <span className="text-[10px] bg-brand-primary text-white px-1.5 py-0.5 rounded-full mr-2">
                         {ui.today}
                       </span>
                     )}
                   </h2>
                   {dayTotal > 0 && (
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-text-muted">
                       {dayCompleted}/{dayTotal}
                     </span>
                   )}
                 </div>
 
                 {dayTotal === 0 ? (
-                  <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
-                    <p className="text-sm text-gray-400">{ui.noTasksThisShift}</p>
+                  <div className="bg-surface-card rounded-xl border border-border-subtle p-6 text-center">
+                    <p className="text-sm text-text-muted">{ui.noTasksThisShift}</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -372,28 +372,28 @@ export default function TaskStatusPage() {
                                 key={a.id}
                                 className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm ${
                                   a.completed
-                                    ? "bg-green-50 border-green-200"
-                                    : "bg-white border-gray-200"
+                                    ? "bg-brand-success-light border-brand-success/20"
+                                    : "bg-surface-card border-border-default"
                                 }`}
                               >
                                 {a.completed ? (
-                                  <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                  <svg className="w-4 h-4 text-brand-success flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                   </svg>
                                 ) : (
-                                  <div className="w-4 h-4 rounded-full border-2 border-gray-300 flex-shrink-0" />
+                                  <div className="w-4 h-4 rounded-full border-2 border-border-default flex-shrink-0" />
                                 )}
 
                                 <div className="flex-1 min-w-0">
-                                  <span className="font-medium text-gray-800">{a.worker_name}</span>
-                                  <span className="text-gray-400 mx-1">—</span>
-                                  <span className={a.completed ? "text-gray-400 line-through" : "text-gray-600"}>
+                                  <span className="font-medium text-text-primary">{a.worker_name}</span>
+                                  <span className="text-text-muted mx-1">—</span>
+                                  <span className={a.completed ? "text-text-muted line-through" : "text-text-secondary"}>
                                     {a.protocol_title}
                                   </span>
                                 </div>
 
                                 {a.completed_at && (
-                                  <span className="text-[10px] text-gray-400 flex-shrink-0">
+                                  <span className="text-[10px] text-text-muted flex-shrink-0">
                                     {formatTime(a.completed_at)}
                                   </span>
                                 )}
@@ -410,7 +410,7 @@ export default function TaskStatusPage() {
 
             {/* ── WEEKLY TABLE WITH FILTERS ── */}
             <div>
-              <h2 className="text-sm font-semibold text-gray-700 mb-3">
+              <h2 className="text-sm font-semibold text-text-primary font-heading mb-3">
                 {ui.weeklyDetails}
               </h2>
 
@@ -418,7 +418,7 @@ export default function TaskStatusPage() {
                 <select
                   value={selectedWorker}
                   onChange={(e) => setSelectedWorker(e.target.value)}
-                  className="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-lg"
+                  className="px-3 py-1.5 text-sm bg-surface-card border border-border-default rounded-lg"
                 >
                   <option value="all">{ui.allWorkers}</option>
                   {data?.workers.map((w) => (
@@ -428,7 +428,7 @@ export default function TaskStatusPage() {
                 <select
                   value={selectedProtocol}
                   onChange={(e) => setSelectedProtocol(e.target.value)}
-                  className="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-lg"
+                  className="px-3 py-1.5 text-sm bg-surface-card border border-border-default rounded-lg"
                 >
                   <option value="all">{ui.allProtocols}</option>
                   {protocolOptions.map(([slug, title]) => (
@@ -438,7 +438,7 @@ export default function TaskStatusPage() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as "all" | "completed" | "pending")}
-                  className="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-lg"
+                  className="px-3 py-1.5 text-sm bg-surface-card border border-border-default rounded-lg"
                 >
                   <option value="all">{ui.allStatuses}</option>
                   <option value="completed">{ui.completed}</option>
@@ -473,7 +473,7 @@ export default function TaskStatusPage() {
                       setSelectedProtocol("all");
                       setStatusFilter("all");
                     }}
-                    className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1"
+                    className="text-xs text-text-muted hover:text-text-secondary px-2 py-1"
                   >
                     {ui.clearFilters}
                   </button>
@@ -496,16 +496,16 @@ export default function TaskStatusPage() {
                   <Tbody>
                     {sorted.map((a) => (
                       <Tr key={a.id}>
-                        <Td className="text-gray-800">{a.worker_name}</Td>
+                        <Td className="text-text-primary">{a.worker_name}</Td>
                         <Td>
                           <Link
                             href={`/${a.protocol_slug}?lang=${lang}`}
-                            className="text-blue-600 hover:underline"
+                            className="text-brand-primary hover:underline"
                           >
                             {a.protocol_title}
                           </Link>
                         </Td>
-                        <Td className="text-gray-600">
+                        <Td className="text-text-secondary">
                           {getDayName(a.date, lang)} {formatDateShort(a.date)}
                         </Td>
                         <Td>
@@ -513,7 +513,7 @@ export default function TaskStatusPage() {
                         </Td>
                         <Td>
                           {a.completed ? (
-                            <span className="inline-flex items-center gap-1 text-green-700 bg-green-50 px-2 py-0.5 rounded-full text-xs font-medium">
+                            <span className="inline-flex items-center gap-1 text-brand-success bg-brand-success-light px-2 py-0.5 rounded-full text-xs font-medium">
                               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                               </svg>
@@ -525,19 +525,19 @@ export default function TaskStatusPage() {
                             </span>
                           )}
                           {a.completed_at && (
-                            <div className="text-[10px] text-gray-400 mt-0.5">
+                            <div className="text-[10px] text-text-muted mt-0.5">
                               {formatTime(a.completed_at)}
                             </div>
                           )}
                         </Td>
-                        <Td className="text-gray-500 text-xs max-w-[150px] truncate">
+                        <Td className="text-text-muted text-xs max-w-[150px] truncate">
                           {a.notes || "—"}
                         </Td>
                       </Tr>
                     ))}
                     {sorted.length === 0 && (
                       <Tr>
-                        <Td colSpan={6} className="text-center text-gray-400 py-8">
+                        <Td colSpan={6} className="text-center text-text-muted py-8">
                           {ui.noAssignments}
                         </Td>
                       </Tr>
@@ -549,21 +549,21 @@ export default function TaskStatusPage() {
               {/* Mobile cards */}
               <div className="md:hidden space-y-2">
                 {sorted.length === 0 ? (
-                  <div className="bg-white rounded-xl border border-gray-100 p-8 text-center text-gray-400">
+                  <div className="bg-surface-card rounded-xl border border-border-subtle p-8 text-center text-text-muted">
                     {ui.noAssignments}
                   </div>
                 ) : (
                   sorted.map((a) => (
                     <div
                       key={a.id}
-                      className={`bg-white rounded-lg border p-3 ${
-                        a.completed ? "border-green-200" : "border-gray-200"
+                      className={`bg-surface-card rounded-lg border p-3 ${
+                        a.completed ? "border-brand-success/20" : "border-border-default"
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="font-medium text-sm text-gray-800">{a.worker_name}</span>
+                        <span className="font-medium text-sm text-text-primary">{a.worker_name}</span>
                         {a.completed ? (
-                          <span className="inline-flex items-center gap-1 text-green-700 bg-green-50 px-2 py-0.5 rounded-full text-xs font-medium">
+                          <span className="inline-flex items-center gap-1 text-brand-success bg-brand-success-light px-2 py-0.5 rounded-full text-xs font-medium">
                             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
@@ -577,19 +577,19 @@ export default function TaskStatusPage() {
                       </div>
                       <Link
                         href={`/${a.protocol_slug}?lang=${lang}`}
-                        className="text-sm text-blue-600 hover:underline block mb-1.5"
+                        className="text-sm text-brand-primary hover:underline block mb-1.5"
                       >
                         {a.protocol_title}
                       </Link>
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-2 text-xs text-text-muted">
                         <span>{getDayName(a.date, lang)} {formatDateShort(a.date)}</span>
                         <ShiftBadge shift={a.shift} lang={lang} />
                         {a.completed_at && (
-                          <span className="text-gray-400">{formatTime(a.completed_at)}</span>
+                          <span className="text-text-muted">{formatTime(a.completed_at)}</span>
                         )}
                       </div>
                       {a.notes && (
-                        <div className="text-xs text-gray-400 mt-1">{a.notes}</div>
+                        <div className="text-xs text-text-muted mt-1">{a.notes}</div>
                       )}
                     </div>
                   ))

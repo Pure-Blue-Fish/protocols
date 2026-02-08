@@ -20,8 +20,8 @@ export default function AssignmentCard({
     <div
       className={`px-2 py-1.5 rounded-md text-xs border transition-colors ${
         completed
-          ? "bg-green-50 border-green-200 text-green-700"
-          : "bg-white border-gray-200 text-gray-700"
+          ? "bg-brand-success-light border-brand-success/20 text-brand-success"
+          : "bg-surface-card border-border-default text-text-secondary"
       }`}
     >
       <div className="font-medium truncate">{workerName}</div>
@@ -29,7 +29,7 @@ export default function AssignmentCard({
         {protocolTitle}
       </div>
       {notes && (
-        <div className="text-gray-400 truncate mt-0.5">{notes}</div>
+        <div className="text-text-muted truncate mt-0.5">{notes}</div>
       )}
     </div>
   );

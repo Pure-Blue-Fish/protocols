@@ -82,7 +82,7 @@ export default function AdminPage() {
     try {
       const res = await fetch(`/api/protocols?lang=${language}`);
       const data = await res.json();
-      setProtocols(data);
+      setProtocols(Array.isArray(data) ? data : []);
     } catch {
       console.error("Failed to load protocols");
     }
@@ -134,31 +134,31 @@ export default function AdminPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex bg-gray-50" dir={lang === "he" ? "rtl" : "ltr"}>
+    <div className="min-h-screen flex bg-surface-page" dir={lang === "he" ? "rtl" : "ltr"}>
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-e border-gray-200 p-4 overflow-y-auto flex-shrink-0">
+      <aside className="w-64 bg-surface-card border-e border-border-default p-4 overflow-y-auto flex-shrink-0">
         <div className="mb-4 flex justify-between items-center">
-          <h1 className="font-bold text-lg">{lang === "he" ? "עריכת פרוטוקולים" : "Edit Protocols"}</h1>
-          <Link href="/" className="text-sm text-blue-600 hover:underline">
+          <h1 className="font-bold text-lg font-heading">{lang === "he" ? "עריכת פרוטוקולים" : "Edit Protocols"}</h1>
+          <Link href="/" className="text-sm text-brand-primary hover:underline">
             {lang === "he" ? "חזרה" : "Back"}
           </Link>
         </div>
         <div className="mb-4 flex gap-2">
           <button
             onClick={() => setLang("he")}
-            className={`px-3 py-1 rounded text-sm ${lang === "he" ? "bg-blue-600 text-white" : "bg-gray-100"}`}
+            className={`px-3 py-1 rounded text-sm ${lang === "he" ? "bg-brand-primary text-white" : "bg-surface-subtle"}`}
           >
             עברית
           </button>
           <button
             onClick={() => setLang("en")}
-            className={`px-3 py-1 rounded text-sm ${lang === "en" ? "bg-blue-600 text-white" : "bg-gray-100"}`}
+            className={`px-3 py-1 rounded text-sm ${lang === "en" ? "bg-brand-primary text-white" : "bg-surface-subtle"}`}
           >
             English
           </button>
         </div>
         {loading ? (
-          <p className="text-gray-500">{lang === "he" ? "טוען..." : "Loading..."}</p>
+          <p className="text-text-secondary">{lang === "he" ? "טוען..." : "Loading..."}</p>
         ) : (
           <ul className="space-y-1">
             {protocols.map((p) => {
@@ -167,10 +167,10 @@ export default function AdminPage() {
                 <li key={p.slug}>
                   <button
                     onClick={() => selectProtocol(p)}
-                    className={`w-full text-start px-3 py-2 rounded-lg text-sm ${
+                    className={`w-full text-start px-3 py-2 rounded-lg text-sm transition-colors ${
                       selected?.slug === p.slug
-                        ? "bg-blue-600 text-white"
-                        : "hover:bg-gray-100"
+                        ? "bg-brand-primary text-white"
+                        : "hover:bg-brand-primary-light hover:text-brand-primary"
                     }`}
                   >
                     {fm.title || p.slug}
@@ -187,11 +187,11 @@ export default function AdminPage() {
         {selected ? (
           <div className="max-w-4xl">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">{frontmatter.title || selected.slug}</h2>
+              <h2 className="text-xl font-bold font-heading">{frontmatter.title || selected.slug}</h2>
               <button
                 onClick={saveProtocol}
                 disabled={saving}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                className="px-4 py-2 bg-brand-success text-white rounded-lg hover:bg-brand-success/90 disabled:opacity-50 transition-colors"
               >
                 {saving ? (lang === "he" ? "שומר..." : "Saving...") : (lang === "he" ? "שמור" : "Save")}
               </button>
@@ -205,7 +205,7 @@ export default function AdminPage() {
             />
           </div>
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-500">
+          <div className="flex items-center justify-center h-full text-text-secondary">
             {lang === "he" ? "בחר פרוטוקול לעריכה" : "Select a protocol to edit"}
           </div>
         )}

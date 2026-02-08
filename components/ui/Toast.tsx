@@ -46,12 +46,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`pointer-events-auto px-4 py-2.5 rounded-lg shadow-lg text-sm font-medium flex items-center gap-2 animate-slide-up ${
+            className={`pointer-events-auto px-4 py-2.5 rounded-xl shadow-elevated text-sm font-medium flex items-center gap-2 animate-slide-up ${
               t.type === "success"
-                ? "bg-green-600 text-white"
+                ? "bg-brand-success text-white"
                 : t.type === "error"
-                  ? "bg-red-600 text-white"
-                  : "bg-gray-800 text-white"
+                  ? "bg-brand-danger text-white"
+                  : "bg-text-primary text-white"
             }`}
           >
             {t.type === "success" && (

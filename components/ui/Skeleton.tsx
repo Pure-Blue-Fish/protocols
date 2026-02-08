@@ -8,7 +8,7 @@ interface SkeletonProps {
 export default function Skeleton({ className = "h-4 w-full" }: SkeletonProps) {
   return (
     <div
-      className={`bg-gray-200 rounded-md animate-pulse ${className}`}
+      className={`bg-surface-subtle rounded-md animate-pulse ${className}`}
       aria-hidden="true"
     />
   );

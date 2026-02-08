@@ -458,27 +458,29 @@ export default async function RecommendationsPage({
   const c = content[lang];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface-page">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 shadow-sm print:hidden">
+      <header className="bg-gradient-to-r from-header-from to-header-to shadow-elevated print:hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
           <Link href={`/?lang=${lang}`} className="flex items-center gap-2">
-            <svg className="w-5 h-5 text-gray-600 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-white/80 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            <Image
-              src="/logo.png"
-              alt="Pure Blue Fish"
-              width={100}
-              height={40}
-              className="h-8 sm:h-10 w-auto"
-            />
+            <div className="bg-white/95 rounded-lg p-1.5">
+              <Image
+                src="/logo.png"
+                alt="Pure Blue Fish"
+                width={100}
+                height={40}
+                className="h-7 sm:h-9 w-auto"
+              />
+            </div>
           </Link>
           <div className="flex items-center gap-2 sm:gap-4">
             <LanguageToggle currentLang={lang} />
             <Link
               href={`/?lang=${lang}`}
-              className="hidden sm:block px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm"
+              className="hidden sm:block px-4 py-2 bg-white/10 text-white/90 rounded-lg hover:bg-white/20 text-sm transition-colors"
             >
               {c.backToProtocols}
             </Link>
@@ -489,29 +491,29 @@ export default async function RecommendationsPage({
       {/* Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-2">{c.title}</h1>
-          <p className="text-sm sm:text-base text-gray-600">{c.subtitle}</p>
-          <p className="text-xs sm:text-sm text-gray-400 mt-2">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-text-primary font-heading">{c.title}</h1>
+          <p className="text-sm sm:text-base text-text-secondary">{c.subtitle}</p>
+          <p className="text-xs sm:text-sm text-text-muted mt-2">
             {c.date} | {c.sources}
           </p>
         </div>
 
         {/* Executive Summary */}
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-3">{c.executiveSummary}</h2>
-          <p className="text-gray-700 mb-4">{c.executiveSummaryText}</p>
+        <div className="bg-brand-primary-light border border-brand-primary/20 rounded-2xl p-6 mb-8">
+          <h2 className="text-xl font-semibold mb-3 font-heading">{c.executiveSummary}</h2>
+          <p className="text-text-secondary mb-4">{c.executiveSummaryText}</p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-blue-200">
-                  <th className="text-start py-2 px-3">{lang === "he" ? "תחום" : "Area"}</th>
-                  <th className="text-start py-2 px-3">
+                <tr className="border-b border-brand-primary/20">
+                  <th className="text-start py-2 px-3 font-heading">{lang === "he" ? "תחום" : "Area"}</th>
+                  <th className="text-start py-2 px-3 font-heading">
                     {lang === "he" ? "עיקרי ההמלצות" : "Key Recommendations"}
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b border-blue-100">
+                <tr className="border-b border-brand-primary/10">
                   <td className="py-2 px-3">{lang === "he" ? "חמצן" : "Oxygen"}</td>
                   <td className="py-2 px-3">
                     {lang === "he"
@@ -519,7 +521,7 @@ export default async function RecommendationsPage({
                       : "Add night measurements + automatic alerts"}
                   </td>
                 </tr>
-                <tr className="border-b border-blue-100">
+                <tr className="border-b border-brand-primary/10">
                   <td className="py-2 px-3">{lang === "he" ? "האכלה" : "Feeding"}</td>
                   <td className="py-2 px-3">
                     {lang === "he"
@@ -527,7 +529,7 @@ export default async function RecommendationsPage({
                       : "FCR tracking + temperature optimization"}
                   </td>
                 </tr>
-                <tr className="border-b border-blue-100">
+                <tr className="border-b border-brand-primary/10">
                   <td className="py-2 px-3">Biosecurity</td>
                   <td className="py-2 px-3">
                     {lang === "he"
@@ -535,7 +537,7 @@ export default async function RecommendationsPage({
                       : "Add shower protocol + visitor documentation"}
                   </td>
                 </tr>
-                <tr className="border-b border-blue-100">
+                <tr className="border-b border-brand-primary/10">
                   <td className="py-2 px-3">{lang === "he" ? "אקלום" : "Acclimation"}</td>
                   <td className="py-2 px-3">
                     {lang === "he"
@@ -558,15 +560,15 @@ export default async function RecommendationsPage({
         {c.sections.map((section, idx) => (
           <div
             key={idx}
-            className="bg-white rounded-xl border border-gray-200 p-6 mb-6 shadow-sm"
+            className="bg-surface-card rounded-2xl border border-border-default p-6 mb-6 shadow-card"
           >
-            <h2 className="text-xl font-semibold mb-4">{section.title}</h2>
+            <h2 className="text-xl font-semibold mb-4 font-heading">{section.title}</h2>
 
             <div className="mb-4">
-              <h3 className="text-sm font-medium text-gray-500 mb-2">
+              <h3 className="text-sm font-medium text-text-secondary mb-2">
                 {c.currentState}
               </h3>
-              <ul className="list-disc list-inside text-gray-700 space-y-1">
+              <ul className="list-disc list-inside text-text-secondary space-y-1">
                 {section.current.map((item, i) => (
                   <li key={i}>{item}</li>
                 ))}
@@ -574,15 +576,15 @@ export default async function RecommendationsPage({
             </div>
 
             <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-3">
+              <h3 className="text-sm font-medium text-text-secondary mb-3">
                 {c.improvementSuggestions}
               </h3>
               <div className="space-y-4">
                 {section.recommendations.map((rec, i) => (
-                  <div key={i} className="bg-gray-50 rounded-lg p-4">
+                  <div key={i} className="bg-surface-subtle rounded-lg p-4">
                     <h4 className="font-medium mb-1">{rec.title}</h4>
-                    <p className="text-sm text-gray-500 italic mb-2">{rec.quote}</p>
-                    <p className="text-sm text-gray-700">{rec.details}</p>
+                    <p className="text-sm text-text-muted italic mb-2">{rec.quote}</p>
+                    <p className="text-sm text-text-secondary">{rec.details}</p>
                   </div>
                 ))}
               </div>
@@ -591,13 +593,13 @@ export default async function RecommendationsPage({
         ))}
 
         {/* General Recommendations */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">{c.generalRecs}</h2>
+        <div className="bg-surface-card rounded-2xl border border-border-default p-6 mb-6 shadow-card">
+          <h2 className="text-xl font-semibold mb-4 font-heading">{c.generalRecs}</h2>
           <div className="grid md:grid-cols-3 gap-4">
             {c.generalRecommendations.map((rec, idx) => (
-              <div key={idx} className="bg-gray-50 rounded-lg p-4">
+              <div key={idx} className="bg-surface-subtle rounded-lg p-4">
                 <h3 className="font-medium mb-2">{rec.title}</h3>
-                <ul className="text-sm text-gray-700 space-y-1">
+                <ul className="text-sm text-text-secondary space-y-1">
                   {rec.items.map((item, i) => (
                     <li key={i}>• {item}</li>
                   ))}
@@ -608,20 +610,20 @@ export default async function RecommendationsPage({
         </div>
 
         {/* KPIs */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">{c.kpisTitle}</h2>
+        <div className="bg-surface-card rounded-2xl border border-border-default p-6 shadow-card">
+          <h2 className="text-xl font-semibold mb-4 font-heading">{c.kpisTitle}</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-start py-2 px-3">{c.metric}</th>
-                  <th className="text-start py-2 px-3">{c.target}</th>
-                  <th className="text-start py-2 px-3">{c.frequency}</th>
+                <tr className="border-b border-border-default">
+                  <th className="text-start py-2 px-3 font-heading">{c.metric}</th>
+                  <th className="text-start py-2 px-3 font-heading">{c.target}</th>
+                  <th className="text-start py-2 px-3 font-heading">{c.frequency}</th>
                 </tr>
               </thead>
               <tbody>
                 {c.kpis.map((kpi, idx) => (
-                  <tr key={idx} className="border-b border-gray-100">
+                  <tr key={idx} className="border-b border-border-subtle">
                     <td className="py-2 px-3 font-medium">{kpi.metric}</td>
                     <td className="py-2 px-3">{kpi.target}</td>
                     <td className="py-2 px-3">{kpi.frequency}</td>

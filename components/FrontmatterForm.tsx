@@ -57,22 +57,22 @@ export function FrontmatterForm({ data, onChange, lang }: FrontmatterFormProps) 
   };
 
   return (
-    <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg mb-4" dir={isRtl ? "rtl" : "ltr"}>
+    <div className="grid grid-cols-2 gap-4 p-4 bg-surface-subtle border border-border-default rounded-lg mb-4" dir={isRtl ? "rtl" : "ltr"}>
       <div className="col-span-2">
-        <label className="block text-sm font-medium text-gray-700 mb-1">{labels[lang].title}</label>
+        <label className="block text-sm font-medium text-text-secondary mb-1">{labels[lang].title}</label>
         <input
           type="text"
           value={data.title}
           onChange={(e) => update("title", e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-border-default rounded-md focus-visible:ring-2 focus-visible:ring-brand-primary/20 focus-visible:border-brand-primary"
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">{labels[lang].category}</label>
+        <label className="block text-sm font-medium text-text-secondary mb-1">{labels[lang].category}</label>
         <select
           value={data.category}
           onChange={(e) => update("category", e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-border-default rounded-md focus-visible:ring-2 focus-visible:ring-brand-primary/20 focus-visible:border-brand-primary"
         >
           {Object.entries(categories).map(([key, label]) => (
             <option key={key} value={key}>{label}</option>
@@ -80,22 +80,22 @@ export function FrontmatterForm({ data, onChange, lang }: FrontmatterFormProps) 
         </select>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">{labels[lang].protocolNumber}</label>
+        <label className="block text-sm font-medium text-text-secondary mb-1">{labels[lang].protocolNumber}</label>
         <input
           type="text"
           value={data.protocolNumber}
           onChange={(e) => update("protocolNumber", e.target.value)}
           placeholder="PRO.X.X.X"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-border-default rounded-md focus-visible:ring-2 focus-visible:ring-brand-primary/20 focus-visible:border-brand-primary"
         />
       </div>
       <div className="col-span-2 sm:col-span-1">
-        <label className="block text-sm font-medium text-gray-700 mb-1">{labels[lang].frequency}</label>
+        <label className="block text-sm font-medium text-text-secondary mb-1">{labels[lang].frequency}</label>
         <input
           type="text"
           value={data.frequency}
           onChange={(e) => update("frequency", e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-border-default rounded-md focus-visible:ring-2 focus-visible:ring-brand-primary/20 focus-visible:border-brand-primary"
         />
       </div>
     </div>

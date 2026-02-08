@@ -16,7 +16,7 @@ export default function ChatMessage({ role, content, isRTL }: ChatMessageProps) 
     >
       <div
         className={`max-w-[80%] px-4 py-2 rounded-2xl ${
-          isUser ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-800"
+          isUser ? "bg-brand-primary text-white" : "bg-surface-subtle text-text-primary"
         }`}
       >
         <p className="text-sm whitespace-pre-wrap">{content}</p>

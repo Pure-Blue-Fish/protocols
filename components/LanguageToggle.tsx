@@ -8,9 +8,10 @@ import { useCallback } from "react";
 
 interface LanguageToggleProps {
   currentLang: "he" | "en";
+  dark?: boolean;
 }
 
-export default function LanguageToggle({ currentLang }: LanguageToggleProps) {
+export default function LanguageToggle({ currentLang, dark }: LanguageToggleProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -32,14 +33,24 @@ export default function LanguageToggle({ currentLang }: LanguageToggleProps) {
     [currentLang, pathname, searchParams, router]
   );
 
+  const containerCls = dark
+    ? "flex bg-white/10 rounded-lg p-0.5 sm:p-1 gap-0.5 sm:gap-1"
+    : "flex bg-surface-subtle rounded-lg p-0.5 sm:p-1 gap-0.5 sm:gap-1";
+
+  const activeCls = dark
+    ? "bg-white/20 text-white shadow-sm"
+    : "bg-surface-card text-brand-primary shadow-sm";
+
+  const inactiveCls = dark
+    ? "text-white/60 hover:text-white"
+    : "text-text-secondary hover:text-text-primary";
+
   return (
-    <div className="flex bg-gray-100 rounded-lg p-0.5 sm:p-1 gap-0.5 sm:gap-1">
+    <div className={containerCls}>
       <button
         onClick={() => switchLanguage("he")}
         className={`px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all ${
-          currentLang === "he"
-            ? "bg-white text-blue-600 shadow-sm"
-            : "text-gray-600 hover:text-gray-900"
+          currentLang === "he" ? activeCls : inactiveCls
         }`}
       >
         <span className="sm:hidden">עב</span>
@@ -48,9 +59,7 @@ export default function LanguageToggle({ currentLang }: LanguageToggleProps) {
       <button
         onClick={() => switchLanguage("en")}
         className={`px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all ${
-          currentLang === "en"
-            ? "bg-white text-blue-600 shadow-sm"
-            : "text-gray-600 hover:text-gray-900"
+          currentLang === "en" ? activeCls : inactiveCls
         }`}
       >
         <span className="sm:hidden">EN</span>

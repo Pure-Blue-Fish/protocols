@@ -21,31 +21,31 @@ export function EditorToolbar({ editor, lang }: EditorToolbarProps) {
   };
 
   const btn = (active: boolean) =>
-    `px-3 py-1.5 text-sm font-medium rounded ${active ? "bg-blue-600 text-white" : "bg-white border border-gray-300 hover:bg-gray-50"}`;
+    `px-3 py-1.5 text-sm font-medium rounded transition-colors ${active ? "bg-brand-primary text-white" : "bg-surface-card border border-border-default hover:bg-surface-subtle"}`;
 
   return (
-    <div className="flex flex-wrap gap-1 p-2 bg-gray-100 border border-gray-200 rounded-t-lg sticky top-0 z-10" dir={isRtl ? "rtl" : "ltr"}>
+    <div className="flex flex-wrap gap-1 p-2 bg-surface-subtle border border-border-default rounded-t-lg sticky top-0 z-10" dir={isRtl ? "rtl" : "ltr"}>
       <button type="button" onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={btn(editor.isActive("heading", { level: 2 }))}>
         H2
       </button>
       <button type="button" onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} className={btn(editor.isActive("heading", { level: 3 }))}>
         H3
       </button>
-      <div className="w-px bg-gray-300 mx-1" />
+      <div className="w-px bg-border-default mx-1" />
       <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className={btn(editor.isActive("bold"))}>
         <span className="font-bold">B</span>
       </button>
       <button type="button" onClick={() => editor.chain().focus().toggleItalic().run()} className={btn(editor.isActive("italic"))}>
         <span className="italic">I</span>
       </button>
-      <div className="w-px bg-gray-300 mx-1" />
+      <div className="w-px bg-border-default mx-1" />
       <button type="button" onClick={() => editor.chain().focus().toggleBulletList().run()} className={btn(editor.isActive("bulletList"))}>
         • List
       </button>
       <button type="button" onClick={() => editor.chain().focus().toggleTaskList().run()} className={btn(editor.isActive("taskList"))}>
         ☑ Task
       </button>
-      <div className="w-px bg-gray-300 mx-1" />
+      <div className="w-px bg-border-default mx-1" />
       <button
         type="button"
         onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}

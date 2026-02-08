@@ -15,11 +15,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-cyan-50 px-4">
-      <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center bg-surface-page px-4">
+      <div className="bg-surface-card p-6 sm:p-8 rounded-2xl shadow-elevated w-full max-w-sm border-t-4 border-brand-primary">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-blue-600">Pure Blue Fish</h1>
-          <p className="text-sm text-gray-500">ספר הפרוטוקולים</p>
+          <h1 className="text-2xl font-bold text-brand-primary font-heading">Pure Blue Fish</h1>
+          <p className="text-sm text-text-muted">ספר הפרוטוקולים</p>
         </div>
         <WorkerLoginForm onSuccess={handleSuccess} />
       </div>

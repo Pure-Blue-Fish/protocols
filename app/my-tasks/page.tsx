@@ -87,7 +87,7 @@ export default function MyTasksPage() {
   const completedCount = allTasks.filter((t) => t.completed).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50" dir="rtl">
+    <div className="min-h-screen bg-surface-page" dir="rtl">
       <MobileNav
         lang={lang}
         userName={data?.worker.name || ""}
@@ -102,21 +102,21 @@ export default function MyTasksPage() {
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={() => setWeek(shiftWeek(week, -7))}
-            className="px-3 py-1.5 text-sm text-gray-600 bg-white rounded-lg border border-gray-200 hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm text-text-secondary bg-surface-card rounded-lg border border-border-default hover:bg-surface-subtle transition-colors"
           >
             {ui.prevWeek}
           </button>
-          <h1 className="text-sm font-medium text-gray-700">
+          <h1 className="text-sm font-medium text-text-primary font-heading">
             {ui.myTasks}
             {dates.length > 0 && (
-              <span className="text-gray-400 mr-2">
+              <span className="text-text-muted mr-2">
                 {" "}{formatDateShort(dates[0])} - {formatDateShort(dates[dates.length - 1])}
               </span>
             )}
           </h1>
           <button
             onClick={() => setWeek(shiftWeek(week, 7))}
-            className="px-3 py-1.5 text-sm text-gray-600 bg-white rounded-lg border border-gray-200 hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm text-text-secondary bg-surface-card rounded-lg border border-border-default hover:bg-surface-subtle transition-colors"
           >
             {ui.nextWeek}
           </button>
@@ -124,14 +124,14 @@ export default function MyTasksPage() {
 
         {/* Progress bar */}
         {totalCount > 0 && (
-          <div className="mb-6 bg-white rounded-lg p-3 border border-gray-100">
-            <div className="flex justify-between text-xs text-gray-500 mb-1">
+          <div className="mb-6 bg-surface-card rounded-lg p-3 border border-border-subtle">
+            <div className="flex justify-between text-xs text-text-muted mb-1">
               <span>{completedCount} / {totalCount}</span>
               <span>{Math.round((completedCount / totalCount) * 100)}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-surface-subtle rounded-full h-2">
               <div
-                className="bg-green-500 h-2 rounded-full transition-all duration-500"
+                className="bg-brand-success h-2 rounded-full transition-all duration-500"
                 style={{ width: `${(completedCount / totalCount) * 100}%` }}
               />
             </div>
@@ -141,7 +141,7 @@ export default function MyTasksPage() {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="rounded-xl border border-gray-100 bg-white p-4">
+              <div key={i} className="rounded-xl border border-border-subtle bg-surface-card p-4">
                 <Skeleton className="h-4 w-24 mb-3" />
                 <Skeleton className="h-16 w-full rounded-lg" />
               </div>
@@ -163,22 +163,22 @@ export default function MyTasksPage() {
               return (
                 <div
                   key={date}
-                  className={`rounded-xl border ${isToday ? "border-blue-300 bg-blue-50/50" : "border-gray-100 bg-white"}`}
+                  className={`rounded-xl border ${isToday ? "border-brand-primary/30 bg-brand-primary-light/50" : "border-border-subtle bg-surface-card"}`}
                 >
                   {/* Day header */}
-                  <div className={`px-4 py-2 border-b ${isToday ? "border-blue-200" : "border-gray-100"} flex items-center justify-between`}>
+                  <div className={`px-4 py-2 border-b ${isToday ? "border-brand-primary/20" : "border-border-subtle"} flex items-center justify-between`}>
                     <div className="flex items-center gap-2">
-                      <span className={`text-sm font-medium ${isToday ? "text-blue-700" : "text-gray-700"}`}>
+                      <span className={`text-sm font-medium ${isToday ? "text-brand-primary" : "text-text-primary"}`}>
                         {dayNames[i]}
                       </span>
-                      <span className="text-xs text-gray-400">{formatDateShort(date)}</span>
+                      <span className="text-xs text-text-muted">{formatDateShort(date)}</span>
                       {isToday && (
-                        <span className="text-[10px] bg-blue-600 text-white px-1.5 py-0.5 rounded-full">
+                        <span className="text-[10px] bg-brand-primary text-white px-1.5 py-0.5 rounded-full">
                           {ui.today}
                         </span>
                       )}
                     </div>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-text-muted">
                       {tasks.filter((t) => t.completed).length}/{tasks.length}
                     </span>
                   </div>

@@ -147,11 +147,11 @@ export default function ShiftsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50" dir="rtl">
+      <div className="min-h-screen bg-surface-page" dir="rtl">
         <div className="max-w-6xl mx-auto px-4 py-6 space-y-3">
           <Skeleton className="h-8 w-48 mb-4" />
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white rounded-lg border border-gray-200 p-4">
+            <div key={i} className="bg-surface-card rounded-lg border border-border-default p-4">
               <Skeleton className="h-5 w-32 mb-2" />
               <Skeleton className="h-4 w-48" />
             </div>
@@ -163,61 +163,61 @@ export default function ShiftsPage() {
 
   if (!isManager) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50" dir="rtl">
-        <p className="text-gray-500">גישה למנהלים בלבד</p>
+      <div className="min-h-screen flex items-center justify-center bg-surface-page" dir="rtl">
+        <p className="text-text-secondary">גישה למנהלים בלבד</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50" dir={lang === "he" ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-surface-page" dir={lang === "he" ? "rtl" : "ltr"}>
       <MobileNav lang={lang} userName={ui.shiftManagement} currentPage="shifts" isManager={true} />
 
       <div className="max-w-6xl mx-auto px-4 py-6">
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          <div className="mb-4 p-3 bg-brand-danger-light border border-brand-danger/20 rounded-lg text-sm text-brand-danger">
             {error}
           </div>
         )}
 
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-lg font-bold text-gray-800">{ui.shiftDefinitions}</h1>
+          <h1 className="text-lg font-bold text-text-primary font-heading">{ui.shiftDefinitions}</h1>
           <button
             onClick={() => setShowAddShift(!showAddShift)}
-            className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-4 py-2 text-sm bg-brand-primary text-white rounded-lg hover:bg-brand-primary-hover"
           >
             {showAddShift ? ui.cancel : ui.addShift}
           </button>
         </div>
 
         {showAddShift && (
-          <div className="mb-4 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+          <div className="mb-4 p-4 bg-surface-card rounded-lg border border-border-default shadow-card">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               <input
                 placeholder={lang === "he" ? "מפתח (אנגלית)" : "Key (english)"}
                 value={shiftForm.key}
                 onChange={(e) => setShiftForm({ ...shiftForm, key: e.target.value.toLowerCase().replace(/\s/g, "-") })}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                className="px-3 py-2 border border-border-default rounded-md text-sm"
                 dir="ltr"
               />
               <input
                 placeholder={lang === "he" ? "שם בעברית" : "Hebrew name"}
                 value={shiftForm.display_name_he}
                 onChange={(e) => setShiftForm({ ...shiftForm, display_name_he: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                className="px-3 py-2 border border-border-default rounded-md text-sm"
               />
               <input
                 placeholder={lang === "he" ? "שם באנגלית" : "English name"}
                 value={shiftForm.display_name_en}
                 onChange={(e) => setShiftForm({ ...shiftForm, display_name_en: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                className="px-3 py-2 border border-border-default rounded-md text-sm"
                 dir="ltr"
               />
               <input
                 placeholder={ui.startTime}
                 value={shiftForm.start_time}
                 onChange={(e) => setShiftForm({ ...shiftForm, start_time: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                className="px-3 py-2 border border-border-default rounded-md text-sm"
                 type="time"
                 dir="ltr"
               />
@@ -225,7 +225,7 @@ export default function ShiftsPage() {
                 placeholder={ui.endTime}
                 value={shiftForm.end_time}
                 onChange={(e) => setShiftForm({ ...shiftForm, end_time: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                className="px-3 py-2 border border-border-default rounded-md text-sm"
                 type="time"
                 dir="ltr"
               />
@@ -233,7 +233,7 @@ export default function ShiftsPage() {
                 placeholder={lang === "he" ? "סדר" : "Order"}
                 value={shiftForm.sort_order}
                 onChange={(e) => setShiftForm({ ...shiftForm, sort_order: parseInt(e.target.value) || 0 })}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                className="px-3 py-2 border border-border-default rounded-md text-sm"
                 type="number"
                 dir="ltr"
               />
@@ -242,7 +242,7 @@ export default function ShiftsPage() {
               <button
                 onClick={handleAddShift}
                 disabled={saving}
-                className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                className="px-4 py-2 text-sm bg-brand-success text-white rounded-lg hover:bg-brand-success/90 disabled:opacity-50"
               >
                 {saving ? "..." : ui.save}
               </button>
@@ -266,22 +266,22 @@ export default function ShiftsPage() {
             </Thead>
             <Tbody>
               {shifts.map((shift) => (
-                <Tr key={shift.key} className={!shift.active ? "opacity-50 bg-gray-50" : ""}>
+                <Tr key={shift.key} className={!shift.active ? "opacity-50 bg-surface-page" : ""}>
                   {editingShiftKey === shift.key ? (
                     <>
-                      <Td className="text-gray-500 font-mono text-xs">{shift.key}</Td>
+                      <Td className="text-text-secondary font-mono text-xs">{shift.key}</Td>
                       <Td>
                         <input
                           value={editShiftForm.display_name_he}
                           onChange={(e) => setEditShiftForm({ ...editShiftForm, display_name_he: e.target.value })}
-                          className="px-2 py-1 border border-gray-300 rounded text-sm w-full"
+                          className="px-2 py-1 border border-border-default rounded text-sm w-full"
                         />
                       </Td>
                       <Td>
                         <input
                           value={editShiftForm.display_name_en}
                           onChange={(e) => setEditShiftForm({ ...editShiftForm, display_name_en: e.target.value })}
-                          className="px-2 py-1 border border-gray-300 rounded text-sm w-full"
+                          className="px-2 py-1 border border-border-default rounded text-sm w-full"
                           dir="ltr"
                         />
                       </Td>
@@ -289,7 +289,7 @@ export default function ShiftsPage() {
                         <input
                           value={editShiftForm.start_time}
                           onChange={(e) => setEditShiftForm({ ...editShiftForm, start_time: e.target.value })}
-                          className="px-2 py-1 border border-gray-300 rounded text-sm"
+                          className="px-2 py-1 border border-border-default rounded text-sm"
                           type="time"
                           dir="ltr"
                         />
@@ -298,7 +298,7 @@ export default function ShiftsPage() {
                         <input
                           value={editShiftForm.end_time}
                           onChange={(e) => setEditShiftForm({ ...editShiftForm, end_time: e.target.value })}
-                          className="px-2 py-1 border border-gray-300 rounded text-sm"
+                          className="px-2 py-1 border border-border-default rounded text-sm"
                           type="time"
                           dir="ltr"
                         />
@@ -309,13 +309,13 @@ export default function ShiftsPage() {
                           <button
                             onClick={() => handleUpdateShift(shift.key)}
                             disabled={saving}
-                            className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                            className="px-2 py-1 text-xs bg-brand-success text-white rounded hover:bg-brand-success/90 disabled:opacity-50"
                           >
                             {ui.save}
                           </button>
                           <button
                             onClick={() => setEditingShiftKey(null)}
-                            className="px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                            className="px-2 py-1 text-xs bg-surface-subtle text-text-secondary rounded hover:bg-surface-subtle/80"
                           >
                             {ui.cancel}
                           </button>
@@ -324,14 +324,14 @@ export default function ShiftsPage() {
                     </>
                   ) : (
                     <>
-                      <Td className="font-mono text-xs text-gray-500">{shift.key}</Td>
+                      <Td className="font-mono text-xs text-text-secondary">{shift.key}</Td>
                       <Td>{shift.display_name_he}</Td>
                       <Td>{shift.display_name_en}</Td>
                       <Td className="font-mono text-xs" dir="ltr">{shift.start_time}</Td>
                       <Td className="font-mono text-xs" dir="ltr">{shift.end_time}</Td>
                       <Td>
                         <span className={`px-2 py-0.5 text-xs rounded-full ${
-                          shift.active ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-500"
+                          shift.active ? "bg-brand-success-light text-brand-success" : "bg-surface-subtle text-text-muted"
                         }`}>
                           {shift.active ? ui.active : ui.inactive}
                         </span>
@@ -340,7 +340,7 @@ export default function ShiftsPage() {
                         <div className="flex gap-1">
                           <button
                             onClick={() => startEditShift(shift)}
-                            className="px-2 py-1 text-xs text-blue-600 bg-blue-50 rounded hover:bg-blue-100"
+                            className="px-2 py-1 text-xs text-brand-primary bg-brand-primary-light rounded hover:bg-brand-primary-light/70"
                           >
                             {ui.edit}
                           </button>
@@ -348,8 +348,8 @@ export default function ShiftsPage() {
                             onClick={() => toggleShiftActive(shift)}
                             className={`px-2 py-1 text-xs rounded ${
                               shift.active
-                                ? "text-red-600 bg-red-50 hover:bg-red-100"
-                                : "text-green-600 bg-green-50 hover:bg-green-100"
+                                ? "text-brand-danger bg-brand-danger-light hover:bg-red-100"
+                                : "text-brand-success bg-brand-success-light hover:bg-green-100"
                             }`}
                           >
                             {shift.active ? ui.deactivate : ui.activate}
@@ -369,38 +369,38 @@ export default function ShiftsPage() {
           {shifts.map((shift) => (
             <div
               key={shift.key}
-              className={`bg-white rounded-lg border border-gray-200 shadow-sm p-3 ${
+              className={`bg-surface-card rounded-lg border border-border-default shadow-card p-3 ${
                 !shift.active ? "opacity-50" : ""
               }`}
             >
               {editingShiftKey === shift.key ? (
                 <div className="space-y-2">
-                  <div className="text-xs text-gray-400 font-mono mb-1">{shift.key}</div>
+                  <div className="text-xs text-text-muted font-mono mb-1">{shift.key}</div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <input
                       value={editShiftForm.display_name_he}
                       onChange={(e) => setEditShiftForm({ ...editShiftForm, display_name_he: e.target.value })}
                       placeholder={lang === "he" ? "שם בעברית" : "Hebrew name"}
-                      className="px-2 py-1.5 border border-gray-300 rounded text-sm w-full"
+                      className="px-2 py-1.5 border border-border-default rounded text-sm w-full"
                     />
                     <input
                       value={editShiftForm.display_name_en}
                       onChange={(e) => setEditShiftForm({ ...editShiftForm, display_name_en: e.target.value })}
                       placeholder={lang === "he" ? "שם באנגלית" : "English name"}
-                      className="px-2 py-1.5 border border-gray-300 rounded text-sm w-full"
+                      className="px-2 py-1.5 border border-border-default rounded text-sm w-full"
                       dir="ltr"
                     />
                     <input
                       value={editShiftForm.start_time}
                       onChange={(e) => setEditShiftForm({ ...editShiftForm, start_time: e.target.value })}
-                      className="px-2 py-1.5 border border-gray-300 rounded text-sm"
+                      className="px-2 py-1.5 border border-border-default rounded text-sm"
                       type="time"
                       dir="ltr"
                     />
                     <input
                       value={editShiftForm.end_time}
                       onChange={(e) => setEditShiftForm({ ...editShiftForm, end_time: e.target.value })}
-                      className="px-2 py-1.5 border border-gray-300 rounded text-sm"
+                      className="px-2 py-1.5 border border-border-default rounded text-sm"
                       type="time"
                       dir="ltr"
                     />
@@ -409,13 +409,13 @@ export default function ShiftsPage() {
                     <button
                       onClick={() => handleUpdateShift(shift.key)}
                       disabled={saving}
-                      className="px-3 py-1.5 text-xs bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                      className="px-3 py-1.5 text-xs bg-brand-success text-white rounded hover:bg-brand-success/90 disabled:opacity-50"
                     >
                       {ui.save}
                     </button>
                     <button
                       onClick={() => setEditingShiftKey(null)}
-                      className="px-3 py-1.5 text-xs bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                      className="px-3 py-1.5 text-xs bg-surface-subtle text-text-secondary rounded hover:bg-surface-subtle/80"
                     >
                       {ui.cancel}
                     </button>
@@ -428,21 +428,21 @@ export default function ShiftsPage() {
                       <span className="font-medium text-sm">
                         {lang === "he" ? shift.display_name_he : shift.display_name_en}
                       </span>
-                      <span className="text-xs text-gray-400 font-mono mr-2">({shift.key})</span>
+                      <span className="text-xs text-text-muted font-mono mr-2">({shift.key})</span>
                     </div>
                     <span className={`px-2 py-0.5 text-xs rounded-full ${
-                      shift.active ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-500"
+                      shift.active ? "bg-brand-success-light text-brand-success" : "bg-surface-subtle text-text-muted"
                     }`}>
                       {shift.active ? ui.active : ui.inactive}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-500 mb-2" dir="ltr">
+                  <div className="text-xs text-text-secondary mb-2" dir="ltr">
                     {shift.start_time} - {shift.end_time}
                   </div>
                   <div className="flex gap-1.5">
                     <button
                       onClick={() => startEditShift(shift)}
-                      className="px-2.5 py-1.5 text-xs text-blue-600 bg-blue-50 rounded hover:bg-blue-100"
+                      className="px-2.5 py-1.5 text-xs text-brand-primary bg-brand-primary-light rounded hover:bg-brand-primary-light/70"
                     >
                       {ui.edit}
                     </button>
@@ -450,8 +450,8 @@ export default function ShiftsPage() {
                       onClick={() => toggleShiftActive(shift)}
                       className={`px-2.5 py-1.5 text-xs rounded ${
                         shift.active
-                          ? "text-red-600 bg-red-50 hover:bg-red-100"
-                          : "text-green-600 bg-green-50 hover:bg-green-100"
+                          ? "text-brand-danger bg-brand-danger-light hover:bg-red-100"
+                          : "text-brand-success bg-brand-success-light hover:bg-green-100"
                       }`}
                     >
                       {shift.active ? ui.deactivate : ui.activate}

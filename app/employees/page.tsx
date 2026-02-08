@@ -175,11 +175,11 @@ export default function EmployeesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50" dir="rtl">
+      <div className="min-h-screen bg-surface-page" dir="rtl">
         <div className="max-w-6xl mx-auto px-4 py-6 space-y-3">
           <Skeleton className="h-8 w-48 mb-4" />
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white rounded-lg border border-gray-200 p-4">
+            <div key={i} className="bg-surface-card rounded-lg border border-border-default p-4">
               <Skeleton className="h-5 w-32 mb-2" />
               <Skeleton className="h-4 w-48" />
             </div>
@@ -191,61 +191,61 @@ export default function EmployeesPage() {
 
   if (!isManager) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50" dir="rtl">
-        <p className="text-gray-500">גישה למנהלים בלבד</p>
+      <div className="min-h-screen flex items-center justify-center bg-surface-page" dir="rtl">
+        <p className="text-text-secondary">גישה למנהלים בלבד</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50" dir={lang === "he" ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-surface-page" dir={lang === "he" ? "rtl" : "ltr"}>
       <MobileNav lang={lang} userName={ui.employeeManagement} currentPage="employees" isManager={true} />
 
       <div className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-lg font-bold text-gray-800">{ui.employeeManagement}</h1>
+          <h1 className="text-lg font-bold text-text-primary font-heading">{ui.employeeManagement}</h1>
           <button
             onClick={() => setShowAdd(!showAdd)}
-            className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-4 py-2 text-sm bg-brand-primary text-white rounded-lg hover:bg-brand-primary-hover"
           >
             {showAdd ? ui.cancel : ui.addEmployee}
           </button>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          <div className="mb-4 p-3 bg-brand-danger-light border border-brand-danger/20 rounded-lg text-sm text-brand-danger">
             {error}
           </div>
         )}
 
         {/* Add form */}
         {showAdd && (
-          <div className="mb-6 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+          <div className="mb-6 p-4 bg-surface-card rounded-lg border border-border-default shadow-card">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               <input
                 placeholder={ui.name}
                 value={addForm.name}
                 onChange={(e) => setAddForm({ ...addForm, name: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                className="px-3 py-2 border border-border-default rounded-md text-sm"
               />
               <input
                 placeholder={ui.role}
                 value={addForm.role}
                 onChange={(e) => setAddForm({ ...addForm, role: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                className="px-3 py-2 border border-border-default rounded-md text-sm"
               />
               <input
                 placeholder={ui.phone}
                 value={addForm.phone}
                 onChange={(e) => setAddForm({ ...addForm, phone: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                className="px-3 py-2 border border-border-default rounded-md text-sm"
                 dir="ltr"
               />
               <input
                 placeholder={ui.pin}
                 value={addForm.pin}
                 onChange={(e) => setAddForm({ ...addForm, pin: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                className="px-3 py-2 border border-border-default rounded-md text-sm"
                 type="password"
                 maxLength={4}
                 dir="ltr"
@@ -253,7 +253,7 @@ export default function EmployeesPage() {
               <select
                 value={addForm.default_shift}
                 onChange={(e) => setAddForm({ ...addForm, default_shift: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                className="px-3 py-2 border border-border-default rounded-md text-sm"
               >
                 {shifts.filter((s) => s.active !== false).map((s) => (
                   <option key={s.key} value={s.key}>
@@ -261,7 +261,7 @@ export default function EmployeesPage() {
                   </option>
                 ))}
               </select>
-              <label className="flex items-center gap-2 text-sm text-gray-700">
+              <label className="flex items-center gap-2 text-sm text-text-secondary">
                 <input
                   type="checkbox"
                   checked={addForm.is_manager}
@@ -274,7 +274,7 @@ export default function EmployeesPage() {
               <button
                 onClick={handleAdd}
                 disabled={saving}
-                className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                className="px-4 py-2 text-sm bg-brand-success text-white rounded-lg hover:bg-brand-success/90 disabled:opacity-50"
               >
                 {saving ? "..." : ui.save}
               </button>
@@ -297,28 +297,28 @@ export default function EmployeesPage() {
             </Thead>
             <Tbody>
               {employees.map((emp) => (
-                <Tr key={emp.id} className={!emp.active ? "opacity-50 bg-gray-50" : ""}>
+                <Tr key={emp.id} className={!emp.active ? "opacity-50 bg-surface-page" : ""}>
                   {editingId === emp.id ? (
                     <>
                       <Td>
                         <input
                           value={editForm.name}
                           onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                          className="px-2 py-1 border border-gray-300 rounded text-sm w-full"
+                          className="px-2 py-1 border border-border-default rounded text-sm w-full"
                         />
                       </Td>
                       <Td>
                         <input
                           value={editForm.role}
                           onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
-                          className="px-2 py-1 border border-gray-300 rounded text-sm w-full"
+                          className="px-2 py-1 border border-border-default rounded text-sm w-full"
                         />
                       </Td>
                       <Td>
                         <input
                           value={editForm.phone}
                           onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                          className="px-2 py-1 border border-gray-300 rounded text-sm w-full"
+                          className="px-2 py-1 border border-border-default rounded text-sm w-full"
                           dir="ltr"
                         />
                       </Td>
@@ -326,7 +326,7 @@ export default function EmployeesPage() {
                         <select
                           value={editForm.default_shift}
                           onChange={(e) => setEditForm({ ...editForm, default_shift: e.target.value })}
-                          className="px-2 py-1 border border-gray-300 rounded text-sm"
+                          className="px-2 py-1 border border-border-default rounded text-sm"
                         >
                           {shifts.filter((s) => s.active !== false).map((s) => (
                             <option key={s.key} value={s.key}>
@@ -350,13 +350,13 @@ export default function EmployeesPage() {
                           <button
                             onClick={() => handleUpdate(emp.id)}
                             disabled={saving}
-                            className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                            className="px-2 py-1 text-xs bg-brand-success text-white rounded hover:bg-brand-success/90 disabled:opacity-50"
                           >
                             {ui.save}
                           </button>
                           <button
                             onClick={() => setEditingId(null)}
-                            className="px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                            className="px-2 py-1 text-xs bg-surface-subtle text-text-secondary rounded hover:bg-surface-subtle/80"
                           >
                             {ui.cancel}
                           </button>
@@ -368,19 +368,19 @@ export default function EmployeesPage() {
                       <Td className="font-medium">
                         {emp.name}
                         {emp.is_manager && (
-                          <span className="mr-2 px-1.5 py-0.5 text-[10px] bg-blue-100 text-blue-700 rounded">
+                          <span className="mr-2 px-1.5 py-0.5 text-[10px] bg-brand-primary-light text-brand-primary rounded">
                             {ui.isManager}
                           </span>
                         )}
                       </Td>
-                      <Td className="text-gray-600">{emp.role}</Td>
-                      <Td className="text-gray-600" dir="ltr">{emp.phone}</Td>
+                      <Td className="text-text-secondary">{emp.role}</Td>
+                      <Td className="text-text-secondary" dir="ltr">{emp.phone}</Td>
                       <Td>{shiftLabel(emp.default_shift)}</Td>
                       <Td>
                         <span className={`px-2 py-0.5 text-xs rounded-full ${
                           emp.active
-                            ? "bg-green-100 text-green-700"
-                            : "bg-gray-200 text-gray-500"
+                            ? "bg-brand-success-light text-brand-success"
+                            : "bg-surface-subtle text-text-muted"
                         }`}>
                           {emp.active ? ui.active : ui.inactive}
                         </span>
@@ -389,7 +389,7 @@ export default function EmployeesPage() {
                         <div className="flex gap-1">
                           <button
                             onClick={() => startEdit(emp)}
-                            className="px-2 py-1 text-xs text-blue-600 bg-blue-50 rounded hover:bg-blue-100"
+                            className="px-2 py-1 text-xs text-brand-primary bg-brand-primary-light rounded hover:bg-brand-primary-light/70"
                           >
                             {ui.editEmployee}
                           </button>
@@ -397,8 +397,8 @@ export default function EmployeesPage() {
                             onClick={() => handleDeactivateClick(emp)}
                             className={`px-2 py-1 text-xs rounded ${
                               emp.active
-                                ? "text-red-600 bg-red-50 hover:bg-red-100"
-                                : "text-green-600 bg-green-50 hover:bg-green-100"
+                                ? "text-brand-danger bg-brand-danger-light hover:bg-red-100"
+                                : "text-brand-success bg-brand-success-light hover:bg-green-100"
                             }`}
                           >
                             {emp.active ? ui.deactivate : ui.activate}
@@ -418,7 +418,7 @@ export default function EmployeesPage() {
           {employees.map((emp) => (
             <div
               key={emp.id}
-              className={`bg-white rounded-lg border border-gray-200 shadow-sm p-3 ${
+              className={`bg-surface-card rounded-lg border border-border-default shadow-card p-3 ${
                 !emp.active ? "opacity-50" : ""
               }`}
             >
@@ -429,25 +429,25 @@ export default function EmployeesPage() {
                       value={editForm.name}
                       onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                       placeholder={ui.name}
-                      className="px-2 py-1.5 border border-gray-300 rounded text-sm w-full"
+                      className="px-2 py-1.5 border border-border-default rounded text-sm w-full"
                     />
                     <input
                       value={editForm.role}
                       onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
                       placeholder={ui.role}
-                      className="px-2 py-1.5 border border-gray-300 rounded text-sm w-full"
+                      className="px-2 py-1.5 border border-border-default rounded text-sm w-full"
                     />
                     <input
                       value={editForm.phone}
                       onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
                       placeholder={ui.phone}
-                      className="px-2 py-1.5 border border-gray-300 rounded text-sm w-full"
+                      className="px-2 py-1.5 border border-border-default rounded text-sm w-full"
                       dir="ltr"
                     />
                     <select
                       value={editForm.default_shift}
                       onChange={(e) => setEditForm({ ...editForm, default_shift: e.target.value })}
-                      className="px-2 py-1.5 border border-gray-300 rounded text-sm"
+                      className="px-2 py-1.5 border border-border-default rounded text-sm"
                     >
                       {shifts.filter((s) => s.active !== false).map((s) => (
                         <option key={s.key} value={s.key}>
@@ -457,7 +457,7 @@ export default function EmployeesPage() {
                     </select>
                   </div>
                   <div className="flex items-center justify-between">
-                    <label className="flex items-center gap-1 text-xs text-gray-700">
+                    <label className="flex items-center gap-1 text-xs text-text-secondary">
                       <input
                         type="checkbox"
                         checked={editForm.is_manager}
@@ -469,13 +469,13 @@ export default function EmployeesPage() {
                       <button
                         onClick={() => handleUpdate(emp.id)}
                         disabled={saving}
-                        className="px-3 py-1.5 text-xs bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                        className="px-3 py-1.5 text-xs bg-brand-success text-white rounded hover:bg-brand-success/90 disabled:opacity-50"
                       >
                         {ui.save}
                       </button>
                       <button
                         onClick={() => setEditingId(null)}
-                        className="px-3 py-1.5 text-xs bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                        className="px-3 py-1.5 text-xs bg-surface-subtle text-text-secondary rounded hover:bg-surface-subtle/80"
                       >
                         {ui.cancel}
                       </button>
@@ -488,25 +488,25 @@ export default function EmployeesPage() {
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-sm">{emp.name}</span>
                       {emp.is_manager && (
-                        <span className="px-1.5 py-0.5 text-[10px] bg-blue-100 text-blue-700 rounded">
+                        <span className="px-1.5 py-0.5 text-[10px] bg-brand-primary-light text-brand-primary rounded">
                           {ui.isManager}
                         </span>
                       )}
                     </div>
                     <span className={`px-2 py-0.5 text-xs rounded-full ${
-                      emp.active ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-500"
+                      emp.active ? "bg-brand-success-light text-brand-success" : "bg-surface-subtle text-text-muted"
                     }`}>
                       {emp.active ? ui.active : ui.inactive}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-500 space-y-0.5 mb-2">
+                  <div className="text-xs text-text-muted space-y-0.5 mb-2">
                     <div>{emp.role} &middot; {shiftLabel(emp.default_shift)}</div>
                     <div dir="ltr" className="text-start">{emp.phone}</div>
                   </div>
                   <div className="flex gap-1.5">
                     <button
                       onClick={() => startEdit(emp)}
-                      className="px-2.5 py-1.5 text-xs text-blue-600 bg-blue-50 rounded hover:bg-blue-100"
+                      className="px-2.5 py-1.5 text-xs text-brand-primary bg-brand-primary-light rounded hover:bg-brand-primary-light/70"
                     >
                       {ui.editEmployee}
                     </button>
@@ -514,8 +514,8 @@ export default function EmployeesPage() {
                       onClick={() => handleDeactivateClick(emp)}
                       className={`px-2.5 py-1.5 text-xs rounded ${
                         emp.active
-                          ? "text-red-600 bg-red-50 hover:bg-red-100"
-                          : "text-green-600 bg-green-50 hover:bg-green-100"
+                          ? "text-brand-danger bg-brand-danger-light hover:bg-red-100"
+                          : "text-brand-success bg-brand-success-light hover:bg-green-100"
                       }`}
                     >
                       {emp.active ? ui.deactivate : ui.activate}

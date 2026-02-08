@@ -56,20 +56,20 @@ export default function SchedulePage() {
   const mobileTab = showChat ? "chat" : "calendar";
 
   return (
-    <div className="h-dvh flex flex-col bg-gray-50" dir="rtl">
+    <div className="h-dvh flex flex-col bg-surface-page" dir="rtl">
       <div className="flex-shrink-0">
         <MobileNav lang={lang} userName={userName} currentPage="schedule" isManager={isManager} workerId={workerId} />
       </div>
 
       {/* Mobile: tab switcher for managers */}
       {isManager && isMobile && (
-        <div className="flex-shrink-0 flex border-b border-gray-200 bg-white">
+        <div className="flex-shrink-0 flex border-b border-border-default bg-surface-card">
           <button
             onClick={() => setShowChat(false)}
             className={`flex-1 py-2.5 text-sm font-medium text-center transition-colors ${
               mobileTab === "calendar"
-                ? "text-blue-600 border-b-2 border-blue-600"
-                : "text-gray-500 hover:text-gray-700"
+                ? "text-brand-primary border-b-2 border-brand-primary"
+                : "text-text-secondary hover:text-text-primary"
             }`}
           >
             <span className="inline-flex items-center gap-1.5">
@@ -83,8 +83,8 @@ export default function SchedulePage() {
             onClick={() => setShowChat(true)}
             className={`flex-1 py-2.5 text-sm font-medium text-center transition-colors ${
               mobileTab === "chat"
-                ? "text-purple-600 border-b-2 border-purple-600"
-                : "text-gray-500 hover:text-gray-700"
+                ? "text-brand-accent border-b-2 border-brand-accent"
+                : "text-text-secondary hover:text-text-primary"
             }`}
           >
             <span className="inline-flex items-center gap-1.5">
@@ -101,7 +101,7 @@ export default function SchedulePage() {
       <div className="flex-1 flex overflow-hidden min-h-0">
         {/* Desktop: side panel chat */}
         {isManager && !isMobile && (
-          <div className="w-80 border-l border-gray-200 bg-white flex flex-col flex-shrink-0">
+          <div className="w-80 border-l border-border-default bg-surface-card flex flex-col flex-shrink-0">
             <ScheduleChat
               lang={lang}
               week={week}
@@ -122,7 +122,7 @@ export default function SchedulePage() {
 
         {/* Mobile: inline chat tab */}
         {isManager && isMobile && mobileTab === "chat" && (
-          <div className="flex-1 flex flex-col overflow-hidden bg-white">
+          <div className="flex-1 flex flex-col overflow-hidden bg-surface-card">
             <ScheduleChat
               lang={lang}
               week={week}

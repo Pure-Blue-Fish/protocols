@@ -3,10 +3,25 @@
 
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import { Plus_Jakarta_Sans, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { UI_STRINGS, type Language } from "@/lib/protocols";
 import ChatWidget from "@/components/ChatWidget";
 import { ToastProvider } from "@/components/ui/Toast";
+
+const headingFont = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  display: "swap",
+  weight: ["500", "600", "700", "800"],
+});
+
+const bodyFont = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+  weight: ["400", "500", "600"],
+});
 
 export const viewport = {
   width: "device-width",
@@ -31,7 +46,7 @@ export default async function RootLayout({
 
   return (
     <html lang={lang} dir={dir}>
-      <body className="antialiased bg-gray-50 text-gray-900">
+      <body className={`${headingFont.variable} ${bodyFont.variable} antialiased bg-surface-page text-text-primary`}>
         <ToastProvider>
           {children}
         </ToastProvider>

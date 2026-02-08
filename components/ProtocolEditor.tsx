@@ -141,7 +141,7 @@ export function ProtocolEditor({ content, onChange, lang }: ProtocolEditorProps)
   });
 
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden" dir={isRtl ? "rtl" : "ltr"}>
+    <div className="border border-border-default rounded-lg overflow-hidden" dir={isRtl ? "rtl" : "ltr"}>
       <EditorToolbar editor={editor} lang={lang} />
       <EditorContent editor={editor} />
       <style jsx global>{`
@@ -152,12 +152,12 @@ export function ProtocolEditor({ content, onChange, lang }: ProtocolEditorProps)
         }
         .ProseMirror th,
         .ProseMirror td {
-          border: 1px solid #d1d5db;
+          border: 1px solid #e2e8f0;
           padding: 0.5rem;
           text-align: ${isRtl ? "right" : "left"};
         }
         .ProseMirror th {
-          background: #f3f4f6;
+          background: #f1f5f9;
           font-weight: 600;
         }
         .ProseMirror ul[data-type="taskList"] {

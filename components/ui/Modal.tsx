@@ -42,13 +42,13 @@ export default function Modal({ open, onClose, title, children, footer }: ModalP
       onClick={handleBackdropClick}
       className="fixed inset-0 z-50 m-0 h-full w-full max-w-none max-h-none bg-transparent backdrop:bg-black/40 p-4 flex items-center justify-center"
     >
-      <div className="bg-white rounded-xl shadow-modal w-full max-w-md mx-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="px-5 py-4 border-b border-gray-100">
-          <h3 className="text-base font-semibold text-gray-800">{title}</h3>
+      <div className="bg-surface-card rounded-2xl shadow-modal w-full max-w-md mx-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="px-5 py-4 border-b border-border-subtle">
+          <h3 className="text-base font-semibold text-text-primary font-heading">{title}</h3>
         </div>
         <div className="px-5 py-4">{children}</div>
         {footer && (
-          <div className="px-5 py-3 border-t border-gray-100 flex justify-end gap-2">
+          <div className="px-5 py-3 border-t border-border-subtle flex justify-end gap-2">
             {footer}
           </div>
         )}

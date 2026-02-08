@@ -36,7 +36,7 @@ export default function SearchInput({
   return (
     <div className={`relative ${className}`}>
       <svg
-        className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+        className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -49,12 +49,12 @@ export default function SearchInput({
         value={internal}
         onChange={(e) => handleChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full ps-9 pe-8 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary outline-none"
+        className="w-full ps-9 pe-8 py-2 text-sm border border-border-default rounded-lg focus-visible:ring-2 focus-visible:ring-brand-primary/20 focus:border-brand-primary outline-none"
       />
       {internal && (
         <button
           onClick={() => { setInternal(""); onChange(""); }}
-          className="absolute end-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+          className="absolute end-2 top-1/2 -translate-y-1/2 p-1 text-text-muted hover:text-text-secondary"
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

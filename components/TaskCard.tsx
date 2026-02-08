@@ -54,8 +54,8 @@ export default function TaskCard({
 
   return (
     <div
-      className={`bg-white rounded-xl p-4 shadow-card border transition-all ${
-        completed ? "border-green-200 bg-green-50/50" : "border-gray-100"
+      className={`bg-surface-card rounded-xl p-4 shadow-card border transition-all ${
+        completed ? "border-brand-success/20 bg-brand-success-light/50" : "border-border-subtle"
       } ${toggling ? "scale-[0.98]" : ""}`}
     >
       <div className="flex items-start gap-3">
@@ -65,8 +65,8 @@ export default function TaskCard({
           disabled={toggling}
           className={`mt-0.5 flex-shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
             completed
-              ? "bg-green-500 border-green-500 text-white"
-              : "border-gray-300 hover:border-blue-400"
+              ? "bg-brand-success border-brand-success text-white"
+              : "border-border-default hover:border-brand-primary"
           } ${toggling ? "opacity-50" : ""}`}
         >
           {completed && (
@@ -85,14 +85,14 @@ export default function TaskCard({
             href={`/${protocolSlug}?lang=${lang}`}
             className={`block text-base font-medium transition-colors ${
               completed
-                ? "text-gray-400 line-through"
-                : "text-gray-800 hover:text-blue-600"
+                ? "text-text-muted line-through"
+                : "text-text-primary hover:text-brand-primary"
             }`}
           >
             {protocolTitle}
           </Link>
           {notes && (
-            <p className="text-sm text-gray-500 mt-1">{notes}</p>
+            <p className="text-sm text-text-secondary mt-1">{notes}</p>
           )}
         </div>
       </div>

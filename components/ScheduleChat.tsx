@@ -157,11 +157,11 @@ export default function ScheduleChat({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="p-4 border-b border-gray-200">
-        <h2 className="text-sm font-medium text-gray-700">
+      <div className="p-4 border-b border-border-default">
+        <h2 className="text-sm font-medium text-text-primary font-heading">
           {ui.scheduleChatTitle}
         </h2>
-        <p className="text-xs text-gray-400 mt-0.5">
+        <p className="text-xs text-text-muted mt-0.5">
           {week}
         </p>
       </div>
@@ -169,20 +169,20 @@ export default function ScheduleChat({
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 && (
-          <div className="text-center text-sm text-gray-400 py-8">
+          <div className="text-center text-sm text-text-muted py-8">
             <p className="mb-2">
               {lang === "he"
                 ? 'תגיד לי מה צריך להיות השבוע. למשל:'
                 : "Tell me what this week should look like. For example:"}
             </p>
             <div className="space-y-1 text-xs">
-              <p className="bg-gray-50 rounded px-3 py-1.5 inline-block">
+              <p className="bg-surface-subtle rounded px-3 py-1.5 inline-block">
                 {lang === "he"
                   ? '"תעתיק מהשבוע הקודם"'
                   : '"Copy from last week"'}
               </p>
               <br />
-              <p className="bg-gray-50 rounded px-3 py-1.5 inline-block">
+              <p className="bg-surface-subtle rounded px-3 py-1.5 inline-block">
                 {lang === "he"
                   ? '"שים את אודי על האכלה פיטום כל הבקרים"'
                   : '"Put Udi on fattening feed every morning"'}
@@ -199,8 +199,8 @@ export default function ScheduleChat({
             <div
               className={`max-w-[85%] px-3 py-2 rounded-xl text-sm whitespace-pre-wrap ${
                 msg.role === "user"
-                  ? "bg-blue-600 text-white rounded-br-sm"
-                  : "bg-gray-100 text-gray-800 rounded-bl-sm"
+                  ? "bg-brand-primary text-white rounded-br-sm"
+                  : "bg-surface-subtle text-text-primary rounded-bl-sm"
               }`}
             >
               {msg.content}
@@ -221,11 +221,11 @@ export default function ScheduleChat({
         {/* Loading indicator */}
         {isLoading && !toolStatus && messages[messages.length - 1]?.role === "user" && (
           <div className="flex justify-end">
-            <div className="bg-gray-100 px-3 py-2 rounded-xl">
+            <div className="bg-surface-subtle px-3 py-2 rounded-xl">
               <div className="flex gap-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:150ms]" />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:300ms]" />
+                <div className="w-2 h-2 bg-text-muted rounded-full animate-bounce" />
+                <div className="w-2 h-2 bg-text-muted rounded-full animate-bounce [animation-delay:150ms]" />
+                <div className="w-2 h-2 bg-text-muted rounded-full animate-bounce [animation-delay:300ms]" />
               </div>
             </div>
           </div>
@@ -235,7 +235,7 @@ export default function ScheduleChat({
       </div>
 
       {/* Input */}
-      <div className="p-3 border-t border-gray-200">
+      <div className="p-3 border-t border-border-default">
         <div className="flex gap-2">
           <input
             ref={inputRef}
@@ -245,12 +245,12 @@ export default function ScheduleChat({
             onKeyDown={handleKeyDown}
             placeholder={ui.scheduleChatPlaceholder}
             disabled={isLoading}
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-base md:text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
+            className="flex-1 px-3 py-2 border border-border-default rounded-lg text-base md:text-sm focus-visible:ring-2 focus-visible:ring-brand-primary/20 focus-visible:border-transparent disabled:opacity-50"
           />
           <button
             onClick={sendMessage}
             disabled={isLoading || !input.trim()}
-            className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 text-sm"
+            className="px-3 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-primary-hover disabled:opacity-50 text-sm transition-colors"
           >
             {lang === "he" ? "שלח" : "Send"}
           </button>

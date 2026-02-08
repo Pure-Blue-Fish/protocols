@@ -42,7 +42,7 @@ export default function WorkerLoginForm({ onSuccess }: WorkerLoginFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm text-gray-600 mb-1 text-right">מספר טלפון</label>
+        <label className="block text-sm text-text-secondary mb-1 text-right">מספר טלפון</label>
         <input
           type="tel"
           dir="ltr"
@@ -50,13 +50,13 @@ export default function WorkerLoginForm({ onSuccess }: WorkerLoginFormProps) {
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="05X-XXXXXXX"
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg text-lg text-center tracking-wider"
+          className="w-full px-4 py-3 border border-border-default rounded-lg text-lg text-center tracking-wider focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none"
           autoFocus
           disabled={loading}
         />
       </div>
       <div>
-        <label className="block text-sm text-gray-600 mb-1 text-right">קוד כניסה</label>
+        <label className="block text-sm text-text-secondary mb-1 text-right">קוד כניסה</label>
         <input
           type="password"
           inputMode="numeric"
@@ -64,7 +64,7 @@ export default function WorkerLoginForm({ onSuccess }: WorkerLoginFormProps) {
           value={pin}
           onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
           placeholder="••••"
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg text-lg text-center tracking-widest"
+          className="w-full px-4 py-3 border border-border-default rounded-lg text-lg text-center tracking-widest focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none"
           disabled={loading}
         />
       </div>
@@ -72,7 +72,7 @@ export default function WorkerLoginForm({ onSuccess }: WorkerLoginFormProps) {
       <button
         type="submit"
         disabled={loading || phone.length < 9 || pin.length < 4}
-        className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 text-lg"
+        className="w-full bg-brand-primary text-white py-3 rounded-lg hover:bg-brand-primary-hover disabled:opacity-50 text-lg font-heading font-semibold transition-all"
       >
         {loading ? "מתחבר..." : "כניסה"}
       </button>

@@ -5,7 +5,7 @@
 
 import { useRouter } from "next/navigation";
 
-export default function LogoutButton({ label }: { label: string }) {
+export default function LogoutButton({ label, dark = false }: { label: string; dark?: boolean }) {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -17,7 +17,11 @@ export default function LogoutButton({ label }: { label: string }) {
   return (
     <button
       onClick={handleLogout}
-      className="px-2 sm:px-3 py-1.5 text-xs text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
+      className={`px-2 sm:px-3 py-1.5 text-xs rounded-lg transition-all ${
+        dark
+          ? "text-white/70 hover:text-white hover:bg-white/10"
+          : "text-brand-danger bg-brand-danger-light hover:bg-red-100"
+      }`}
     >
       {label}
     </button>

@@ -20,7 +20,7 @@ const TABS: { page: Page; href: string; labelKey: keyof typeof UI_STRINGS.he }[]
 ];
 
 function TabIcon({ page, active }: { page: Page; active: boolean }) {
-  const cls = `w-5 h-5 ${active ? "text-blue-600" : "text-gray-400"}`;
+  const cls = `w-5 h-5 ${active ? "text-brand-primary" : "text-text-muted"}`;
 
   switch (page) {
     case "protocols":
@@ -48,7 +48,7 @@ export default function BottomNav({ lang, currentPage }: BottomNavProps) {
   const ui = UI_STRINGS[lang];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 md:hidden safe-area-pb no-print">
+    <nav className="fixed bottom-0 inset-x-0 z-40 bg-surface-card border-t border-border-default md:hidden safe-area-pb no-print">
       <div className="flex items-center justify-around h-14">
         {TABS.map(({ page, href, labelKey }) => {
           const active = page === currentPage;
@@ -57,7 +57,7 @@ export default function BottomNav({ lang, currentPage }: BottomNavProps) {
               key={page}
               href={`${href}?lang=${lang}`}
               className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
-                active ? "text-blue-600" : "text-gray-400 hover:text-gray-600"
+                active ? "text-brand-primary" : "text-text-muted hover:text-text-secondary"
               }`}
             >
               <TabIcon page={page} active={active} />

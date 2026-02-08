@@ -16,9 +16,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   primary: "bg-brand-primary text-white hover:bg-brand-primary-hover disabled:opacity-50",
-  secondary: "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 disabled:opacity-50",
-  danger: "text-red-600 bg-red-50 hover:bg-red-100 disabled:opacity-50",
-  ghost: "text-gray-600 hover:bg-gray-100 disabled:opacity-50",
+  secondary: "bg-white text-text-primary border border-border-default hover:bg-surface-subtle disabled:opacity-50",
+  danger: "text-brand-danger bg-brand-danger-light hover:bg-red-100 disabled:opacity-50",
+  ghost: "text-text-secondary hover:bg-surface-subtle disabled:opacity-50",
   success: "bg-brand-success text-white hover:bg-brand-success-hover disabled:opacity-50",
 };
 
@@ -34,7 +34,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         disabled={disabled || loading}
-        className={`inline-flex items-center justify-center font-medium transition-colors cursor-pointer ${VARIANT_CLASSES[variant]} ${SIZE_CLASSES[size]} ${className}`}
+        className={`inline-flex items-center justify-center font-medium font-heading transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-brand-primary/20 focus-visible:ring-offset-2 outline-none ${VARIANT_CLASSES[variant]} ${SIZE_CLASSES[size]} ${className}`}
         {...props}
       >
         {loading && (

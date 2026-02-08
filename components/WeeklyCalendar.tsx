@@ -110,21 +110,21 @@ export default function WeeklyCalendar({
   return (
     <div className="h-full flex flex-col">
       {/* Week navigation */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border-default bg-surface-card">
         <button
           onClick={() => onWeekChange(shiftWeek(week, -7))}
-          className="px-3 py-1.5 text-sm text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
+          className="px-3 py-1.5 text-sm text-text-secondary bg-surface-subtle rounded-lg hover:bg-surface-subtle/80 transition-colors"
         >
           {ui.prevWeek}
         </button>
-        <h2 className="text-sm font-medium text-gray-700">
+        <h2 className="text-sm font-medium text-text-primary font-heading">
           {dates.length > 0
             ? `${formatDateShort(dates[0])} - ${formatDateShort(dates[dates.length - 1])}`
             : ui.thisWeek}
         </h2>
         <button
           onClick={() => onWeekChange(shiftWeek(week, 7))}
-          className="px-3 py-1.5 text-sm text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
+          className="px-3 py-1.5 text-sm text-text-secondary bg-surface-subtle rounded-lg hover:bg-surface-subtle/80 transition-colors"
         >
           {ui.nextWeek}
         </button>
@@ -134,20 +134,20 @@ export default function WeeklyCalendar({
       <div className="flex-1 overflow-auto">
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+            <div className="w-8 h-8 border-4 border-brand-primary/20 border-t-brand-primary rounded-full animate-spin" />
           </div>
         ) : (
           <>
             {/* Desktop: 7-column grid (unchanged) */}
             <div className="hidden md:block min-w-[700px]">
               {/* Header row */}
-              <div className="grid grid-cols-7 border-b border-gray-200 bg-gray-50 sticky top-0">
+              <div className="grid grid-cols-7 border-b border-border-default bg-surface-subtle sticky top-0">
                 {dates.map((date, i) => (
-                  <div key={date} className="px-2 py-2 text-center border-l border-gray-200 first:border-l-0">
-                    <div className="text-xs font-medium text-gray-600">
+                  <div key={date} className="px-2 py-2 text-center border-l border-border-default first:border-l-0">
+                    <div className="text-xs font-medium text-text-secondary">
                       {ui[DAY_KEYS[i]] || DAY_KEYS[i]}
                     </div>
-                    <div className="text-xs text-gray-400">{formatDateShort(date)}</div>
+                    <div className="text-xs text-text-muted">{formatDateShort(date)}</div>
                   </div>
                 ))}
               </div>
@@ -155,20 +155,20 @@ export default function WeeklyCalendar({
               {/* Shift rows */}
               {SHIFTS.map((shift) => (
                 <div key={shift}>
-                  <div className={`px-3 py-1.5 text-xs font-medium border-b border-gray-100 ${
+                  <div className={`px-3 py-1.5 text-xs font-medium border-b border-border-subtle ${
                     shift === "morning" ? "bg-amber-50 text-amber-700" :
                     shift === "afternoon" ? "bg-orange-50 text-orange-700" :
                     "bg-indigo-50 text-indigo-700"
                   }`}>
                     {ui[shift]}
                   </div>
-                  <div className="grid grid-cols-7 border-b border-gray-200">
+                  <div className="grid grid-cols-7 border-b border-border-default">
                     {dates.map((date) => {
                       const assignments = schedule[date]?.[shift] || [];
                       return (
                         <div
                           key={`${date}-${shift}`}
-                          className="border-l border-gray-200 first:border-l-0 p-1.5 min-h-[60px] space-y-1"
+                          className="border-l border-border-default first:border-l-0 p-1.5 min-h-[60px] space-y-1"
                         >
                           {assignments.map((a) => (
                             <AssignmentCard
@@ -204,16 +204,16 @@ export default function WeeklyCalendar({
                       onClick={() => setSelectedDay(date)}
                       className={`flex-1 min-w-[48px] px-1.5 py-2 rounded-lg text-center border transition-all ${
                         isSelected
-                          ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                          ? "bg-brand-primary text-white border-brand-primary shadow-sm"
                           : hasAssignments
-                            ? "bg-white border-gray-200 hover:border-blue-300"
-                            : "bg-gray-50 border-gray-100 text-gray-400"
+                            ? "bg-surface-card border-border-default hover:border-brand-primary/40"
+                            : "bg-surface-subtle border-border-subtle text-text-muted"
                       }`}
                     >
                       <div className={`text-xs font-medium ${isSelected ? "text-white" : ""}`}>
                         {(ui[DAY_KEYS[i]] || DAY_KEYS[i]).slice(0, 3)}
                       </div>
-                      <div className={`text-[10px] ${isSelected ? "text-blue-100" : "text-gray-400"}`}>
+                      <div className={`text-[10px] ${isSelected ? "text-white/70" : "text-text-muted"}`}>
                         {formatDateShort(date)}
                         {isToday && !isSelected && " *"}
                       </div>
@@ -251,7 +251,7 @@ export default function WeeklyCalendar({
                     );
                   })}
                   {SHIFTS.every((s) => (schedule[selectedDay]?.[s]?.length || 0) === 0) && (
-                    <div className="text-center py-8 text-sm text-gray-400">
+                    <div className="text-center py-8 text-sm text-text-muted">
                       {ui.noTasksThisShift}
                     </div>
                   )}

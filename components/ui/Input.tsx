@@ -25,15 +25,15 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div>
         {label && (
-          <label htmlFor={inputId} className="block text-sm text-gray-600 mb-1">
+          <label htmlFor={inputId} className="block text-sm text-text-secondary mb-1">
             {label}
           </label>
         )}
         <input
           ref={ref}
           id={inputId}
-          className={`w-full border transition-colors focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary outline-none ${
-            error ? "border-red-300" : "border-gray-300"
+          className={`w-full border transition-colors focus-visible:ring-2 focus-visible:ring-brand-primary/20 focus:border-brand-primary outline-none ${
+            error ? "border-red-300" : "border-border-default"
           } ${SIZE_CLASSES[inputSize]} ${className}`}
           {...props}
         />

@@ -10,7 +10,7 @@ interface TableProps {
 
 export function Table({ children, className = "" }: TableProps) {
   return (
-    <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+    <div className="bg-surface-card rounded-2xl border border-border-subtle overflow-hidden">
       <div className="overflow-x-auto">
         <table className={`w-full text-sm ${className}`}>{children}</table>
       </div>
@@ -20,14 +20,14 @@ export function Table({ children, className = "" }: TableProps) {
 
 export function Thead({ children }: { children: React.ReactNode }) {
   return (
-    <thead className="bg-gray-50/80 border-b border-gray-100 sticky top-0 z-10">
+    <thead className="bg-surface-subtle/80 border-b border-border-subtle sticky top-0 z-10">
       {children}
     </thead>
   );
 }
 
 export function Tbody({ children }: { children: React.ReactNode }) {
-  return <tbody className="divide-y divide-gray-50">{children}</tbody>;
+  return <tbody className="divide-y divide-border-subtle">{children}</tbody>;
 }
 
 interface ThProps {
@@ -45,8 +45,8 @@ export function Th({ children, sortKey, currentSort, sortDir, onSort, className 
 
   return (
     <th
-      className={`px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide ${
-        sortable ? "cursor-pointer select-none hover:text-gray-700" : ""
+      className={`px-4 py-3 text-start text-xs font-semibold text-text-muted uppercase tracking-wide font-heading ${
+        sortable ? "cursor-pointer select-none hover:text-text-secondary" : ""
       } ${className}`}
       onClick={sortable ? () => onSort(sortKey) : undefined}
     >
@@ -78,5 +78,5 @@ export function Td({ children, className = "", colSpan, dir }: TdProps) {
 }
 
 export function Tr({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <tr className={`hover:bg-gray-50/50 transition-colors ${className}`}>{children}</tr>;
+  return <tr className={`hover:bg-surface-subtle/50 transition-colors ${className}`}>{children}</tr>;
 }
