@@ -2,10 +2,15 @@
 title: "אקלום דגים בקרנטינה"
 category: "arrival"
 protocolNumber: "PRO.1.1.5"
+frequency: ""
 ---
+
 ## אקלום דגים בקרנטינה (PRO.1.1.5)
-Slug: acclimate
+
+SluG: acclimate
+
 Category: arrival
+
 Frequency: N/A
 
 ## תפקידים בצוות
@@ -17,25 +22,20 @@ Frequency: N/A
 
 ## גבולות קצב אקלום
 
-| פרמטר | שינוי מקסימלי לחצי שעה |
-| --- | --- |
-| pH | עד 0.3 יחידות |
-| טמפרטורה | עד 2°C |
-| מליחות | עד 3 ppt |
-| חמצן | מינימלי! הגבר רק אם |
+<table style="min-width: 50px;"><colgroup><col style="min-width: 25px;"><col style="min-width: 25px;"></colgroup><tbody><tr><th colspan="1" rowspan="1"><p>פרמטר</p></th><th colspan="1" rowspan="1"><p>שינוי מקסימלי לחצי שעה</p></th></tr><tr><td colspan="1" rowspan="1"><p>pH</p></td><td colspan="1" rowspan="1"><p>עד 0.3 יחידות</p></td></tr><tr><td colspan="1" rowspan="1"><p>טמפרטורה</p></td><td colspan="1" rowspan="1"><p>עד 2°C</p></td></tr><tr><td colspan="1" rowspan="1"><p>מליחות</p></td><td colspan="1" rowspan="1"><p>עד 3 ppt</p></td></tr><tr><td colspan="1" rowspan="1"><p>חמצן</p></td><td colspan="1" rowspan="1"><p>מינימלי! הגבר רק אם</p></td></tr></tbody></table>
 
 ## שלב 1: פריקה וסידור
 
 - [ ] פרוק ארגזים ממשאית וסדר בשורות
 - [ ] פתח שקיות דוגמה (עד 10%)
 - [ ] מדוד ורשום מדדי הגעה
-- [ ] סמן שקיות עם DOA גבוה *(ישארו לסוף!)*
+- [ ] סמן שקיות עם DOA גבוה _(ישארו לסוף!)_
 
 ## שלב 2: הכנת מערכת
 
 - [ ] מקם מיכלי אקלום בסמוך למיכלי היעד
 - [ ] חבר משאבה טבולה עם צינור וברז
-- [ ] וודא אוורור/חמצון סגור במיכל המקור *(מניעת gas bubble disease)*
+- [ ] וודא אוורור/חמצון סגור במיכל המקור _(מניעת gas bubble disease)_
 - [ ] הכנס דפיוזר חמצן למיכל האקלום
 
 ## שלב 3: הוספת מים לשקיות
